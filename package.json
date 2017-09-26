@@ -1,0 +1,15 @@
+{
+  "name": "push2node",
+  "version": "0.0.0",
+  "description": "NodeJs library for communicating with Ableton Push 2 over MIDI.",
+  "main": "show_stream.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sam Hiatt [samhiatt@gmail.com]",
+  "license": "ISC",
+  "dependencies": {
+    "midi": "^0.9.5",
+    "midi-stream": "^1.3.2"
+  }
+}
