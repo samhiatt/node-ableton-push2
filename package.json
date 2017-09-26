@@ -6,6 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/samhiatt/node-ableton-push2.git"
+  },
   "author": "Sam Hiatt [samhiatt@gmail.com]",
   "license": "ISC",
   "dependencies": {
