@@ -1,5 +1,5 @@
 {
-  "name": "push2node",
+  "name": "node-ableton-push2",
   "version": "0.0.0",
   "description": "NodeJs library for communicating with Ableton Push 2 over MIDI.",
   "main": "show_stream.js",
