@@ -1,5 +1,6 @@
 var easymidi = require('easymidi');
 var push2keymap = require('./Push2Keymap');
+var EventEmitter = require('events').EventEmitter;
 
 module.exports = {
   MidiMonitor:class MidiMonitor{
@@ -27,8 +28,9 @@ module.exports = {
       }
     }
   },
-  Push2:class Push2{
+  Push2:class Push2 extends EventEmitter {
     constructor(port='both',virtual=false){
+      super();
       this._inputs = [];
       this._outputs = [];
       this._ports=[];
@@ -38,6 +40,7 @@ module.exports = {
       else throw `Expected port to be 'user', 'live', or 'both', but got: ${port}`;
       this._ports=this._ports.map((name)=>`Ableton Push 2 ${name} Port`);
       this._virtual = virtual;
+      this.listen();
     }
     _openOutputPorts(){
       var self = this;
@@ -46,6 +49,14 @@ module.exports = {
     _openInputPorts(){
       var self = this;
       this._ports.forEach((name)=>this._inputs.push({name:name,obj:new easymidi.Input(name, self.virtual)}));
+    }
+    listen(){
+      var self = this;
+      this._openInputPorts();
+      this._inputs.forEach((port)=>port.obj.on('message',(msg)=>{
+        self.emit(msg._type,msg);
+        self.emit('message',msg);
+      }));
     }
     monitor(){
       if (this._inputs.length==0) this._openInputPorts();

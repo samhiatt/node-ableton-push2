@@ -31,6 +31,27 @@ push2.setColor([2,3],30); 		// Set track 2, scene 3 to color 30
 push2.setColor("play",127); 	// Set play key to color 127 (red)
 push2.setColor("record",17); 	// Set record key to color 17 (blueish)
 push2.setColor("1/16t",70); 	// Set 1/16t button to color 70
+
+// Listen to all MIDI messages 
+push2.on('message', function(msg){console.log(msg);});
+
+// Specific message types are supported, as in easymidi:
+// noteon note [0-127] velocity [0-127] channel [0-15]
+push2.on('noteon', function(msg){console.log("noteon",msg);});  
+// noteoff note [0-127] velocity [0-127] channel [0-15]
+push2.on('noteoff', function(msg){console.log("noteoff",msg);});
+// poly aftertouch note [0-127]  velocity [0-127]  channel [0-15]
+push2.on('poly aftertouch', function(msg){console.log("poly aftertouch",msg);});
+// cc controller [0-127] value [0-127] channel [0-15]
+push2.on('cc', function(msg){console.log("cc",msg);});
+// program  number [0-127]  channel [0-15]
+push2.on('program', function(msg){console.log("program",msg);});
+// channel aftertouch  pressure [0-127] channel [0-15]
+push2.on('channel aftertouch', function(msg){console.log("channel aftertouch",msg);});
+// pitch  value [0-16384] channel [0-15]
+push2.on('pitch', function(msg){console.log("pitch",msg);});
+// position  value [0-16384] channel [0-15]
+push2.on('position', function(msg){console.log("position",msg);});
 ```
 
 #### Handy example scripts
