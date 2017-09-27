@@ -15,15 +15,28 @@ Uses [easymidi](https://github.com/dinchak/node-easymidi) to parse and send MIDI
 ## Installation
 
 ```
-$ git clone https://github.com/samhiatt/node-ableton-push2
-$ cd node-ableton-push2
-$ npm install
+$ npm install node-ableton-push2
 ```
 
 ## Usage
 
-Make sure node can see your Push 2 with:
+```javascript
+var ableton = require('node-ableton-push2');
+
+var push2 = new ableton.Push2(port='both'); // Yay! A New Ableton Push 2!!
+push2.monitor(); 	// Monitor and parse MIDI messages, printing them to console.log
+push2.stopMonitor(); 		// Removes event listeners
+
+push2.setColor([2,3],30); 		// Set track 2, scene 3 to color 30
+push2.setColor("play",127); 	// Set play key to color 127 (red)
+push2.setColor("record",17); 	// Set record key to color 17 (blueish)
+push2.setColor("1/16t",70); 	// Set 1/16t button to color 70
 ```
+
+#### Handy example scripts
+First probe MIDI ports to make sure node can see your Push 2 with:
+```
+$ cd node-ableton-push2
 $ node examples/show_ports.js
 
 Input ports:
@@ -34,22 +47,23 @@ Output ports:
 	Ableton Push 2 User Port
 ```
 
-Show MIDI messages from Push 2.
+Monitor messages from Push 2.
 ```
 $ node examples/monitor_push.js
 
-Ableton Push 2 User Port { channel: 0, note: 57, velocity: 80, _type: 'noteon' }
- pad 6,6 pressed, velocity: 80
-Ableton Push 2 User Port { channel: 0, note: 58, velocity: 52, _type: 'noteon' }
- pad 7,6 pressed, velocity: 52
-Ableton Push 2 User Port { channel: 0, note: 57, velocity: 0, _type: 'noteoff' }
- pad 6,6 released
-Ableton Push 2 User Port { channel: 0, note: 58, velocity: 0, _type: 'noteoff' }
- pad 7,6 released
+Ableton Push 2 User Port { channel: 0, note: 36, velocity: 56, _type: 'noteon' }
+ pad 1,8 pressed, velocity: 56
+Ableton Push 2 User Port { channel: 0, note: 36, velocity: 0, _type: 'noteoff' }
+ pad 1,8 released
+Ableton Push 2 User Port { channel: 0, controller: 85, value: 127, _type: 'cc' }
+ play: 127
+Ableton Push 2 User Port { channel: 0, controller: 85, value: 0, _type: 'cc' }
+ play: 0
 ...
 ^C
 ```  
 (Exit with ctrl+C)
+
 
 ## References
 
