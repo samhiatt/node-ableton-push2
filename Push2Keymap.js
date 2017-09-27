@@ -1,26 +1,4 @@
-// From https://github.com/Ableton/push-interface/blob/master/doc/AbletonPush2MIDIDisplayInterface.asc
-
-// // p0: message, p1: status, p2: data
-// var midi_messages=[
-//   // 2.8 Pads
-//   {p0:144, p1: 'id', p2: 'value', command:'pad pressed',
-//   {p0:128, p1: 'id', p2: 0, command:'pad released',
-//   // 2.7 Buttons
-//   {p0:176, p1: 'id', p2: 127, command:'button pressed',
-//   {p0:176, p1: 'id', p2: 0, command:'button released',
-//   // Touch strip
-//   {p0:144, p1: 12, p2: 127, command:"touch strip touched",
-//   {p0:144, p1: 12, p2: 0, command:"touch strip released",
-//   {p0:224, p1: 0, p2: 'position', command:"touch strip position",
-//   {p0:224, p1: 64, p2: 'position', command:"touch strip position", // This message seems to duplicate [224, 0, x]
-//   // Mod wheel
-//   {p0:176, p1: 1, p2: 'position', command:"mod wheel position",
-//   // Encoders
-//   {p0:176, p1: 'id', p2: 'value', command:"encoder moved",
-//   {p0:144, p1: 'id', p2: 127, command:"encoder touched",
-//   {p0:144, p1: 'id', p2: 0, command:"encoder released",
-//
-// ];
+// See https://github.com/Ableton/push-interface/blob/master/doc/AbletonPush2MIDIDisplayInterface.asc
 
 exports.controls={
   //12:"touch strip",
@@ -179,3 +157,13 @@ exports.keys={
   98:"pad 7,1",
   99:"pad 8,1",
 };
+
+exports.keysByName={};
+Object.keys(exports.keys).forEach((key)=>{
+  exports.keysByName[exports.keys[key]]=key;
+});
+
+exports.controlsByName={};
+Object.keys(exports.controls).forEach((key)=>{
+  exports.controlsByName[exports.controls[key]]=key;
+});

@@ -4,12 +4,12 @@ Parses MIDI messages from Ableton Push 2.
 Includes MIDI mapping of buttons for Push 2.
 
 
-Uses [midi-stream](https://github.com/livejs/midi-stream) to parse and send MIDI messages. I drew inspiration from [easymidi](https://github.com/dinchak/node-easymidi), however wasn't able to get it working on my (OS X) system, so I rely instead on [midi-stream](https://github.com/livejs/midi-stream), which depends on [web-midi](https://github.com/mmckegg/web-midi).
+Uses [easymidi](https://github.com/dinchak/node-easymidi) to parse and send MIDI messages to Push2.
 
 ##### Intentions for future development:
-- Add functions to control lights. (Send 'note on' messages to pads.)
-- Align message type names with those in [easymidi](https://github.com/dinchak/node-easymidi).
-- Add support for more sysex commands.
+- Add documentation for using Push2 and MidiMonitor classes
+- Add event listener wrappers to Push2 class
+- Add sysex commands for further control of lights (setting palette, etc).
 - Add support for Push 1. Maybe?
 
 ## Installation
@@ -24,18 +24,29 @@ $ npm install
 
 Make sure node can see your Push 2 with:
 ```
-$ node show_ports.js
-There are 2 MIDI ports.
-port 0: Ableton Push 2 Live Port
-port 1: Ableton Push 2 User Port
+$ node examples/show_ports.js
+
+Input ports:
+	Ableton Push 2 Live Port
+	Ableton Push 2 User Port
+Output ports:
+	Ableton Push 2 Live Port
+	Ableton Push 2 User Port
 ```
 
 Show MIDI messages from Push 2.
-```$ node show_stream.js
-note on "pad 1,8" value: 27
-note off "pad 1,8" value: 0
-control change "play" value: 127
-control change "play" value: 0
+```
+$ node examples/monitor_push.js
+
+Ableton Push 2 User Port { channel: 0, note: 57, velocity: 80, _type: 'noteon' }
+ pad 6,6 pressed, velocity: 80
+Ableton Push 2 User Port { channel: 0, note: 58, velocity: 52, _type: 'noteon' }
+ pad 7,6 pressed, velocity: 52
+Ableton Push 2 User Port { channel: 0, note: 57, velocity: 0, _type: 'noteoff' }
+ pad 6,6 released
+Ableton Push 2 User Port { channel: 0, note: 58, velocity: 0, _type: 'noteoff' }
+ pad 7,6 released
+...
 ^C
 ```  
 (Exit with ctrl+C)
@@ -54,6 +65,7 @@ The following table from [easymidi docs](https://github.com/dinchak/node-easymid
 |--------------------|--------------------|------------------|----------------|
 | noteon             | note [0-127]       | velocity [0-127] | channel [0-15] |
 | noteoff            | note [0-127]       | velocity [0-127] | channel [0-15] |
+| poly aftertouch    | note [0-127]       | velocity [0-127] | channel [0-15] |
 | cc                 | controller [0-127] | value [0-127]    | channel [0-15] |
 | program            | number [0-127]     |                  | channel [0-15] |
 | channel aftertouch | pressure [0-127]   |                  | channel [0-15] |
