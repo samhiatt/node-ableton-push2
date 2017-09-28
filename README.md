@@ -32,7 +32,7 @@ push2.setColor("play",127); 	// Set play key to color 127 (red)
 push2.setColor("record",17); 	// Set record key to color 17 (blueish)
 push2.setColor("1/16t",70); 	// Set 1/16t button to color 70
 
-// Listen to all MIDI messages 
+// Listen to all MIDI messages
 push2.on('message', function(msg){console.log(msg);});
 
 // Specific message types are supported, as in easymidi:
@@ -58,7 +58,7 @@ push2.on('position', function(msg){console.log("position",msg);});
 First probe MIDI ports to make sure node can see your Push 2 with:
 ```
 $ cd node-ableton-push2
-$ node examples/show_ports.js
+$ node scripts/show_ports.js
 
 Input ports:
 	Ableton Push 2 Live Port
@@ -70,7 +70,7 @@ Output ports:
 
 Monitor messages from Push 2.
 ```
-$ node examples/monitor_push.js
+$ node scripts/monitor_push.js
 
 Ableton Push 2 User Port { channel: 0, note: 36, velocity: 56, _type: 'noteon' }
  pad 1,8 pressed, velocity: 56
