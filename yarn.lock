@@ -6,9 +6,9 @@ bindings@~1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/bindings/-/bindings-1.2.1.tgz#14ad6113812d2d37d72e67b4cacb4bb726505f11"
 
-"easymidi@git://github.com/samhiatt/node-easymidi.git":
-  version "0.0.2"
-  resolved "git://github.com/samhiatt/node-easymidi.git#9f685e5d1da545c68a231bdac7a430ba13838b5d"
+easymidi@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/easymidi/-/easymidi-0.0.3.tgz#ee1ed1ebd42acce6f8704f898aedbe306fc9bd03"
   dependencies:
     midi "^0.9.1"
 

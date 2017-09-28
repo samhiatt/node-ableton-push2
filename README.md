@@ -6,9 +6,9 @@ Includes MIDI mapping of buttons for Push 2.
 
 Uses [easymidi](https://github.com/dinchak/node-easymidi) to parse and send MIDI messages to Push2.
 
+See [midi.md](/doc/midi.md) for documentation on access to low-level MIDI messages.
+
 ##### Intentions for future development:
-- Add documentation for using Push2 and MidiMonitor classes
-- Add event listener wrappers to Push2 class
 - Add sysex commands for further control of lights (setting palette, etc).
 - Add support for Push 1. Maybe?
 
@@ -20,41 +20,45 @@ $ npm install node-ableton-push2
 
 ## Usage
 
+Instantiate a new Push2 object.
 ```javascript
-var ableton = require('node-ableton-push2');
+var ableton = require('ableton-push2');
 
-var push2 = new ableton.Push2(port='both'); // Yay! A New Ableton Push 2!!
+// port can be 'user' (default) or 'live'
+var push2 = new ableton.Push2(port='user'); // Yay! A New Ableton Push 2!!
+```
+
+Monitor control messages from Push 2.
+```javascript
 push2.monitor(); 	// Monitor and parse MIDI messages, printing them to console.log
-push2.stopMonitor(); 		// Removes event listeners
+push2.stopMonitor(); 		// Stops printing Push2 midi messages to console.
+```
 
+Set LED colors:
+```javascript
+// First argument can be either a key name from push2keymap
+// or it can also be an array containing [track,scene] with values [[1-8],[1-8]]
+// paletteIdx: color palette index [1-127]
 push2.setColor([2,3],30); 		// Set track 2, scene 3 to color 30
 push2.setColor("play",127); 	// Set play key to color 127 (red)
 push2.setColor("record",17); 	// Set record key to color 17 (blueish)
 push2.setColor("1/16t",70); 	// Set 1/16t button to color 70
-
-// Listen to all MIDI messages
-push2.on('message', function(msg){console.log(msg);});
-
-// Specific message types are supported, as in easymidi:
-// noteon note [0-127] velocity [0-127] channel [0-15]
-push2.on('noteon', function(msg){console.log("noteon",msg);});  
-// noteoff note [0-127] velocity [0-127] channel [0-15]
-push2.on('noteoff', function(msg){console.log("noteoff",msg);});
-// poly aftertouch note [0-127]  velocity [0-127]  channel [0-15]
-push2.on('poly aftertouch', function(msg){console.log("poly aftertouch",msg);});
-// cc controller [0-127] value [0-127] channel [0-15]
-push2.on('cc', function(msg){console.log("cc",msg);});
-// program  number [0-127]  channel [0-15]
-push2.on('program', function(msg){console.log("program",msg);});
-// channel aftertouch  pressure [0-127] channel [0-15]
-push2.on('channel aftertouch', function(msg){console.log("channel aftertouch",msg);});
-// pitch  value [0-16384] channel [0-15]
-push2.on('pitch', function(msg){console.log("pitch",msg);});
-// position  value [0-16384] channel [0-15]
-push2.on('position', function(msg){console.log("position",msg);});
 ```
 
+```javascript
+// Listen to all MIDI messages
+push2.midi.on('message', function(msg){ console.log(msg); });
+
+// Or listen to specific midi messages (easymidi message type names)
+push2.midi.on('noteon', function(msg){
+	console.log(`"noteon": note: ${msg.note}, velocity:${msg.velocity}, channel:${msg.channel}`);
+});
+```
+See [midi.md](/doc/midi.md) for more on low-level access to MIDI messages.
+
 #### Handy example scripts
+A few handy scripts are included in `scripts/`.
+
 First probe MIDI ports to make sure node can see your Push 2 with:
 ```
 $ cd node-ableton-push2
@@ -90,26 +94,3 @@ Ableton Push 2 User Port { channel: 0, controller: 85, value: 0, _type: 'cc' }
 
 [Summary of MIDI Messages](https://www.midi.org/specifications/item/table-1-summary-of-midi-message)  
 [Ableton Push 2 MIDI And Display Interface Manual](https://github.com/Ableton/push-interface/blob/master/doc/AbletonPush2MIDIDisplayInterface.asc)  
-
-
-
-### Message Reference
-The following table from [easymidi docs](https://github.com/dinchak/node-easymidi/blob/master/README.md) describes the MIDI message types that are supported and the parameters of each:
-
-| Type               | Parameter          | Parameter        | Parameter      |
-|--------------------|--------------------|------------------|----------------|
-| noteon             | note [0-127]       | velocity [0-127] | channel [0-15] |
-| noteoff            | note [0-127]       | velocity [0-127] | channel [0-15] |
-| poly aftertouch    | note [0-127]       | velocity [0-127] | channel [0-15] |
-| cc                 | controller [0-127] | value [0-127]    | channel [0-15] |
-| program            | number [0-127]     |                  | channel [0-15] |
-| channel aftertouch | pressure [0-127]   |                  | channel [0-15] |
-| pitch              | value [0-16384]    |                  | channel [0-15] |
-| position           | value [0-16384]    |                  |                |
-| mtc                | type [0-7]         | value [0-15]     |                |
-| select             | song [0-127]       |                  |                |
-| clock              |                    |                  |                |
-| start              |                    |                  |                |
-| continue           |                    |                  |                |
-| stop               |                    |                  |                |
-| reset              |                    |                  |                |
