@@ -28,31 +28,6 @@ class Midi extends EventEmitter {
 
 
 module.exports = {
-  MidiMonitor:class MidiMonitor{
-    constructor(){
-      this._inputs = [];
-    }
-    start(port='all'){
-      // Monitor all MIDI inputs
-      var self = this;
-      easymidi.getInputs().forEach(function(inputName){
-        var input = new easymidi.Input(inputName);
-        if (port.toLowerCase()=='all'||port.toLowerCase()==inputName.toLowerCase()) self._inputs.push({name:inputName,obj:input});
-      });
-      this._inputs.forEach((input)=>{
-        input.obj.on('message', function (msg) {
-          var vals = Object.keys(msg).map(function(key){return key+": "+msg[key];});
-          console.log(input.name+": "+vals.join(', '));
-        });
-      });
-    }
-    stop(){
-      while(this._inputs.length>0){
-        var input = this._inputs.pop();
-        input.obj.close();
-      }
-    }
-  },
   Push2:class Push2 extends EventEmitter {
     constructor(port='user',virtual=false){
       super();

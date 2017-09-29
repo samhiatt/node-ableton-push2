@@ -15,12 +15,12 @@ See [midi.md](/doc/midi.md) for documentation on access to low-level MIDI messag
 ## Installation
 
 ```
-$ npm install node-ableton-push2
+$ npm install ableton-push2
 ```
 
 ## Usage
 
-Instantiate a new Push2 object.
+####Instantiate a new Push2 object.
 ```javascript
 var ableton = require('ableton-push2');
 
@@ -28,13 +28,13 @@ var ableton = require('ableton-push2');
 var push2 = new ableton.Push2(port='user'); // Yay! A New Ableton Push 2!!
 ```
 
-Monitor control messages from Push 2.
+#####Monitor control messages from Push 2.
 ```javascript
 push2.monitor(); 	// Monitor and parse MIDI messages, printing them to console.log
 push2.stopMonitor(); 		// Stops printing Push2 midi messages to console.
 ```
 
-Set LED colors:
+#####Set LED colors:
 ```javascript
 // First argument can be either a key name from push2keymap
 // or it can also be an array containing [track,scene] with values [[1-8],[1-8]]
@@ -44,19 +44,21 @@ push2.setColor("play",127); 	// Set play key to color 127 (red)
 push2.setColor("record",17); 	// Set record key to color 17 (blueish)
 push2.setColor("1/16t",70); 	// Set 1/16t button to color 70
 ```
+TODO: Update and document interface for addressing buttons.
 
+##### Monitor Raw MIDI Messages
+See [midi.md](/doc/midi.md) for more on low-level access to MIDI messages.
 ```javascript
 // Listen to all MIDI messages
-push2.midi.on('message', function(msg){ console.log(msg); });
+push2.midi.on('message', console.log);
 
 // Or listen to specific midi messages (easymidi message type names)
 push2.midi.on('noteon', function(msg){
 	console.log(`"noteon": note: ${msg.note}, velocity:${msg.velocity}, channel:${msg.channel}`);
 });
 ```
-See [midi.md](/doc/midi.md) for more on low-level access to MIDI messages.
 
-#### Handy example scripts
+### Handy example scripts
 A few handy scripts are included in `scripts/`.
 
 First probe MIDI ports to make sure node can see your Push 2 with:
