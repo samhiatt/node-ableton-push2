@@ -1,4 +1,7 @@
 var ableton = require('../');
 
-push2 = new ableton.Push2('user');
-push2.monitor();
+var push2user = new ableton.Push2('user');
+push2user.monitor();
+
+var push2live = new ableton.Push2('live');
+push2live.monitor();
