@@ -13,6 +13,6 @@
   "author": "Sam Hiatt [samhiatt@gmail.com]",
   "license": "ISC",
   "dependencies": {
-    "easymidi": "^0.0.3"
+    "easymidi": "https://github.com/samhiatt/node-easymidi"
   }
 }
