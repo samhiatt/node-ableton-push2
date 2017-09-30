@@ -46,7 +46,29 @@ push2.setColor("1/16t",70); 	// Set 1/16t button to color 70
 ```
 TODO: Update and document interface for addressing buttons.
 
-##### Monitor Raw MIDI Messages
+#####Touch strip configuration
+TODO
+
+#####Get/set display backlight brightness
+Display backlight brightness ranges from 0 to 255. Note that when Push 2 is on
+USB power the brightness is automatically reduced to 100.  
+
+`Push2.getDisplayBrightness` returns a Promise.
+```javascript
+push2.getDisplayBrightness()
+	.then((value)=>console.log("Display brightness: "+value))
+	.catch((err)=>console.log("Error getting display brightness.",err));
+```
+
+`Push2.setDisplayBrightness` also returns a Promise which resolves after
+verifying that the value was set correctly.
+```javascript
+push2.setDisplayBrightness(200)
+	.then(()=>console.log("Display brightness successfully set."))
+	.catch((err)=>console.log("Error setting display brightness.",err));
+```
+
+##### Monitor raw MIDI Messages
 See [midi.md](/doc/midi.md) for more on low-level access to MIDI messages.
 ```javascript
 // Listen to all MIDI messages

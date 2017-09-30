@@ -231,9 +231,16 @@ module.exports = {
       });
     }
     setDisplayBrightness(val){
-      var req = [0x08];
-      dec2bit7array(val).forEach((v)=>req.push(v));
-      this._sendSysexCommand(req);
+      // Return a Promise which resolves after verifying that the value was set.
+      return new Promise((resolve,reject)=>{
+        var req = [0x08];
+        dec2bit7array(val).forEach((v)=>req.push(v));
+        this._sendSysexCommand(req);
+        this.getDisplayBrightness().then((newVal)=>{
+          if (newVal == val) resolve();
+          else reject(new Error("Tried setting display brightness, but new value doesn't match."));
+        }).catch(reject);
+      });
     }
     _sendSysexCommand(msg){
       // Adds sysex message header and 0xf7 footer, then sends command.
