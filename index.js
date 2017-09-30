@@ -60,37 +60,62 @@ function dec2bit7array(num){
 //
 // https://github.com/Ableton/push-interface/blob/master/doc/AbletonPush2MIDIDisplayInterface.asc#210-touch-strip
 class TouchStripConfiguration {
-  // Touch strip configuration values
-  // Naming scheme should be self-evident. 0 means first choice, 1 means second.
-  // e.g. LEDsShowBarOrPoint = 0 means LEDs show bar, 1 means LEDs show point.
-  constructor(num){
-    this.LEDsControlledByPushOrHost = (num)%2;
-    this.hostSendsValuesOrSysex = (num>>1)%2;
-    this.valuesSentAsPitchBendOrModWheel = (num>>2)%2;
-    this.LEDsShowBarOrPoint = (num>>3)%2;
-    this.barStartsAtBottomOrCenter = (num>>4)%2;
-    this.doAutoReturnNoOrYes = (num>>5)%2;
-    this.autoReturnToBottomOrCenter = (num>>6)%2;
+  constructor(val){
+    // can be instantiated with either a 7-bit valber to be decoded, or
+    // val can be an object with options to be merged with defaults.
+    var defaults = this._parseNum(null);
+    this.props=[ 'LEDsControlledByPushOrHost',
+      'hostSendsValuesOrSysex',
+      'valuesSentAsPitchBendOrModWheel',
+      'LEDsShowBarOrPoint',
+      'barStartsAtBottomOrCenter',
+      'doAutoReturnNoOrYes',
+      'autoReturnToBottomOrCenter',
+    ];
+    this.props.forEach((prop)=>this[prop]=defaults[prop]);
+    if (typeof val == 'undefined'){ // get defaults if no options are provided.
+      defaults = this._parseNum(null);
+    } else if (typeof val == 'object') {
+      defaults = val;
+    } else if (typeof val == 'number') { // parse and then set properties
+      defaults = this._parseNum(val);
+    }
+    this.props.forEach((key)=>{
+      this[key] = defaults[key];
+    });
+  }
+  getByteCode(){
+    var res = 0;
+    this.props.forEach((key,i)=>{
+      res |= this[key]<<(i);
+    });
+    return res;
+  }
+  _parseNum(num=null){
+    // if num is null, will return default options
+    return {
+      autoReturnToBottomOrCenter: (num != null)? (num>>6)%2 : 1,  // default: autoreturn to center
+      doAutoReturnNoOrYes: (num != null)? (num>>5)%2 : 1, // default: do autoreturn = true
+      barStartsAtBottomOrCenter: (num != null)? (num>>4)%2 : 0, // default: bar starts at bottom
+      LEDsShowBarOrPoint: (num != null)? (num>>3)%2 : 1, // default: LEDs show point
+      valuesSentAsPitchBendOrModWheel: (num != null)? (num>>2)%2 : 0, // dafault: values sent as pitch bend
+      hostSendsValuesOrSysex: (num != null)? (num>>1)%2 : 0, // default: Host sends values (ignored if LEDsControlledByPushOrHost==1)
+      LEDsControlledByPushOrHost: (num != null)? (num)%2 : 0, // default: Push 2 controls touch strip LEDs
+    };
   }
 }
 class DeviceIdentity {
   constructor(msg){
     this.firmwareVersion = msg[12]+'.'+msg[13];
-
     // Parse serial number
     this.serialNumber = bit7array2dec(msg.slice(16,21));
-
     // parse build number
     this.softwareBuild = bit7array2dec(msg.slice(14,16));
-
     // device family code
     this.deviceFamilyCode = bit7array2dec(msg.slice(8,10));
-
     // device family member code
     this.deviceFamilyMemberCode = bit7array2dec(msg.slice(10,12));
-
     this.boardRevision = msg[21];
-
   }
 }
 
@@ -107,8 +132,8 @@ module.exports = {
       port = port[0].toUpperCase() + port.slice(1); // Capitalize the first letter
       this.portName = `Ableton Push 2 ${port} Port`;
       this.midi = new Midi(this.portName,virtual);
-      this.getDeviceInfo();
-      this.getTouchStripConfiguration();
+      // this.getDeviceInfo();
+      // this.getTouchStripConfiguration();
     }
     monitor(){
       var portName = this.portName;
@@ -167,17 +192,35 @@ module.exports = {
       });
     }
     getTouchStripConfiguration() {
-      var self = this;
       return new Promise((resolve,reject)=>{
-        self._sendSysexRequest([0x18]).then((resp)=>{
-          self.touchStripConfiguration = new TouchStripConfiguration(resp.bytes[7]);
-          self.emit('received_touchStripConfiguration',self.touchStripConfiguration);
-          resolve(self.touchStripConfiguration);
+        this._sendSysexRequest([0x18]).then((resp)=>{
+          this.touchStripConfiguration = new TouchStripConfiguration(resp.bytes[7]);
+          this.emit('received_touchStripConfiguration',this.touchStripConfiguration);
+          resolve(this.touchStripConfiguration);
         }).catch(reject);
       });
     }
-    setTouchStripConfiguration(){
-
+    setTouchStripConfiguration(val){
+      return new Promise((resolve,reject)=>{
+        var sendCommand = (encoded)=>{
+          var conf = new TouchStripConfiguration(encoded);
+          console.log("Setting touch strip configuration to:",conf);
+          this._sendSysexCommand([0x17,encoded]);
+          resolve(conf);
+        };
+        if (typeof val == 'object') {
+          // If an object is provided, will first get current config and then merge in options.
+          this.getTouchStripConfiguration().then((conf)=>{
+            conf.props.forEach((key)=> {
+              if (typeof val[key]!='undefined') conf[key]=val[key];
+            });
+            sendCommand(conf.getByteCode());
+          });
+        } else if (typeof val == 'number') {
+          sendCommand(val);
+        }
+        else reject(new Error("Expected val to be either a number or an object."));
+      });
     }
     getDisplayBrightness(){
       var self = this;
@@ -198,6 +241,7 @@ module.exports = {
       var a = [0xf0, 0x00, 0x21, 0x1d, 0x01, 0x01 ];
       msg.forEach((v)=>a.push(v));
       a.push(0xf7);
+      console.log("Sending sysex command:",a);
       this.midi.send('sysex',a);
     }
     _sendSysexRequest(msg){
