@@ -230,6 +230,16 @@ module.exports = {
         }).catch(reject);
       });
     }
+    getGlobalLEDBrightness(){
+      return this._getParamPromise(0x07,(resp,resolve)=>{
+        resolve(resp.bytes);
+      });
+    }
+    setGlobalLEDBrightness(val){
+      var bytes = [0x06];
+      bytes.push(val);
+      this._sendSysexCommand(bytes);
+    }
     getDisplayBrightness(){
       return this._getParamPromise(0x09,(resp,resolve)=>{
         resolve(bit7array2dec(resp.bytes.slice(7,9)));
@@ -249,6 +259,7 @@ module.exports = {
       });
     }
     reapplyColorPalette(){
+      // trigger palette reapplication
       this._sendSysexCommand(0x05);
     }
     setDisplayBrightness(val){
@@ -278,7 +289,7 @@ module.exports = {
       if (typeof msg=='number') msg = [msg];
       msg.forEach((v)=>a.push(v));
       a.push(0xf7);
-      // console.log("Sending sysex command:",a);
+      console.log("Sending sysex command:",a);
       this.midi.send('sysex',a);
     }
     _sendSysexRequest(msg){
@@ -287,7 +298,7 @@ module.exports = {
         var commandId = msg[0];
         setTimeout(()=>{ // reject if no usable response after 1 second.
           reject(new Error("No usable sysex reponse message received."));
-        },10000);
+        },1000);
         this.midi.on('sysex',function handler(resp) {
           if (resp.bytes[6]==commandId){ // This response matches our request.
             this.midi.removeListener('sysex',handler);

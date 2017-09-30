@@ -10,10 +10,10 @@
 |Command ID|Implemented|Sends Reply|Command Name|[Chapter](https://github.com/Ableton/push-interface/blob/master/doc/AbletonPush2MIDIDisplayInterface.asc)|
 |----------|-----------|-----------|------------|-------|
 |`0x03` |  | |Set LED Color Palette Entry  |RGB LED Color Processing
-|`0x04` |  |yes|Get LED Color Palette Entry | RGB LED Color Processing
-|`0x05` |  | |Reapply Color Palette | RGB LED Color Processing
-|`0x06` |  | |Set LED Brightness   |Global LED Brightness
-|`0x07` |  |yes|Get LED Brightness | Global LED Brightness
+|`0x04` | x |yes|Get LED Color Palette Entry | RGB LED Color Processing
+|`0x05` | x | |Reapply Color Palette | RGB LED Color Processing
+|`0x06` | x | |Set LED Brightness   |Global LED Brightness
+|`0x07` | x |yes|Get LED Brightness | Global LED Brightness
 |`0x08` | x | |Set Display Brightness |Display Backlight
 |`0x09` | x | |Get Display Brightness |Display Backlight
 |`0x0A` | x |yes|Set MIDI Mode |MIDI Mode
