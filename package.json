@@ -1,6 +1,6 @@
 {
   "name": "ableton-push2",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "NodeJs library for communicating with Ableton Push 2 over MIDI.",
   "main": "index.js",
   "scripts": {
@@ -13,6 +13,6 @@
   "author": "Sam Hiatt [samhiatt@gmail.com]",
   "license": "ISC",
   "dependencies": {
-    "easymidi": "https://github.com/samhiatt/node-easymidi"
+    "easymidi": "^0.0.4"
   }
 }
