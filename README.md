@@ -20,7 +20,8 @@ $ npm install ableton-push2
 
 ## Usage
 
-####Instantiate a new Push2 object.
+### Usage examples
+#####Instantiate a new Push2 object.
 ```javascript
 var ableton = require('ableton-push2');
 
@@ -34,7 +35,7 @@ push2.monitor(); 	// Monitor and parse MIDI messages, printing them to console.l
 push2.stopMonitor(); 		// Stops printing Push2 midi messages to console.
 ```
 
-#####Set LED colors:
+#####Set pad or button LED colors:
 ```javascript
 // First argument can be either a key name from push2keymap
 // or it can also be an array containing [track,scene] with values [[1-8],[1-8]]
@@ -46,11 +47,81 @@ push2.setColor("1/16t",70); 	// Set 1/16t button to color 70
 ```
 TODO: Update and document interface for addressing buttons.
 
-#####Touch strip configuration
-TODO
+###Touch strip configuration
+####Touch strip configuration options
+ | TouchStripConfiguration property | Behavior if false | Behavior if true | Remarks |
+ | ------------------------|----------------------------|------------------|---------|
+ | `LEDsControlledByHost`  | **controlled by push**     | controlled by host | LED values received from the host are ignored if this is set to `false` (default behavior) |
+ | `hostSendsSysex`        | **host sends values**      | host sends sysex | Host sends position values or sysex commands *(for full control of colors)*. <p>If `LEDsControlledByHost == false` (default) then this flag is ignored. |
+ | `valuesSentAsModWheel`  | **values sent as mod wheel** | values sent as pitch bend | Controls whether lights are controlled by sending pitch bend or mod wheel messages. <p>If `hostSendsSysex == true`, then this is ignored. |
+ | `LEDsShowPoint`         | LEDs show a bar            | **LEDs show a point** | |
+ | `barStartsAtCenter`     | **bar starts at bottom**   | bar starts at center | |
+ | `doAutoReturn`          | auto-return disabled       | **auro-return enabled** | |
+ | `autoReturnToCenter`    | auto-returns to bottom     | **auto-returns to center** |  If `doAutoReturn==false` then this flag is ignored. |
+ (defaults indicated with **bold**)
 
+#####Push2.getTouchStripConfiguration():Promise\<{configObject}\>
+Get current touch strip configuration
+```javascript
+push2.getTouchStripConfiguration()
+	.then((resp)=>{
+	  console.log(resp);
+	}).catch(console.error);
+// Output:
+// TouchStripConfiguration {
+//   LEDsControlledByHost: 0,
+//   hostSendsSysex: 0,
+//   valuesSentAsModWheel: 0,
+//   LEDsShowPoint: 1,
+//   barStartsAtCenter: 1,
+//   doAutoReturn: 1,
+//   autoReturnToCenter: 1 }
+```
+
+#####Push2.setTouchStripConfiguration({configObject}):Promise\<{configObject}>
+Returns a Promise which resolves after verifying that the value was set correctly.  
+
+Set all options at once:
+```javascript
+var newConfig = {
+		'LEDsControlledByPushOrHost':1,
+		'hostSendsSysex': 0,
+		'valuesSentAsModWheel': 0,
+		'LEDsShowPoint': 1,
+		'barStartsAtCenter': 1,
+		'doAutoReturn': 1,
+		'autoReturnToCenter': 1,
+};
+push2.setTouchStripConfiguration(newConfig).then((conf)=>{
+  console.log("Touch strip configuration successfully set to:",conf);
+}).catch(console.error);
+```
+Or you can specify just a subset of properties to change. Others remain unchanged.
+```javascript
+push2.setTouchStripConfiguration({'LEDsControlledByPushOrHost':1}).then((conf)=>{
+  console.log("Touch strip configuration successfully set to:",conf);
+}).catch(console.error);
+// Output:
+// Touch strip configuration successfully set to: TouchStripConfiguration {
+// LEDsControlledByHost: 1,
+// hostSendsSysex: 0,
+// valuesSentAsModWheel: 0,
+// LEDsShowPoint: 1,
+// barStartsAtCenter: 1,
+// doAutoReturn: 1,
+// autoReturnToCenter: 1 }
+```
+######Reset touch strip confg to defaults
+Calling `setTouchStripConfiguration` with no arguments will reset to defaults.
+```javascript
+push2.setTouchStripConfiguration(); // Resets to defaults
+```
+It is not necessary to handle the callback if you don't care to validate the result.
+
+
+###Control display backlight
 #####Get/set display backlight brightness
-Display backlight brightness ranges from 0 to 255. Note that when Push 2 is on
+Display backlight brightness ranges from 0 to 255.   Note that when Push 2 is on
 USB power the brightness is automatically reduced to 100.  
 
 `Push2.getDisplayBrightness` returns a Promise.
@@ -68,7 +139,7 @@ push2.setDisplayBrightness(200)
 	.catch((err)=>console.log("Error setting display brightness.",err));
 ```
 
-##### Monitor raw MIDI Messages
+#### Monitor raw MIDI Messages
 See [midi.md](/doc/midi.md) for more on low-level access to MIDI messages.
 ```javascript
 // Listen to all MIDI messages

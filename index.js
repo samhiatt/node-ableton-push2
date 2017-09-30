@@ -202,6 +202,7 @@ module.exports = {
       });
     }
     setTouchStripConfiguration(val){
+      // If val is undefined will reset touch strip configuration to default.
       return new Promise((resolve,reject)=>{
         var sendCommand = (encoded)=>{
           var conf = new TouchStripConfiguration(encoded);
@@ -215,8 +216,9 @@ module.exports = {
             resolve(conf);
           }).catch(reject);
         };
-        if (typeof val == 'object') {
+        if (typeof val == 'object' || typeof val=='undefined') {
           // If an object is provided, will first get current config and then merge in options.
+          if (!val) val = {};  // if val is empty will get defaults
           this.getTouchStripConfiguration().then((conf)=>{
             _touchStripConfigurationProperties.forEach((key)=> {
               if (typeof val[key]!='undefined') conf[key]=val[key];
