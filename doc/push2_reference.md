@@ -26,3 +26,12 @@ position values or as sysex commands for full control of pitch bend LEDs.
 If `hostSendsSysex==false`, the host may send pitch bend (if `valuesSentAsModWheel==false`) or mod wheel (if `valuesSentAsModWheel==true`) to indicate position with the LEDs. The sysex command "setTouchStripLEDs" is ignored while in this mode.  
 If `hostSendsSysex==true`, the host may call "setTouchStripLEDs" to set the LEDs. Pitch bend or mod wheel are ignored in this mode.  
 LED 0 is the bottom LED, LED30 is the top LED. The LEDn values are brightness ranging from 0 to 7.
+
+
+### Touchstrip Configuration Examples
+
+| Binary |	Hexadecimal |	Decimal	| Configuration	| Typical Application|
+|--------|--------------|---------|---------------|--------------------|
+| 1101000  |0x68|104|  Default: Push 2 controls LEDs as single point with autoreturn to center, sends pitch bend |  Pitch bend control |
+| 0001100  | 0x0C  | 12  | Push 2 controls LEDs as bar starting at bottom, no autoreturn, sends modulation  |  Volume control |
+| 0000011  | 0x03  | 3  | Host controls LEDs using Sysex, Push 2 sends pitch bend  |  Drum rack MIDI range selection |

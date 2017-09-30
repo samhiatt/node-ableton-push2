@@ -43,21 +43,6 @@ function dec2bit7array(num){
   return res.reverse();
 }
 
-// Touch Strip Configuration Flags
-//   ---------------
-// bit |6|5|4|3|2|1|0|
-//   ---------------                       |   0         |   1
-//      | | | | | | |  --------------------+-------------+----------
-//      | | | | | | --- LEDs Controlled By | Push 2*     | Host
-//      | | | | | ----- Host Sends         | Values*     | Sysex
-//      | | | | ------- Values Sent As     | Pitch Bend* | Mod Wheel
-//      | | | --------- LEDs Show          | a Bar       | a Point*
-//      | | ----------- Bar Starts At      | Bottom*     | Center
-//      | ------------- Do Autoreturn      | No          | Yes*
-//      --------------- Autoreturn To      | Bottom      | Center*
-//
-// *) The default settings are marked in bold.
-//
 // https://github.com/Ableton/push-interface/blob/master/doc/AbletonPush2MIDIDisplayInterface.asc#210-touch-strip
 var _touchStripConfigurationProperties=[
   'LEDsControlledByHost',   // default: false, controlled by push
@@ -162,7 +147,7 @@ module.exports = {
         keyIndex = push2keymap.keysByName[keyName];
       }
       if (keyIndex == null) throw `${keyName} not found.`;
-      console.log(`Setting color of ${keyName} (${keyIndex}) to ${paletteIdx}`);
+      // console.log(`Setting color of ${keyName} (${keyIndex}) to ${paletteIdx}`);
       if (keyName.slice(0,4)=="pad ") { // Must be for a pad control, use noteon
         this.midi.send('noteon', {
           note: keyIndex,
@@ -207,7 +192,7 @@ module.exports = {
         var sendCommand = (encoded)=>{
           var conf = new TouchStripConfiguration(encoded);
           console.log("Setting touch strip configuration to:",conf);
-          this._sendSysexCommand([0x17,encoded]);
+          this._sendSysexCommand([0x17,conf.getByteCode()]);
           this.getTouchStripConfiguration().then((currentConf)=>{ // Validate response
             _touchStripConfigurationProperties.forEach((prop)=>{
               if (conf[prop]!=currentConf[prop])
@@ -216,9 +201,9 @@ module.exports = {
             resolve(conf);
           }).catch(reject);
         };
-        if (typeof val == 'object' || typeof val=='undefined') {
+        if (typeof val=='undefined') sendCommand();
+        else if (typeof val == 'object') {
           // If an object is provided, will first get current config and then merge in options.
-          if (!val) val = {};  // if val is empty will get defaults
           this.getTouchStripConfiguration().then((conf)=>{
             _touchStripConfigurationProperties.forEach((key)=> {
               if (typeof val[key]!='undefined') conf[key]=val[key];
@@ -239,8 +224,6 @@ module.exports = {
       return new Promise((resolve,reject)=>{
         var bytes = [0x19];
         for (let i=0; i<16; i++){
-          console.log( (i!=15)? brightnessArray[i*2+1]: 0, ((i!=15)?(brightnessArray[i*2+1])<<3 : 0).toString(2) , brightnessArray[i*2].toString(2));
-          console.log((((i!=15)?(brightnessArray[i*2+1])<<3 : 0)  | (brightnessArray[i*2])).toString(2));
           bytes.push( ((i!=15)?(brightnessArray[i*2+1])<<3 : 0)  | (brightnessArray[i*2]) );
         }
         // Lets make sure the set 'LEDsControlledByHost' and 'hostSendsSysex' to enable control.
@@ -249,9 +232,6 @@ module.exports = {
           resolve();
         }).catch(reject);
       });
-    }
-    setTouchStripMode(mode='default'){
-      // NYI
     }
     getDisplayBrightness(){
       return new Promise((resolve,reject)=>{
@@ -278,7 +258,7 @@ module.exports = {
       var a = [0xf0, 0x00, 0x21, 0x1d, 0x01, 0x01 ];
       msg.forEach((v)=>a.push(v));
       a.push(0xf7);
-      console.log("Sending sysex command:",a);
+      // console.log("Sending sysex command:",a);
       this.midi.send('sysex',a);
     }
     _sendSysexRequest(msg){
