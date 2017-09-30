@@ -48,18 +48,6 @@ push2.setColor("1/16t",70); 	// Set 1/16t button to color 70
 TODO: Update and document interface for addressing buttons.
 
 ### Touch strip configuration
-See [Touch Strip Configuration Documentation](/doc/push2_reference.md#touch-strip-configuration) for details on how they work.
-#### Touch strip configuration options
- | TouchStripConfiguration property | Behavior if false | Behavior if true | Remarks |
- | ------------------------|----------------------------|------------------|---------|
- | `LEDsControlledByHost`  | **controlled by push**     | controlled by host | LED values received from the host are ignored if this is set to `false` (default behavior) |
- | `hostSendsSysex`        | **host sends values**      | host sends sysex | Host sends position values or sysex commands for full control of LEDs. |
- | `valuesSentAsModWheel`  | **values sent as mod wheel** | values sent as pitch bend | Controls whether lights are controlled by sending pitch bend or mod wheel messages. Ignored if `hostSendsSysex == true`. |
- | `LEDsShowPoint`         | LEDs show a bar            | **LEDs show a point** | |
- | `barStartsAtCenter`     | **bar starts at bottom**   | bar starts at center | |
- | `doAutoReturn`          | auto-return disabled       | **auro-return enabled** | |
- | `autoReturnToCenter`    | auto-returns to bottom     | **auto-returns to center** | Ignored if `doAutoReturn==false`. |
- |                    |           |                               | (defaults indicated with **bold**)  |  
 
 ##### Get touch strip configuration
 ```javascript
@@ -117,6 +105,21 @@ Calling `setTouchStripConfiguration` with no arguments will reset to defaults.
 push2.setTouchStripConfiguration(); // Resets to defaults
 ```
 It is not necessary to handle the callback if you don't care to validate the result.
+
+
+#### Touch strip configuration options
+ | TouchStripConfiguration property | Behavior if false | Behavior if true | Remarks |
+ | ------------------------|----------------------------|------------------|---------|
+ | `LEDsControlledByHost`  | **controlled by push**     | controlled by host | LED values received from the host are ignored if this is set to `false` (default behavior) |
+ | `hostSendsSysex`        | **host sends values**      | host sends sysex | Host sends position values or sysex commands for full control of LEDs. |
+ | `valuesSentAsModWheel`  | **values sent as mod wheel** | values sent as pitch bend | Controls whether lights are controlled by sending pitch bend or mod wheel messages. Ignored if `hostSendsSysex == true`. |
+ | `LEDsShowPoint`         | LEDs show a bar            | **LEDs show a point** | |
+ | `barStartsAtCenter`     | **bar starts at bottom**   | bar starts at center | |
+ | `doAutoReturn`          | auto-return disabled       | **auro-return enabled** | |
+ | `autoReturnToCenter`    | auto-returns to bottom     | **auto-returns to center** | Ignored if `doAutoReturn==false`. |
+ |                    |           |                               | (defaults indicated with **bold**)  |  
+
+ See [Touch Strip Configuration Documentation](/doc/push2_reference.md#touch-strip-configuration) for details on how they work.
 
 
 ### Control display backlight
