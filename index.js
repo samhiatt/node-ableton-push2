@@ -161,7 +161,6 @@ module.exports = {
       }
     }
     getDeviceInfo(){
-      var self = this;
       return new Promise(function (resolve, reject) {
         self.midi.on('sysex',function handler(msg) {
           if (msg.bytes[4]==2) { // device identity reply
@@ -178,12 +177,10 @@ module.exports = {
       });
     }
     getTouchStripConfiguration() {
-      return new Promise((resolve,reject)=>{
-        this._sendSysexRequest([0x18]).then((resp)=>{
-          this.touchStripConfiguration = new TouchStripConfiguration(resp.bytes[7]);
-          this.emit('received_touchStripConfiguration',this.touchStripConfiguration);
-          resolve(this.touchStripConfiguration);
-        }).catch((err)=>reject(err));
+      return this._getParamPromise(0x18,(resp,resolve)=>{
+        this.touchStripConfiguration = new TouchStripConfiguration(resp.bytes[7]);
+        this.emit('received_touchStripConfiguration',this.touchStripConfiguration);
+        resolve(this.touchStripConfiguration);
       });
     }
     setTouchStripConfiguration(val){
@@ -204,7 +201,7 @@ module.exports = {
         if (typeof val=='undefined') sendCommand();
         else if (typeof val == 'object') {
           // If an object is provided, will first get current config and then merge in options.
-          this.getTouchStripConfiguration().then((conf)=>{
+          return this.getTouchStripConfiguration().then((conf)=>{
             _touchStripConfigurationProperties.forEach((key)=> {
               if (typeof val[key]!='undefined') conf[key]=val[key];
             });
@@ -227,18 +224,32 @@ module.exports = {
           bytes.push( ((i!=15)?(brightnessArray[i*2+1])<<3 : 0)  | (brightnessArray[i*2]) );
         }
         // Lets make sure the set 'LEDsControlledByHost' and 'hostSendsSysex' to enable control.
-        this.setTouchStripConfiguration({'LEDsControlledByHost':1,'hostSendsSysex':1}).then((conf)=>{
+        return this.setTouchStripConfiguration({'LEDsControlledByHost':1,'hostSendsSysex':1}).then((conf)=>{
           this._sendSysexCommand(bytes); // No need to wait for response
           resolve();
         }).catch(reject);
       });
     }
     getDisplayBrightness(){
-      return new Promise((resolve,reject)=>{
-        this._sendSysexRequest([9]).then((resp)=>{
-          resolve(bit7array2dec(resp.bytes.slice(7,9)));
-        }).catch((err)=>reject(err));
+      return this._getParamPromise(0x09,(resp,resolve)=>{
+        resolve(bit7array2dec(resp.bytes.slice(7,9)));
       });
+    }
+    getLEDColorPaletteEntry(paletteIdx){
+      var decode = (lower7bits,higher1bit)=>{
+        return lower7bits | higher1bit << 8;
+      };
+      return this._getParamPromise([0x04,paletteIdx],(resp,resolve)=>{
+        resolve({
+          r:decode(resp.bytes[8],resp.bytes[9]),
+          g:decode(resp.bytes[10],resp.bytes[11]),
+          b:decode(resp.bytes[12],resp.bytes[13]),
+          a:decode(resp.bytes[12],resp.bytes[13]),
+        });
+      });
+    }
+    reapplyColorPalette(){
+      this._sendSysexCommand(0x05);
     }
     setDisplayBrightness(val){
       // Return a Promise which resolves after verifying that the value was set.
@@ -249,13 +260,22 @@ module.exports = {
         this.getDisplayBrightness().then((newVal)=>{
           if (newVal == val) resolve();
           else reject(new Error("Tried setting display brightness, but new value doesn't match."));
-        }).catch((err)=>reject(err));
+        }).catch(reject);
+      });
+    }
+    _getParamPromise(commandId,responseHandler){
+      return new Promise((resolve,reject)=>{
+        if (typeof commandId=='number') commandId = [commandId];
+        return this._sendSysexRequest(commandId).then((resp)=>{
+          responseHandler(resp,resolve);
+        }).catch(reject);
       });
     }
     _sendSysexCommand(msg){
       // Adds sysex message header and 0xf7 footer, then sends command.
       //[F0 00 21 1D 01 01 ... ... ... F7];
       var a = [0xf0, 0x00, 0x21, 0x1d, 0x01, 0x01 ];
+      if (typeof msg=='number') msg = [msg];
       msg.forEach((v)=>a.push(v));
       a.push(0xf7);
       // console.log("Sending sysex command:",a);
