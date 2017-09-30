@@ -198,7 +198,7 @@ module.exports = {
           this.touchStripConfiguration = new TouchStripConfiguration(resp.bytes[7]);
           this.emit('received_touchStripConfiguration',this.touchStripConfiguration);
           resolve(this.touchStripConfiguration);
-        }).catch(reject);
+        }).catch((err)=>reject(err));
       });
     }
     setTouchStripConfiguration(val){
@@ -206,7 +206,7 @@ module.exports = {
       return new Promise((resolve,reject)=>{
         var sendCommand = (encoded)=>{
           var conf = new TouchStripConfiguration(encoded);
-          // console.log("Setting touch strip configuration to:",conf);
+          console.log("Setting touch strip configuration to:",conf);
           this._sendSysexCommand([0x17,encoded]);
           this.getTouchStripConfiguration().then((currentConf)=>{ // Validate response
             _touchStripConfigurationProperties.forEach((prop)=>{
@@ -231,11 +231,33 @@ module.exports = {
         else reject(new Error("Expected val to be either a number or an object."));
       });
     }
+    setTouchStripLEDs(brightnessArray){
+      // Uses sysex message to set LEDs.
+      // brightnessArray should be an array of 31 brightness values from 0-7 where
+      // brightnessArray[0] is the bottom LED, brightnessArray[30] is the top LED.
+      if (brightnessArray.length!=31) throw new Error("Expected brightnessArray of length 31");
+      return new Promise((resolve,reject)=>{
+        var bytes = [0x19];
+        for (let i=0; i<16; i++){
+          console.log( (i!=15)? brightnessArray[i*2+1]: 0, ((i!=15)?(brightnessArray[i*2+1])<<3 : 0).toString(2) , brightnessArray[i*2].toString(2));
+          console.log((((i!=15)?(brightnessArray[i*2+1])<<3 : 0)  | (brightnessArray[i*2])).toString(2));
+          bytes.push( ((i!=15)?(brightnessArray[i*2+1])<<3 : 0)  | (brightnessArray[i*2]) );
+        }
+        // Lets make sure the set 'LEDsControlledByHost' and 'hostSendsSysex' to enable control.
+        this.setTouchStripConfiguration({'LEDsControlledByHost':1,'hostSendsSysex':1}).then((conf)=>{
+          this._sendSysexCommand(bytes); // No need to wait for response
+          resolve();
+        }).catch(reject);
+      });
+    }
+    setTouchStripMode(mode='default'){
+      // NYI
+    }
     getDisplayBrightness(){
       return new Promise((resolve,reject)=>{
         this._sendSysexRequest([9]).then((resp)=>{
           resolve(bit7array2dec(resp.bytes.slice(7,9)));
-        }).catch(reject);
+        }).catch((err)=>reject(err));
       });
     }
     setDisplayBrightness(val){
@@ -247,7 +269,7 @@ module.exports = {
         this.getDisplayBrightness().then((newVal)=>{
           if (newVal == val) resolve();
           else reject(new Error("Tried setting display brightness, but new value doesn't match."));
-        }).catch(reject);
+        }).catch((err)=>reject(err));
       });
     }
     _sendSysexCommand(msg){
@@ -256,7 +278,7 @@ module.exports = {
       var a = [0xf0, 0x00, 0x21, 0x1d, 0x01, 0x01 ];
       msg.forEach((v)=>a.push(v));
       a.push(0xf7);
-      // console.log("Sending sysex command:",a);
+      console.log("Sending sysex command:",a);
       this.midi.send('sysex',a);
     }
     _sendSysexRequest(msg){
@@ -265,7 +287,7 @@ module.exports = {
         var commandId = msg[0];
         setTimeout(()=>{ // reject if no usable response after 1 second.
           reject(new Error("No usable sysex reponse message received."));
-        },1000);
+        },10000);
         this.midi.on('sysex',function handler(resp) {
           if (resp.bytes[6]==commandId){ // This response matches our request.
             this.midi.removeListener('sysex',handler);
