@@ -85,7 +85,7 @@ class TouchStripConfiguration {
       barStartsAtCenter: (num != null)? (num>>4)%2 : 0, // default: bar starts at bottom
       LEDsShowPoint: (num != null)? (num>>3)%2 : 1, // default: LEDs show point
       valuesSentAsModWheel: (num != null)? (num>>2)%2 : 0, // dafault: values sent as pitch bend
-      hostSendsSysex: (num != null)? (num>>1)%2 : 0, // default: Host sends values (ignored if LEDsControlledByPushOrHost==1)
+      hostSendsSysex: (num != null)? (num>>1)%2 : 0, // default: Host sends values
       LEDsControlledByHost: (num != null)? (num)%2 : 0, // default: Push 2 controls touch strip LEDs
     };
   }
@@ -114,7 +114,8 @@ module.exports = {
       this.deviceIdentity = null;
       this.touchStripConfiguration = null;
       port = port.toLowerCase();
-      if (port !='live' && port != 'user') throw new Error("Expected port to be either 'user' or 'live'.");
+      if (port !='live' && port != 'user')
+        throw new Error("Expected port to be either 'user' or 'live'.");
       port = port[0].toUpperCase() + port.slice(1); // Capitalize the first letter
       this.portName = `Ableton Push 2 ${port} Port`;
       this.midi = new Midi(this.portName,virtual);
@@ -193,7 +194,8 @@ module.exports = {
           this.getTouchStripConfiguration().then((currentConf)=>{ // Validate response
             _touchStripConfigurationProperties.forEach((prop)=>{
               if (conf[prop]!=currentConf[prop])
-                reject(new Error("Current config does not match the config just attempted to set. Current config is:",currentConf));
+                reject(new Error("Current config does not match the config just attempted to set."+
+                " Current config is:",currentConf));
             });
             resolve(conf);
           }).catch(reject);
@@ -231,8 +233,8 @@ module.exports = {
       });
     }
     getGlobalLEDBrightness(){
-      return this._getParamPromise(0x07,(resp,resolve)=>{
-        resolve(resp.bytes);
+      return this._getParamPromise(0x07,(resp,next)=>{
+        next(resp.bytes);
       });
     }
     setGlobalLEDBrightness(val){
@@ -241,16 +243,16 @@ module.exports = {
       this._sendSysexCommand(bytes);
     }
     getDisplayBrightness(){
-      return this._getParamPromise(0x09,(resp,resolve)=>{
-        resolve(bit7array2dec(resp.bytes.slice(7,9)));
+      return this._getParamPromise(0x09,(resp,next)=>{
+        next(bit7array2dec(resp.bytes.slice(7,9)));
       });
     }
     getLEDColorPaletteEntry(paletteIdx){
       var decode = (lower7bits,higher1bit)=>{
         return lower7bits | higher1bit << 8;
       };
-      return this._getParamPromise([0x04,paletteIdx],(resp,resolve)=>{
-        resolve({
+      return this._getParamPromise([0x04,paletteIdx],(resp,next)=>{
+        next({
           r:decode(resp.bytes[8],resp.bytes[9]),
           g:decode(resp.bytes[10],resp.bytes[11]),
           b:decode(resp.bytes[12],resp.bytes[13]),
@@ -261,6 +263,17 @@ module.exports = {
     reapplyColorPalette(){
       // trigger palette reapplication
       this._sendSysexCommand(0x05);
+    }
+    setAftertouchMode(mode){
+      mode = mode.toLowerCase();
+      if (mode=='channel') return this._sendCommandAndValidate([0x1e, 0]);
+      else if (mode=='poly') return this._sendCommandAndValidate([0x1e, 1]);
+      else throw new Error("Expected mode to be 'poly' or 'aftertouch'.");
+    }
+    getAftertouchMode(){
+      return this._getParamPromise([0x1f],(resp,next)=>{
+        next(resp.bytes[7]==0?'channel':'poly');
+      });
     }
     setDisplayBrightness(val){
       // Return a Promise which resolves after verifying that the value was set.
@@ -280,6 +293,16 @@ module.exports = {
         return this._sendSysexRequest(commandId).then((resp)=>{
           responseHandler(resp,resolve);
         }).catch(reject);
+      });
+    }
+    _sendCommandAndValidate(command){ // Sends a command, then validates
+      this._sendSysexCommand(command);
+      // This relies on the assumption that the command id for 'get'
+      // commands is the 'set' commandId +1
+      return this._getParamPromise(command[0]+1,(resp,next)=>{
+        // resp.bytes.slice(7,-1) should equal command.slice(1)
+        var bytesValid = command.slice(1).map((v,i)=>v==resp.bytes[i+7]);
+        next(!bytesValid.includes(false));
       });
     }
     _sendSysexCommand(msg){
@@ -303,6 +326,8 @@ module.exports = {
           if (resp.bytes[6]==commandId){ // This response matches our request.
             this.midi.removeListener('sysex',handler);
             resolve(resp);
+          } else {
+            console.warn("Received sysex message, but command id didn't match.", resp);
           }
         }.bind(this));
         this._sendSysexCommand(msg);
