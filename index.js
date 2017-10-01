@@ -227,7 +227,8 @@ module.exports = {
         }
         // Lets make sure the set 'LEDsControlledByHost' and 'hostSendsSysex' to enable control.
         return this.setTouchStripConfiguration({'LEDsControlledByHost':1,'hostSendsSysex':1}).then((conf)=>{
-          this._sendSysexCommand(bytes); // No need to wait for response
+          // No need to wait for response since there is no "getTouchStripLEDs" command
+          this._sendSysexCommand(bytes);
           resolve();
         }).catch(reject);
       });
@@ -297,7 +298,10 @@ module.exports = {
       return this._getParamPromise(command[0]+1,(resp,next)=>{
         // resp.bytes.slice(7,-1) should equal command.slice(1)
         var bytesValid = command.slice(1).map((v,i)=>v==resp.bytes[i+7]);
-        next(!bytesValid.includes(false));
+        if (bytesValid.includes(false))
+          throw new Error(`Error validating setting. Sent ${command.slice(1)},`+
+            ` but setting is currently ${resp.bytes.slice(7,-1)}.`);
+        else next();
       });
     }
     _sendSysexCommand(msg){
