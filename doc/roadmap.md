@@ -11,7 +11,7 @@
 |----------|------|-----------|-----------|------------|-------|
 |`0x03` |   |   | |Set LED Color Palette Entry  |RGB LED Color Processing
 |`0x04` |   | x |yes|Get LED Color Palette Entry | RGB LED Color Processing
-|`0x05` | x |   | |Reapply Color Palette | RGB LED Color Processing
+|`0x05` | x | x | |Reapply Color Palette | RGB LED Color Processing
 |`0x06` | x | x | |Set LED Brightness   |Global LED Brightness
 |`0x07` | x | x |yes|Get LED Brightness | Global LED Brightness
 |`0x08` | x | x | |Set Display Brightness |Display Backlight
