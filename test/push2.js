@@ -126,4 +126,19 @@ describe('Push2',()=>{
       return push2.reapplyColorPalette();
     });
   });
+  describe('getStatistics',()=>{
+    it('should get device statistice.',()=>{
+      return push2.getStatistics().then((resp)=>{
+        expect(resp).to.have.property('powerStatus');
+        expect(resp).to.have.property('runId',1);
+      });
+    });
+  });
+  describe('getLEDColorPaletteEntry',()=>{
+    it('should get device statistice.',()=>{
+      return push2.getLEDColorPaletteEntry().then((resp)=>{
+        console.log(resp);
+      });
+    });
+  });
 });

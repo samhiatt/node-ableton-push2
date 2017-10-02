@@ -24,7 +24,7 @@
 |`0x17` | x | x | |Set Touch Strip Configuration  |Touch Strip
 |`0x18` | x | x |yes|Get Touch Strip Configuration|Touch Strip
 |`0x19` | x | x | |Set Touch Strip LEDs|Touch Strip
-|`0x1A` |   |   |yes|Request Statistics |Statistics
+|`0x1A` | x | x |yes|Request Statistics |Statistics
 |`0x1B` |   |   | |Set Pad Parameters |Pad Parameters
 |`0x1D` |   |   |yes|Read 400g Pad Values From Flash |Individual Pad Calibration
 |`0x1E` | x | x | |Set Aftertouch Mode |Aftertouch
