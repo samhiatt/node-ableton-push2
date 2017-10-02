@@ -116,7 +116,7 @@ describe('Push2',()=>{
         });
     });
   });
-  describe('getMidiMode',()=>{
+  describe('setMidiMode',()=>{
     it('should set midi mode to "user".',()=>{
       return push2.setMidiMode('user');
     });
