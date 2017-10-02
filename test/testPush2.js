@@ -1,18 +1,27 @@
 var ableton = require('../');
 var expect = require('chai').expect;
 
+function getVirtualPush(){
+  var push2 = new ableton.Push2('user',virtual=true);
+  var responder = new ableton.VirtualResponder('user');
+  responder.listen();
+  return push2;
+}
+
 describe('Push2',()=>{
   var push2 = null;
   var isVirtual;
-  try { // Try first connecting to actual Push 2
+  if (process.env.NODE_ENV && process.env.NODE_ENV.toLowerCase()=='test') {
+    console.log("NODE_ENV set to 'test'. Running tests against VirtualResponder.");
+    push2 = getVirtualPush();
+  }
+  if (!push2) try { // Try first connecting to actual Push 2
     push2 = new ableton.Push2('user');
     console.log("Running tests against connected Push 2.");
   } catch(e) {
     if (e.message.startsWith('No MIDI input found')) {
       console.log("No Ableton Push 2 found. Running tests against VirtualResponder.");
-      push2 = new ableton.Push2('user',virtual=true);
-      var responder = new ableton.VirtualResponder('user');
-      responder.listen();
+      push2 = getVirtualPush();
     }
   }
   describe('getDeviceId',()=>{

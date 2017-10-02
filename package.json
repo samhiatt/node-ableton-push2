@@ -4,7 +4,7 @@
   "description": "NodeJs library for communicating with Ableton Push 2 over MIDI.",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test"
+    "test": "NODE_ENV=test ./node_modules/mocha/bin/mocha test"
   },
   "repository": {
     "type": "git",
