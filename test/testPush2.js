@@ -15,9 +15,9 @@ describe('Push2',()=>{
       responder.listen();
     }
   }
-  describe('getDeviceInfo',()=>{
+  describe('getDeviceId',()=>{
     it('should get device identity response',()=>{
-      return push2.getDeviceInfo().then((resp)=>{
+      return push2.getDeviceId().then((resp)=>{
         expect(resp).to.have.property('firmwareVersion','1.0');
         expect(resp).to.have.property('softwareBuild',60);
         expect(resp).to.have.property('boardRevision',1);
