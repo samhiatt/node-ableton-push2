@@ -10,7 +10,7 @@
 |Command ID|Implemented|Test Implemented|Sends Reply|Command Name|[Chapter](https://github.com/Ableton/push-interface/blob/master/doc/AbletonPush2MIDIDisplayInterface.asc)|
 |----------|------|-----------|-----------|------------|-------|
 |`0x03` |   |   | |Set LED Color Palette Entry  |RGB LED Color Processing
-|`0x04` |   | x |yes|Get LED Color Palette Entry | RGB LED Color Processing
+|`0x04` | x | x |yes|Get LED Color Palette Entry | RGB LED Color Processing
 |`0x05` | x | x | |Reapply Color Palette | RGB LED Color Processing
 |`0x06` | x | x | |Set LED Brightness   |Global LED Brightness
 |`0x07` | x | x |yes|Get LED Brightness | Global LED Brightness
@@ -23,7 +23,7 @@
 |`0x15` |   |   |yes|Get LED White Balance|White Balance
 |`0x17` | x | x | |Set Touch Strip Configuration  |Touch Strip
 |`0x18` | x | x |yes|Get Touch Strip Configuration|Touch Strip
-|`0x19` | x | x | |Set Touch Strip LEDs|Touch Strip
+|`0x19` | x |   | |Set Touch Strip LEDs|Touch Strip
 |`0x1A` | x | x |yes|Request Statistics |Statistics
 |`0x1B` |   |   | |Set Pad Parameters |Pad Parameters
 |`0x1D` |   |   |yes|Read 400g Pad Values From Flash |Individual Pad Calibration

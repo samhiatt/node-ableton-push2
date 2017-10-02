@@ -136,8 +136,11 @@ describe('Push2',()=>{
   });
   describe('getLEDColorPaletteEntry',()=>{
     it('should get device statistice.',()=>{
-      return push2.getLEDColorPaletteEntry().then((resp)=>{
-        console.log(resp);
+      return push2.getLEDColorPaletteEntry(255).then((resp)=>{
+        expect(resp).to.have.property('r',255);
+        expect(resp).to.have.property('g',0);
+        expect(resp).to.have.property('b',0);
+        expect(resp).to.have.property('a',0);
       });
     });
   });
