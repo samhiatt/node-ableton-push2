@@ -43,9 +43,12 @@ describe('Push2',()=>{
     });
   });
   describe('getTouchStripConfiguration/setTouchStripConfiguration',()=>{
-    it('should set touch strip configuration to all 0s',()=>{
-      return push2.setTouchStripConfiguration(0).then(()=>{
-        push2.getTouchStripConfiguration().then((conf)=>{
+    it('should set touch strip configuration to all 0s, '+
+        'then turn on "LEDsControlledByHost", then set back to original setting.',()=>{
+      var origSetting=null;
+      return push2.getTouchStripConfiguration().then((conf)=>{
+        origSetting = conf.getByteCode();
+        return push2.setTouchStripConfiguration(0).then((conf)=>{
           expect(conf).to.have.property('LEDsControlledByHost',0);
           expect(conf).to.have.property('hostSendsSysex',0);
           expect(conf).to.have.property('valuesSentAsModWheel',0);
@@ -54,26 +57,31 @@ describe('Push2',()=>{
           expect(conf).to.have.property('doAutoReturn',0);
           expect(conf).to.have.property('autoReturnToCenter',0);
         });
-      });
-    });
-  });
-  describe('setTouchStripConfiguration to default',()=>{
-    it('should set touch strip to default (104) then get and validate.',()=>{
-      return push2.setTouchStripConfiguration(104).then(()=>{
-        push2.getTouchStripConfiguration().then((conf)=>{
-          expect(conf).to.have.property('LEDsControlledByHost',0);
+      }).catch((err)=>{
+        throw new Error("Error setting touch strip configuration to 0s.");
+      }).then(()=>{
+        return push2.setTouchStripConfiguration({'LEDsControlledByHost':1}).then((conf)=>{
+          expect(conf).to.have.property('LEDsControlledByHost',1);
           expect(conf).to.have.property('hostSendsSysex',0);
           expect(conf).to.have.property('valuesSentAsModWheel',0);
-          expect(conf).to.have.property('LEDsShowPoint',1);
+          expect(conf).to.have.property('LEDsShowPoint',0);
           expect(conf).to.have.property('barStartsAtCenter',0);
-          expect(conf).to.have.property('doAutoReturn',1);
-          expect(conf).to.have.property('autoReturnToCenter',1);
+          expect(conf).to.have.property('doAutoReturn',0);
+          expect(conf).to.have.property('autoReturnToCenter',0);
         });
+      }).catch((err)=>{
+        throw new Error("Error setting touch strip back to original setting.");
+      }).then(()=>{
+        return push2.setTouchStripConfiguration(origSetting).then((conf)=>{
+          expect(conf.getByteCode()).to.equal(origSetting);
+        });
+      }).catch((err)=>{
+        throw new Error("Error setting touch strip back to original setting.");
       });
     });
   });
   describe('getGlobalLEDBrightness/setGlobalLEDBrightness',()=>{
-    it('should get global LED brightness, set it to 137, '+
+    it('should get display brightness, set it to 37, '+
         'validate, then set it back to original value', ()=>{
       var origVal = null;
       return push2.getGlobalLEDBrightness().then((val)=>{
@@ -81,14 +89,13 @@ describe('Push2',()=>{
           origVal = val;
           return this;
         }).then(()=>{
-          return push2.setGlobalLEDBrightness(137);
+          return push2.setGlobalLEDBrightness(37);
         }).then(()=>{
           return push2.getGlobalLEDBrightness();
         }).then((newVal)=>{
-          expect(newVal).to.equal(137);
+          expect(newVal).to.equal(37);
           return push2.setGlobalLEDBrightness(origVal);
-        })
-      ;
+        });
     });
   });
   describe('getDisplayBrightness/setDisplayBrightness',()=>{
@@ -112,6 +119,11 @@ describe('Push2',()=>{
   describe('getMidiMode',()=>{
     it('should set midi mode to "user".',()=>{
       return push2.setMidiMode('user');
+    });
+  });
+  describe('reapplyColorPalette',()=>{
+    it('should send reapply color palette command.',()=>{
+      return push2.reapplyColorPalette();
     });
   });
 });
