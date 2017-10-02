@@ -4,7 +4,7 @@
   "description": "NodeJs library for communicating with Ableton Push 2 over MIDI.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha test"
   },
   "repository": {
     "type": "git",
@@ -13,6 +13,12 @@
   "author": "Sam Hiatt [samhiatt@gmail.com]",
   "license": "ISC",
   "dependencies": {
-    "easymidi": "^0.0.4"
+    "deep-equal": "^1.0.1",
+    "easymidi": "^0.0.4",
+    "midi-stream": "^1.3.2"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^3.5.3"
   }
 }
