@@ -106,10 +106,12 @@ describe('Push2',()=>{
         }).then((newVal)=>{
           expect(newVal).to.equal(137);
           return push2.setDisplayBrightness(origVal);
-        // }).catch((err)=>{
-        //   console.log("Got err");
-      })
-      ;
+        });
+    });
+  });
+  describe('getMidiMode',()=>{
+    it('should set midi mode to "user".',()=>{
+      return push2.setMidiMode('user');
     });
   });
 });
