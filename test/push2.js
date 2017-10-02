@@ -127,7 +127,7 @@ describe('Push2',()=>{
     });
   });
   describe('getStatistics',()=>{
-    it('should get device statistice.',()=>{
+    it('should get device statistics.',()=>{
       return push2.getStatistics().then((resp)=>{
         expect(resp).to.have.property('powerStatus');
         expect(resp).to.have.property('runId',1);
@@ -135,8 +135,8 @@ describe('Push2',()=>{
     });
   });
   describe('getLEDColorPaletteEntry',()=>{
-    it('should get device statistice.',()=>{
-      return push2.getLEDColorPaletteEntry(255).then((resp)=>{
+    it('should get color palette entry for color idx 127 (red).',()=>{
+      return push2.getLEDColorPaletteEntry(127).then((resp)=>{
         expect(resp).to.have.property('r',255);
         expect(resp).to.have.property('g',0);
         expect(resp).to.have.property('b',0);
