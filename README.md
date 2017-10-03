@@ -1,10 +1,13 @@
 # NodeJs MIDI control library for Ableton Push 2
 
-Parses MIDI messages from Ableton Push 2.  
-Includes MIDI mapping of buttons for Push 2.
+Control your Ableton Push 2 with JavaScript!  
 
+This project implements the functions described in the [Ableton Push 2 MIDI And Display Interface Manual](https://github.com/Ableton/push-interface/blob/master/doc/AbletonPush2MIDIDisplayInterface.asc).  
+See the command list in [roadmap.md](/doc/roadmap.md) for a list of functions and an indication
+of if they have been implemented yet or not.
 
-Uses [easymidi](https://github.com/dinchak/node-easymidi) to parse and send MIDI messages to Push2.
+[Auto-generated API documentation](https://samhiatt.github.io/node-ableton-push2/modules/_lib_push2_.html)
+(thanks to [typedoc](https://github.com/TypeStrong/typedoc).)
 
 See [midi.md](/doc/midi.md) for documentation on access to low-level MIDI messages.
 
@@ -108,17 +111,6 @@ It is not necessary to handle the callback if you don't care to validate the res
 
 
 #### Touch strip configuration options
- | TouchStripConfiguration property | Behavior if false | Behavior if true | Remarks |
- | ------------------------|----------------------------|------------------|---------|
- | `LEDsControlledByHost`  | **controlled by push**     | controlled by host | LED values received from the host are ignored if this is set to `false` (default behavior) |
- | `hostSendsSysex`        | **host sends values**      | host sends sysex | Host sends position values or sysex commands for full control of LEDs. |
- | `valuesSentAsModWheel`  | **values sent as mod wheel** | values sent as pitch bend | Controls whether lights are controlled by sending pitch bend or mod wheel messages. Ignored if `hostSendsSysex == true`. |
- | `LEDsShowPoint`         | LEDs show a bar            | **LEDs show a point** | |
- | `barStartsAtCenter`     | **bar starts at bottom**   | bar starts at center | |
- | `doAutoReturn`          | auto-return disabled       | **auro-return enabled** | |
- | `autoReturnToCenter`    | auto-returns to bottom     | **auto-returns to center** | Ignored if `doAutoReturn==false`. |
- |                    |           |                               | (defaults indicated with **bold**)  |  
-
  See [Touch Strip Configuration Documentation](/doc/push2_reference.md#touch-strip-configuration) for details on how they work.
 
 
@@ -143,6 +135,9 @@ push2.setDisplayBrightness(200)
 ```
 
 #### Monitor raw MIDI Messages
+Events from [easymidi](https://github.com/dinchak/node-easymidi) are accessible from the
+Push2.midi property.  
+
 See [midi.md](/doc/midi.md) for more on low-level access to MIDI messages.
 ```javascript
 // Listen to all MIDI messages
@@ -189,6 +184,5 @@ Ableton Push 2 User Port { channel: 0, controller: 85, value: 0, _type: 'cc' }
 
 
 ## References
-
 [Summary of MIDI Messages](https://www.midi.org/specifications/item/table-1-summary-of-midi-message)  
 [Ableton Push 2 MIDI And Display Interface Manual](https://github.com/Ableton/push-interface/blob/master/doc/AbletonPush2MIDIDisplayInterface.asc)  
