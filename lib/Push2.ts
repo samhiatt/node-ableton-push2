@@ -44,7 +44,7 @@ export class Midi extends EventEmitter {
 }
 
 interface SysexResponse{
-  bytes:[number];
+  bytes:number[];
 }
 export interface Push2 {
   isVirtual:boolean;

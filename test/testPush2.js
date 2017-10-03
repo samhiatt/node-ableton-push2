@@ -1,5 +1,6 @@
 var ableton = require('../dist');
 var expect = require('chai').expect;
+var VirtualResponder = require('../dist/lib/VirtualResponder');
 
 describe('Push2',()=>{
   describe('constructor',()=>{
@@ -22,7 +23,7 @@ describe('Push2',()=>{
     before(()=>{
       function getVirtualPush(){
         var push2 = new ableton.Push2('user',true);
-        var responder = new ableton.VirtualResponder('user');
+        var responder = new VirtualResponder('user');
         responder.listen();
         return push2;
       }
