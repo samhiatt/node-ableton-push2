@@ -15,6 +15,9 @@ var easymidi = require('easymidi');
 var Enum = require('enum');
 var push2keymap = require('./Push2Keymap');
 var events_1 = require("events");
+var TouchStripConfiguration_1 = require("./TouchStripConfiguration");
+var DeviceIdentity_1 = require("./DeviceIdentity");
+var DeviceStatistics_1 = require("./DeviceStatistics");
 // Make our Enums easily printable
 Enum.prototype.toString = function () {
     return this.enums.map(function (k) { return k.key; }).toString();
@@ -38,109 +41,20 @@ var Midi = /** @class */ (function (_super) {
     Midi.prototype.send = function (messageType, message) {
         this._output.send(messageType, message);
     };
-    // removeAllListeners(){
-    //   this._input.removeAllListeners();
-    // }
+    Midi.prototype.removeAllListeners = function (event) {
+        this._input.removeAllListeners(event);
+        return this;
+    };
     Midi.prototype.close = function () {
         this._input.close();
         this._output.close();
     };
     return Midi;
 }(events_1.EventEmitter));
-function bit7array2dec(bit7array) {
-    // Decodes an array of 7-bit values ordered from LSB to MSB.
-    var dec = 0;
-    bit7array.forEach(function (v, i) { return dec |= v << (i * 7); });
-    return dec;
-}
-function dec2bit7array(num) {
-    // Encodes a number as an array of 7-bit numbers from LSB to MSB.
-    if (num < 0 || typeof num != 'number')
-        throw new Error("Only positive numbers supported.");
-    var p = Math.floor(num.toString(2).length / 7);
-    var res = [];
-    while (p >= 0) {
-        res.push((num >> p * 7) & 0x7f);
-        p -= 1;
-    }
-    return res.reverse();
-}
-// https://github.com/Ableton/push-interface/blob/master/doc/AbletonPush2MIDIDisplayInterface.asc#210-touch-strip
-var _touchStripConfigurationProperties = [
-    'LEDsControlledByHost',
-    'hostSendsSysex',
-    'valuesSentAsModWheel',
-    'LEDsShowPoint',
-    'barStartsAtCenter',
-    'doAutoReturn',
-    'autoReturnToCenter',
-];
-var TouchStripConfiguration = /** @class */ (function () {
-    function TouchStripConfiguration(val) {
-        var _this = this;
-        // can be instantiated with either a 7-bit valber to be decoded, or
-        // val can be an object with options to be merged with defaults.
-        var defaults = this._parseNum(null);
-        _touchStripConfigurationProperties.forEach(function (prop) { return _this[prop] = defaults[prop]; });
-        if (typeof val == 'undefined') {
-            defaults = this._parseNum(null);
-        }
-        else if (typeof val == 'object') {
-            defaults = val;
-        }
-        else if (typeof val == 'number') {
-            defaults = this._parseNum(val);
-        }
-        _touchStripConfigurationProperties.forEach(function (key) {
-            _this[key] = defaults[key];
-        });
-    }
-    TouchStripConfiguration.prototype.getByteCode = function () {
-        var _this = this;
-        var res = 0;
-        _touchStripConfigurationProperties.forEach(function (key, i) {
-            res |= _this[key] << (i);
-        });
-        return res;
-    };
-    TouchStripConfiguration.prototype._parseNum = function (num) {
-        if (num === void 0) { num = null; }
-        // if num is null, will return default options
-        return {
-            autoReturnToCenter: (num != null) ? (num >> 6) % 2 : 1,
-            doAutoReturn: (num != null) ? (num >> 5) % 2 : 1,
-            barStartsAtCenter: (num != null) ? (num >> 4) % 2 : 0,
-            LEDsShowPoint: (num != null) ? (num >> 3) % 2 : 1,
-            valuesSentAsModWheel: (num != null) ? (num >> 2) % 2 : 0,
-            hostSendsSysex: (num != null) ? (num >> 1) % 2 : 0,
-            LEDsControlledByHost: (num != null) ? (num) % 2 : 0,
-        };
-    };
-    return TouchStripConfiguration;
-}());
-var DeviceIdentity = /** @class */ (function () {
-    function DeviceIdentity(msg) {
-        this.firmwareVersion = msg[12] + '.' + msg[13];
-        // Parse serial number
-        this.serialNumber = bit7array2dec(msg.slice(16, 21));
-        // parse build number
-        this.softwareBuild = bit7array2dec(msg.slice(14, 16));
-        // device family code
-        this.deviceFamilyCode = bit7array2dec(msg.slice(8, 10));
-        // device family member code
-        this.deviceFamilyMemberCode = bit7array2dec(msg.slice(10, 12));
-        this.boardRevision = msg[21];
-    }
-    return DeviceIdentity;
-}());
-var DeviceStatistics = /** @class */ (function () {
-    function DeviceStatistics(bytes) {
-        this.powerStatus = bytes[7] == 0 ? 'USB' : 'External A/C';
-        this.runId = bytes[8];
-        this.upTime = bit7array2dec(bytes.slice(9, 14));
-    }
-    return DeviceStatistics;
-}());
+exports.Midi = Midi;
+var midiModes = new Enum({ LIVE: 0, USER: 1, BOTH: 2 }, { ignoreCase: true });
+var ports = new Enum({ LIVE: 0, USER: 1 }, { ignoreCase: true });
+var aftertouchModes = new Enum({ CHANNEL: 0, POLY: 1 }, { ignoreCase: true });
 var Push2 = /** @class */ (function (_super) {
     __extends(Push2, _super);
     // Emits Events: 'device-id' deviceId received
@@ -149,13 +63,10 @@ var Push2 = /** @class */ (function (_super) {
         if (virtual === void 0) { virtual = false; }
         var _this = _super.call(this) || this;
         _this.isVirtual = virtual;
-        _this.midiModes = new Enum({ LIVE: 0, USER: 1, BOTH: 2 }, { ignoreCase: true });
-        _this.ports = new Enum({ LIVE: 0, USER: 1 }, { ignoreCase: true });
-        _this.aftertouchModes = new Enum({ CHANNEL: 0, POLY: 1 }, { ignoreCase: true });
         _this.deviceId = null;
         _this.touchStripConfiguration = null;
-        if (!_this.ports.get(port))
-            throw new Error("Expected port to be one of: " + _this.ports + ".");
+        if (!ports.get(port))
+            throw new Error("Expected port to be one of: " + ports + ".");
         port = port[0].toUpperCase() + port.toLowerCase().slice(1); // Capitalize the first letter
         _this.portName = (virtual ? 'Virtual ' : '') + "Ableton Push 2 " + port + " Port";
         _this.midi = new Midi(_this.portName, virtual);
@@ -212,7 +123,7 @@ var Push2 = /** @class */ (function (_super) {
             self.midi.on('sysex', function handler(msg) {
                 if (msg.bytes[4] == 2) {
                     self.midi.removeListener('sysex', handler);
-                    self.deviceId = new DeviceIdentity(msg.bytes);
+                    self.deviceId = new DeviceIdentity_1.DeviceIdentity(msg.bytes);
                     self.emit('device-id', self.deviceId);
                     resolve(self.deviceId);
                 }
@@ -226,7 +137,7 @@ var Push2 = /** @class */ (function (_super) {
     Push2.prototype.getTouchStripConfiguration = function () {
         var _this = this;
         return this._getParamPromise(0x18, function (resp, resolve) {
-            _this.touchStripConfiguration = new TouchStripConfiguration(resp.bytes[7]);
+            _this.touchStripConfiguration = new TouchStripConfiguration_1.TouchStripConfiguration(resp.bytes[7]);
             _this.emit('received_touchStripConfiguration', _this.touchStripConfiguration);
             resolve(_this.touchStripConfiguration);
         });
@@ -236,11 +147,10 @@ var Push2 = /** @class */ (function (_super) {
         // If val is undefined will reset touch strip configuration to default.
         return new Promise(function (resolve, reject) {
             var sendCommand = function (encoded) {
-                var conf = new TouchStripConfiguration(encoded);
-                // console.log("Setting touch strip configuration to:",conf);
+                var conf = new TouchStripConfiguration_1.TouchStripConfiguration(encoded);
                 _this._sendSysexCommand([0x17, conf.getByteCode()]);
                 _this.getTouchStripConfiguration().then(function (currentConf) {
-                    _touchStripConfigurationProperties.forEach(function (prop) {
+                    Object.keys(_this.touchStripConfiguration).forEach(function (prop) {
                         if (conf[prop] != currentConf[prop])
                             reject(new Error("Current config does not match the config just attempted to set." +
                                 " Current config is:" + currentConf));
@@ -249,11 +159,11 @@ var Push2 = /** @class */ (function (_super) {
                 }).catch(reject);
             };
             if (typeof val == 'undefined')
-                sendCommand(null);
+                sendCommand(0);
             else if (typeof val == 'object') {
                 // If an object is provided, will first get current config and then merge in options.
                 return _this.getTouchStripConfiguration().then(function (conf) {
-                    _touchStripConfigurationProperties.forEach(function (key) {
+                    Object.keys(_this.touchStripConfiguration).forEach(function (key) {
                         if (typeof val[key] != 'undefined')
                             conf[key] = val[key];
                     });
@@ -301,13 +211,12 @@ var Push2 = /** @class */ (function (_super) {
         // return this._sendSysexCommand(bytes);
     };
     Push2.prototype.setMidiMode = function (mode) {
-        var _this = this;
-        if (!this.midiModes.isDefined(mode))
-            throw new Error("Expected mode to be one of: " + this.midiModes + ".");
-        this._sendSysexRequest([0x0a, this.midiModes.get(mode)]).then(function (resp) {
-            if (resp.bytes[7] != _this.midiModes.get(mode))
+        if (!midiModes.isDefined(mode))
+            throw new Error("Expected mode to be one of: " + midiModes + ".");
+        this._sendSysexRequest([0x0a, midiModes.get(mode)]).then(function (resp) {
+            if (resp.bytes[7] != midiModes.get(mode))
                 throw new Error("Tried to set MIDI mode to ${mode} but responded with " +
-                    "mode ${this.midiModes.get(resp.bytes[7])}");
+                    "mode ${midiModes.get(resp.bytes[7])}");
         });
     };
     Push2.prototype.getDisplayBrightness = function () {
@@ -341,9 +250,9 @@ var Push2 = /** @class */ (function (_super) {
     };
     Push2.prototype.setAftertouchMode = function (mode) {
         // mode = mode.toLowerCase();
-        if (!this.aftertouchModes.get(mode))
-            throw new Error("Expected mode to be one of " + this.aftertouchModes + ".");
-        return this._sendCommandAndValidate([0x1e, this.aftertouchModes.get(mode)]);
+        if (!aftertouchModes.get(mode))
+            throw new Error("Expected mode to be one of " + aftertouchModes + ".");
+        return this._sendCommandAndValidate([0x1e, aftertouchModes.get(mode)]);
     };
     Push2.prototype.getAftertouchMode = function () {
         return this._getParamPromise([0x1f], function (resp, next) {
@@ -352,7 +261,7 @@ var Push2 = /** @class */ (function (_super) {
     };
     Push2.prototype.getStatistics = function () {
         return this._getParamPromise([0x1a, 0x01], function (resp, next) {
-            next(new DeviceStatistics(resp.bytes));
+            next(new DeviceStatistics_1.DeviceStatistics(resp.bytes));
         });
     };
     Push2.prototype._getParamPromise = function (commandId, responseHandler) {
@@ -443,4 +352,5 @@ var Push2 = /** @class */ (function (_super) {
     };
     return Push2;
 }(events_1.EventEmitter));
+exports.Push2 = Push2;
 module.exports = Push2;

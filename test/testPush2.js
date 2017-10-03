@@ -80,34 +80,28 @@ describe('Push2',()=>{
         return push2.getTouchStripConfiguration().then((conf)=>{
           origSetting = conf.getByteCode();
           return push2.setTouchStripConfiguration(0).then((conf)=>{
-            expect(conf).to.have.property('LEDsControlledByHost',0);
-            expect(conf).to.have.property('hostSendsSysex',0);
-            expect(conf).to.have.property('valuesSentAsModWheel',0);
-            expect(conf).to.have.property('LEDsShowPoint',0);
-            expect(conf).to.have.property('barStartsAtCenter',0);
-            expect(conf).to.have.property('doAutoReturn',0);
-            expect(conf).to.have.property('autoReturnToCenter',0);
+            expect(conf).to.have.property('LEDsControlledByHost',false);
+            expect(conf).to.have.property('hostSendsSysex',false);
+            expect(conf).to.have.property('valuesSentAsModWheel',false);
+            expect(conf).to.have.property('LEDsShowPoint',false);
+            expect(conf).to.have.property('barStartsAtCenter',false);
+            expect(conf).to.have.property('doAutoReturn',false);
+            expect(conf).to.have.property('autoReturnToCenter',false);
           });
-        }).catch((err)=>{
-          throw new Error("Error setting touch strip configuration to 0s.");
         }).then(()=>{
-          return push2.setTouchStripConfiguration({'LEDsControlledByHost':1}).then((conf)=>{
-            expect(conf).to.have.property('LEDsControlledByHost',1);
-            expect(conf).to.have.property('hostSendsSysex',0);
-            expect(conf).to.have.property('valuesSentAsModWheel',0);
-            expect(conf).to.have.property('LEDsShowPoint',0);
-            expect(conf).to.have.property('barStartsAtCenter',0);
-            expect(conf).to.have.property('doAutoReturn',0);
-            expect(conf).to.have.property('autoReturnToCenter',0);
+          return push2.setTouchStripConfiguration({'LEDsControlledByHost':true}).then((conf)=>{
+            expect(conf).to.have.property('LEDsControlledByHost',true);
+            expect(conf).to.have.property('hostSendsSysex',false);
+            expect(conf).to.have.property('valuesSentAsModWheel',false);
+            expect(conf).to.have.property('LEDsShowPoint',false);
+            expect(conf).to.have.property('barStartsAtCenter',false);
+            expect(conf).to.have.property('doAutoReturn',false);
+            expect(conf).to.have.property('autoReturnToCenter',false);
           });
-        }).catch((err)=>{
-          throw new Error("Error setting touch strip back to original setting.");
         }).then(()=>{
           return push2.setTouchStripConfiguration(origSetting).then((conf)=>{
             expect(conf.getByteCode()).to.equal(origSetting);
           });
-        }).catch((err)=>{
-          throw new Error("Error setting touch strip back to original setting.");
         });
       });
     });
