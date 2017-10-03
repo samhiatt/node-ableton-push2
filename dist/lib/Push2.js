@@ -16,6 +16,9 @@ var events_1 = require("events");
 var TouchStripConfiguration_1 = require("./TouchStripConfiguration");
 var DeviceIdentity_1 = require("./DeviceIdentity");
 var DeviceStatistics_1 = require("./DeviceStatistics");
+/**
+* Access to MIDI events through [easymidi](https://github.com/dinchak/node-easymidi) interface.
+*/
 var Midi = /** @class */ (function (_super) {
     __extends(Midi, _super);
     function Midi(portName, virtual) {
@@ -32,6 +35,10 @@ var Midi = /** @class */ (function (_super) {
         });
         return _this;
     }
+    /**
+    * Send a midi message.
+    * See [midi documentation](doc/midi.md#midi-message-event-types) for message types.
+    */
     Midi.prototype.send = function (messageType, message) {
         this._output.send(messageType, message);
     };
@@ -39,7 +46,11 @@ var Midi = /** @class */ (function (_super) {
         this._input.removeAllListeners(event);
         return this;
     };
+    /**
+    * Remove event listeners and close ports.
+    */
     Midi.prototype.close = function () {
+        this.removeAllListeners();
         this._input.close();
         this._output.close();
     };
@@ -238,11 +249,10 @@ var Push2 = /** @class */ (function (_super) {
     };
     Push2.prototype.setMidiMode = function (mode) {
         if (!MIDIMODES.propertyIsEnumerable(mode))
-            throw new Error("Expected mode to be one of: " + MIDIMODES + ".");
-        this._sendSysexRequest([0x0a, MIDIMODES[mode]]).then(function (resp) {
-            if (MIDIMODES[resp.bytes[7]] != MIDIMODES[mode])
-                throw new Error("Tried to set MIDI mode to ${mode} but responded with " +
-                    "mode ${MIDIMODES[resp.bytes[7]]}");
+            throw new Error("Expected mode to be 'user', 'live', or 'both'.");
+        return this._sendSysexRequest([0x0a, MIDIMODES[mode]]).then(function (resp) {
+            if (MIDIMODES[resp.bytes[7]] != (MIDIMODES[MIDIMODES[mode]]))
+                throw new Error("Tried to set MIDI mode to \"" + mode + "\" but responded with mode \"" + MIDIMODES[resp.bytes[7]] + "\"");
         });
     };
     Push2.prototype.getDisplayBrightness = function () {

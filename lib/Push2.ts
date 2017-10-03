@@ -11,8 +11,11 @@ export interface Midi {
   _output:any;
 }
 
+/**
+* Access to MIDI events through [easymidi](https://github.com/dinchak/node-easymidi) interface.
+*/
 export class Midi extends EventEmitter {
-  constructor(portName='Ableton Push 2 User Port',virtual=false){
+  constructor(portName:string='Ableton Push 2 User Port',virtual:boolean=false){
     super();
     // console.log(`Initializing ${portName}`);
     this._input = new easymidi.Input(portName,virtual);
@@ -23,14 +26,22 @@ export class Midi extends EventEmitter {
       this.emit('message',msg);
     });
   }
-  send(messageType,message){
+  /**
+  * Send a midi message.
+  * See [midi documentation](doc/midi.md#midi-message-event-types) for message types.
+  */
+  send(messageType:string,message:{[t:string]:number}|number[]){
     this._output.send(messageType,message);
   }
   removeAllListeners(event?:string|symbol){
     this._input.removeAllListeners(event);
     return this;
   }
+  /**
+  * Remove event listeners and close ports.
+  */
   close() {
+    this.removeAllListeners();
     this._input.close();
     this._output.close();
   }
@@ -227,11 +238,10 @@ export class Push2 extends EventEmitter {
   }
   setMidiMode(mode){
     if (!MIDIMODES.propertyIsEnumerable(mode))
-      throw new Error(`Expected mode to be one of: ${MIDIMODES}.`);
-    this._sendSysexRequest([0x0a, MIDIMODES[mode]]).then((resp:SysexResponse)=>{
-      if (MIDIMODES[resp.bytes[7]]!=MIDIMODES[mode])
-        throw new Error("Tried to set MIDI mode to ${mode} but responded with "+
-          "mode ${MIDIMODES[resp.bytes[7]]}");
+      throw new Error("Expected mode to be 'user', 'live', or 'both'.");
+    return this._sendSysexRequest([0x0a, MIDIMODES[mode]]).then((resp:SysexResponse)=>{
+      if (MIDIMODES[resp.bytes[7]]!=(MIDIMODES[MIDIMODES[mode]]))  // Workaround typecript compiler error
+        throw new Error(`Tried to set MIDI mode to "${mode}" but responded with mode "${MIDIMODES[resp.bytes[7]]}"`);
     });
   }
   getDisplayBrightness(){

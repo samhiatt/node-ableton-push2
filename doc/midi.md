@@ -75,8 +75,8 @@ push2.midi.on('pitch',console.log);
 ...
 ```
 
-### MIDI Message Reference
-The following table describes the MIDI message types that are supported and the parameters of each:
+### MIDI Message Event Types
+The following table describes the MIDI message event types that are supported and the parameters of each:
 
 | Type               | Parameter          | Parameter        | Parameter      |
 |--------------------|--------------------|------------------|----------------|

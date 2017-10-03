@@ -6,10 +6,22 @@ export interface Midi {
     _input: any;
     _output: any;
 }
+/**
+* Access to MIDI events through [easymidi](https://github.com/dinchak/node-easymidi) interface.
+*/
 export declare class Midi extends EventEmitter {
     constructor(portName?: string, virtual?: boolean);
-    send(messageType: any, message: any): void;
+    /**
+    * Send a midi message.
+    * See [midi documentation](doc/midi.md#midi-message-event-types) for message types.
+    */
+    send(messageType: string, message: {
+        [t: string]: number;
+    } | number[]): void;
     removeAllListeners(event?: string | symbol): this;
+    /**
+    * Remove event listeners and close ports.
+    */
     close(): void;
 }
 export interface Color {
@@ -66,7 +78,7 @@ export declare class Push2 extends EventEmitter {
     setTouchStripLEDs(brightnessArray: any): Promise<{}>;
     getGlobalLEDBrightness(): Promise<{}>;
     setGlobalLEDBrightness(val: any): Promise<{}>;
-    setMidiMode(mode: any): void;
+    setMidiMode(mode: any): Promise<void>;
     getDisplayBrightness(): Promise<{}>;
     setDisplayBrightness(val: any): Promise<{}>;
     getLEDColorPaletteEntry(paletteIdx: number): Promise<{}>;

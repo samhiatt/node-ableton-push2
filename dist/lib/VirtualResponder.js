@@ -67,6 +67,7 @@ var VirtualResponder = /** @class */ (function () {
             else if (deepEqual(msg.slice(0, 7), [240, 0, 33, 29, 1, 1, 10])) {
                 // console.log("Set MIDI mode request received",msg);
                 _this._midiMode = msg[7];
+                _this.midi.write([240, 0, 33, 29, 1, 1, 10, 1, 247]);
             }
             else if (deepEqual(msg.slice(0, 7), [240, 0, 33, 29, 1, 1, 3])) {
                 // console.log("Set color palette entry request received",msg);

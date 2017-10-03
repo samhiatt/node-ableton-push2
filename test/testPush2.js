@@ -74,35 +74,41 @@ describe('Push2',()=>{
         });
       });
     });
+    var origSetting=null;
     describe('getTouchStripConfiguration/setTouchStripConfiguration',()=>{
-      it('should set touch strip configuration to all 0s, '+
-          'then turn on "LEDsControlledByHost", then set back to original setting.',()=>{
-        var origSetting=null;
+      it('should get current touch strip config and save it',()=>{
         return push2.getTouchStripConfiguration().then((conf)=>{
           origSetting = conf.getByteCode();
-          return push2.setTouchStripConfiguration(0).then((conf)=>{
-            expect(conf).to.have.property('LEDsControlledByHost',false);
-            expect(conf).to.have.property('hostSendsSysex',false);
-            expect(conf).to.have.property('valuesSentAsModWheel',false);
-            expect(conf).to.have.property('LEDsShowPoint',false);
-            expect(conf).to.have.property('barStartsAtCenter',false);
-            expect(conf).to.have.property('doAutoReturn',false);
-            expect(conf).to.have.property('autoReturnToCenter',false);
-          });
-        }).then(()=>{
-          return push2.setTouchStripConfiguration({'LEDsControlledByHost':true}).then((conf)=>{
-            expect(conf).to.have.property('LEDsControlledByHost',true);
-            expect(conf).to.have.property('hostSendsSysex',false);
-            expect(conf).to.have.property('valuesSentAsModWheel',false);
-            expect(conf).to.have.property('LEDsShowPoint',false);
-            expect(conf).to.have.property('barStartsAtCenter',false);
-            expect(conf).to.have.property('doAutoReturn',false);
-            expect(conf).to.have.property('autoReturnToCenter',false);
-          });
-        }).then(()=>{
-          return push2.setTouchStripConfiguration(origSetting).then((conf)=>{
-            expect(conf.getByteCode()).to.equal(origSetting);
-          });
+        });
+      });
+      it('should set touch strip configuration to all 0s',()=>{
+        return push2.setTouchStripConfiguration(0).then((conf)=>{
+          expect(conf).to.have.property('LEDsControlledByHost',false);
+          expect(conf).to.have.property('hostSendsSysex',false);
+          expect(conf).to.have.property('valuesSentAsModWheel',false);
+          expect(conf).to.have.property('LEDsShowPoint',false);
+          expect(conf).to.have.property('barStartsAtCenter',false);
+          expect(conf).to.have.property('doAutoReturn',false);
+          expect(conf).to.have.property('autoReturnToCenter',false);
+        });
+      });
+      it('should turn on "LEDsControlledByHost"',()=>{
+        return push2.setTouchStripConfiguration({'LEDsControlledByHost':true}).then((conf)=>{
+          expect(conf).to.have.property('LEDsControlledByHost',true);
+          expect(conf).to.have.property('hostSendsSysex',false);
+          expect(conf).to.have.property('valuesSentAsModWheel',false);
+          expect(conf).to.have.property('LEDsShowPoint',false);
+          expect(conf).to.have.property('barStartsAtCenter',false);
+          expect(conf).to.have.property('doAutoReturn',false);
+          expect(conf).to.have.property('autoReturnToCenter',false);
+        });
+      });
+      it('should set back touchStripConfiguration back to original setting',()=>{
+        return push2.setTouchStripConfiguration(origSetting);
+      });
+      it('should verify original setting',()=>{
+        return push2.getTouchStripConfiguration().then((conf)=>{
+          expect(conf.getByteCode()).to.equal(origSetting);
         });
       });
     });
@@ -146,12 +152,12 @@ describe('Push2',()=>{
       it('should set midi mode to "user".',()=>{
         return push2.setMidiMode('user');
       });
-      it('should throw an error if called with "foobar".',()=>{
-        function doIt(){
-          return push2.setMidiMode('foobar');
-        }
-        expect(doIt).to.throw(/Expected mode to be one of/i);
-      });
+      // it('should throw an error if called with "foobar".',()=>{
+      //   function doIt(){
+      //     return push2.setMidiMode('foobar');
+      //   }
+      //   expect(doIt).to.throw(/Expected mode to be/i);
+      // });
     });
     // describe('reapplyColorPalette',()=>{
     //   it('should send reapply color palette command.',()=>{

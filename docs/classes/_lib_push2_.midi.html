@@ -67,6 +67,13 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Access to MIDI events through <a href="https://github.com/dinchak/node-easymidi">easymidi</a> interface.</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -134,7 +141,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/b48adb3/lib/Push2.ts#L14">lib/Push2.ts:14</a></li>
+									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/0453422/lib/Push2.ts#L17">lib/Push2.ts:17</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -159,7 +166,7 @@
 					<div class="tsd-signature tsd-kind-icon">_input<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/b48adb3/lib/Push2.ts#L10">lib/Push2.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/0453422/lib/Push2.ts#L10">lib/Push2.ts:10</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -169,7 +176,7 @@
 					<div class="tsd-signature tsd-kind-icon">_output<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/b48adb3/lib/Push2.ts#L11">lib/Push2.ts:11</a></li>
+							<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/0453422/lib/Push2.ts#L11">lib/Push2.ts:11</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -243,9 +250,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/b48adb3/lib/Push2.ts#L33">lib/Push2.ts:33</a></li>
+									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/0453422/lib/Push2.ts#L43">lib/Push2.ts:43</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Remove event listeners and close ports.</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
@@ -561,7 +573,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides EventEmitter.removeAllListeners</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/b48adb3/lib/Push2.ts#L29">lib/Push2.ts:29</a></li>
+									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/0453422/lib/Push2.ts#L36">lib/Push2.ts:36</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -624,22 +636,28 @@
 					<a name="send" class="tsd-anchor"></a>
 					<h3>send</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">send<span class="tsd-signature-symbol">(</span>messageType<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, message<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">send<span class="tsd-signature-symbol">(</span>messageType<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, message<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/b48adb3/lib/Push2.ts#L26">lib/Push2.ts:26</a></li>
+									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/0453422/lib/Push2.ts#L33">lib/Push2.ts:33</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Send a midi message.
+									See <a href="doc/midi.md#midi-message-event-types">midi documentation</a> for message types.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>messageType: <span class="tsd-signature-type">any</span></h5>
+									<h5>messageType: <span class="tsd-signature-type">string</span></h5>
 								</li>
 								<li>
-									<h5>message: <span class="tsd-signature-type">any</span></h5>
+									<h5>message: <span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
