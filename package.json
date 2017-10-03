@@ -1,7 +1,7 @@
 {
   "name": "ableton-push2",
-  "version": "0.0.3",
-  "description": "NodeJs library for communicating with Ableton Push 2 over MIDI.",
+  "version": "0.0.4",
+  "description": "NodeJs library for communicating with the Ableton Push 2 MIDI controller.",
   "main": "index.js",
   "scripts": {
     "test": "NODE_ENV=test ./node_modules/mocha/bin/mocha test",
