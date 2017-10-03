@@ -63,8 +63,11 @@
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
 				<h1 id="nodejs-midi-control-library-for-ableton-push-2">NodeJs MIDI control library for Ableton Push 2</h1>
-				<p>Parses MIDI messages from Ableton Push 2.<br>Includes MIDI mapping of buttons for Push 2.</p>
-				<p>Uses <a href="https://github.com/dinchak/node-easymidi">easymidi</a> to parse and send MIDI messages to Push2.</p>
+				<p>Control your Ableton Push 2 with JavaScript!  </p>
+				<p>This project implements the functions described in the <a href="https://github.com/Ableton/push-interface/blob/master/doc/AbletonPush2MIDIDisplayInterface.asc">Ableton Push 2 MIDI And Display Interface Manual</a>.<br>See the command list in <a href="/doc/roadmap.md">roadmap.md</a> for a list of functions and an indication
+				of if they have been implemented yet or not.</p>
+				<p><a href="https://samhiatt.github.io/node-ableton-push2/classes/_lib_push2_.push2.html">Auto-generated API documentation</a>
+				(thanks to <a href="https://github.com/TypeStrong/typedoc">typedoc</a>.)</p>
 				<p>See <a href="/doc/midi.md">midi.md</a> for documentation on access to low-level MIDI messages.</p>
 				<h5 id="intentions-for-future-development-">Intentions for future development:</h5>
 				<ul>
@@ -147,66 +150,6 @@ push2.setTouchStripConfiguration(newConfig).then(<span class="hljs-function">(<s
 </code></pre>
 				<p>It is not necessary to handle the callback if you don&#39;t care to validate the result.</p>
 				<h4 id="touch-strip-configuration-options">Touch strip configuration options</h4>
-				<table>
-					<thead>
-						<tr>
-							<th>TouchStripConfiguration property</th>
-							<th>Behavior if false</th>
-							<th>Behavior if true</th>
-							<th>Remarks</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td><code>LEDsControlledByHost</code></td>
-							<td><strong>controlled by push</strong></td>
-							<td>controlled by host</td>
-							<td>LED values received from the host are ignored if this is set to <code>false</code> (default behavior)</td>
-						</tr>
-						<tr>
-							<td><code>hostSendsSysex</code></td>
-							<td><strong>host sends values</strong></td>
-							<td>host sends sysex</td>
-							<td>Host sends position values or sysex commands for full control of LEDs.</td>
-						</tr>
-						<tr>
-							<td><code>valuesSentAsModWheel</code></td>
-							<td><strong>values sent as mod wheel</strong></td>
-							<td>values sent as pitch bend</td>
-							<td>Controls whether lights are controlled by sending pitch bend or mod wheel messages. Ignored if <code>hostSendsSysex == true</code>.</td>
-						</tr>
-						<tr>
-							<td><code>LEDsShowPoint</code></td>
-							<td>LEDs show a bar</td>
-							<td><strong>LEDs show a point</strong></td>
-							<td></td>
-						</tr>
-						<tr>
-							<td><code>barStartsAtCenter</code></td>
-							<td><strong>bar starts at bottom</strong></td>
-							<td>bar starts at center</td>
-							<td></td>
-						</tr>
-						<tr>
-							<td><code>doAutoReturn</code></td>
-							<td>auto-return disabled</td>
-							<td><strong>auro-return enabled</strong></td>
-							<td></td>
-						</tr>
-						<tr>
-							<td><code>autoReturnToCenter</code></td>
-							<td>auto-returns to bottom</td>
-							<td><strong>auto-returns to center</strong></td>
-							<td>Ignored if <code>doAutoReturn==false</code>.</td>
-						</tr>
-						<tr>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td>(defaults indicated with <strong>bold</strong>)</td>
-						</tr>
-					</tbody>
-				</table>
 				<p> See <a href="/doc/push2_reference.md#touch-strip-configuration">Touch Strip Configuration Documentation</a> for details on how they work.</p>
 				<h3 id="control-display-backlight">Control display backlight</h3>
 				<h5 id="get-set-display-backlight-brightness">Get/set display backlight brightness</h5>
@@ -224,6 +167,8 @@ push2.setTouchStripConfiguration(newConfig).then(<span class="hljs-function">(<s
     .catch(<span class="hljs-function">(<span class="hljs-params">err</span>)=&gt;</span><span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Error setting display brightness."</span>,err));
 </code></pre>
 				<h4 id="monitor-raw-midi-messages">Monitor raw MIDI Messages</h4>
+				<p>Events from <a href="https://github.com/dinchak/node-easymidi">easymidi</a> are accessible from the
+				Push2.midi property.  </p>
 				<p>See <a href="/doc/midi.md">midi.md</a> for more on low-level access to MIDI messages.</p>
 				<pre><code class="lang-javascript"><span class="hljs-comment">// Listen to all MIDI messages</span>
 push2.midi.on(<span class="hljs-string">'message'</span>, <span class="hljs-built_in">console</span>.log);

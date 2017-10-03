@@ -6,7 +6,7 @@ This project implements the functions described in the [Ableton Push 2 MIDI And 
 See the command list in [roadmap.md](/doc/roadmap.md) for a list of functions and an indication
 of if they have been implemented yet or not.
 
-[Auto-generated API documentation](https://samhiatt.github.io/node-ableton-push2/modules/_lib_push2_.html)
+[Auto-generated API documentation](https://samhiatt.github.io/node-ableton-push2/classes/_lib_push2_.push2.html)
 (thanks to [typedoc](https://github.com/TypeStrong/typedoc).)
 
 See [midi.md](/doc/midi.md) for documentation on access to low-level MIDI messages.
