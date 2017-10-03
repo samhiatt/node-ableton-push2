@@ -1,6 +1,6 @@
 {
   "name": "ableton-push2",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "NodeJs library for communicating with the Ableton Push 2 MIDI controller.",
   "main": "dist/index.js",
   "scripts": {
