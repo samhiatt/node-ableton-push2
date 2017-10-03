@@ -10,9 +10,9 @@ describe('Push2',()=>{
       }
       expect(badInstantiation).to.throw(/Expected port to be/i);
     });
-    it("should instantiate a virtual Push2 instance, when called with port='uSer' (case insensitive).",()=>{
+    it("should instantiate a virtual Push2 instance, when called with port='user'.",()=>{
       function closeIt(){push.close();}
-      var push = new ableton.Push2('uSer',true);
+      var push = new ableton.Push2('user',true);
       expect(push).to.have.property('isVirtual',true);
       expect(closeIt).to.not.throw();
     });

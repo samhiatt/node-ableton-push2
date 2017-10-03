@@ -1,17 +1,10 @@
 var easymidi = require('easymidi');
-// var EventEmitter = require('events').EventEmitter;
-var Enum = require('enum');
 var push2keymap = require('./Push2Keymap');
 
 import {EventEmitter} from 'events';
 import {TouchStripConfiguration} from './TouchStripConfiguration';
 import {DeviceIdentity} from './DeviceIdentity';
 import {DeviceStatistics} from './DeviceStatistics';
-
-// Make our Enums easily printable
-Enum.prototype.toString=function(){
-  return this.enums.map((k)=>k.key).toString();
-};
 
 export interface Midi {
   _input:any;
@@ -60,19 +53,48 @@ export interface Push2 {
   midi:Midi;
 }
 
-var midiModes = new Enum({LIVE:0,USER:1,BOTH:2}, {ignoreCase:true});
-var ports = new Enum({LIVE:0,USER:1}, {ignoreCase:true});
-var aftertouchModes = new Enum({CHANNEL:0,POLY:1}, {ignoreCase:true});
+// var MIDIMODES = new Enum({LIVE:0,USER:1,BOTH:2}, {ignoreCase:true});
+export enum MIDIMODES {
+  live=0,
+  user=1,
+  both=2,
+}
+// var ports = new Enum({LIVE:0,USER:1}, {ignoreCase:true});
+export enum PORTS {
+  live=0,
+  user=1,
+}
+// var AFTERTOUCHMODES = new Enum({CHANNEL:0,POLY:1}, {ignoreCase:true});
+export enum AFTERTOUCHMODES {
+  channel=0,
+  poly=1,
+}
 
+/**
+* ## Push2 Controller Object
+* Opens a connection to a physical, connected Push 2 device, or alternatively a virtual port.
+* Implements the functions described in the [Ableton Push 2 MIDI And Display Interface Manual](
+*  https://github.com/Ableton/push-interface/blob/master/doc/AbletonPush2MIDIDisplayInterface.asc).
+* #### Quick start:
+* ```javascript
+* var ableton = require('ableton-push2');
+* var push2 = new ableton.Push2(port='user'); // Boom! A New Ableton Push 2!!
+* push2.setColor([2,3],30); 		 // Set track 2, scene 3 to color index 30
+* ```
+*/
 export class Push2 extends EventEmitter {
-  // Emits Events: 'device-id' deviceId received
-  constructor(port='user',virtual=false){
+  /**
+  * @param port 'user' or 'live'
+  * @param virtual Opens a virtual software port
+  */
+  constructor(port:string='user',virtual:boolean=false){
     super();
     this.isVirtual = virtual;
     this.deviceId = null;
     this.touchStripConfiguration = null;
-    if (!ports.get(port))
-      throw new Error(`Expected port to be one of: ${ports}.`);
+    port = port.toLowerCase();
+    if (!PORTS.propertyIsEnumerable(port))
+      throw new Error("Expected port to be 'user' or 'live'.");
     port = port[0].toUpperCase() + port.toLowerCase().slice(1); // Capitalize the first letter
     this.portName = `${virtual?'Virtual ':''}Ableton Push 2 ${port} Port`;
     this.midi = new Midi(this.portName,virtual);
@@ -204,12 +226,12 @@ export class Push2 extends EventEmitter {
     // return this._sendSysexCommand(bytes);
   }
   setMidiMode(mode){
-    if (!midiModes.isDefined(mode))
-      throw new Error(`Expected mode to be one of: ${midiModes}.`);
-    this._sendSysexRequest([0x0a, midiModes.get(mode)*1]).then((resp:SysexResponse)=>{
-      if (resp.bytes[7]!=midiModes.get(mode))
+    if (!MIDIMODES.propertyIsEnumerable(mode))
+      throw new Error(`Expected mode to be one of: ${MIDIMODES}.`);
+    this._sendSysexRequest([0x0a, MIDIMODES[mode]]).then((resp:SysexResponse)=>{
+      if (MIDIMODES[resp.bytes[7]]!=MIDIMODES[mode])
         throw new Error("Tried to set MIDI mode to ${mode} but responded with "+
-          "mode ${midiModes.get(resp.bytes[7])}");
+          "mode ${MIDIMODES[resp.bytes[7]]}");
     });
   }
   getDisplayBrightness(){
@@ -257,9 +279,9 @@ export class Push2 extends EventEmitter {
   }
   setAftertouchMode(mode){
     // mode = mode.toLowerCase();
-    if (!aftertouchModes.get(mode))
-      throw new Error(`Expected mode to be one of ${aftertouchModes}.`);
-    return this._sendCommandAndValidate([0x1e, aftertouchModes.get(mode)*1]);
+    if (!AFTERTOUCHMODES[mode])
+      throw new Error(`Expected mode to be one of ${AFTERTOUCHMODES}.`);
+    return this._sendCommandAndValidate([0x1e, AFTERTOUCHMODES[mode]]);
   }
   getAftertouchMode(){
     return this._getParamPromise([0x1f],(resp,next)=>{

@@ -67,6 +67,20 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<h2 id="push2-controller-object">Push2 Controller Object</h2>
+						<p>Opens a connection to a physical, connected Push 2 device, or alternatively a virtual port.
+						Implements the functions described in the <a href="https://github.com/Ableton/push-interface/blob/master/doc/AbletonPush2MIDIDisplayInterface.asc">Ableton Push 2 MIDI And Display Interface Manual</a>.</p>
+						<h4 id="quick-start-">Quick start:</h4>
+						<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> ableton = <span class="hljs-built_in">require</span>(<span class="hljs-string">'ableton-push2'</span>);
+<span class="hljs-keyword">var</span> push2 = <span class="hljs-keyword">new</span> ableton.Push2(port=<span class="hljs-string">'user'</span>); <span class="hljs-comment">// Boom! A New Ableton Push 2!!</span>
+push2.setColor([<span class="hljs-number">2</span>,<span class="hljs-number">3</span>],<span class="hljs-number">30</span>);          <span class="hljs-comment">// Set track 2, scene 3 to color index 30</span>
+</code></pre>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -154,16 +168,28 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/39d3c14/lib/Push2.ts#L67">lib/Push2.ts:67</a></li>
+									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/b48adb3/lib/Push2.ts#L85">lib/Push2.ts:85</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> port: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;user&quot;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>&#39;user&#39; or &#39;live&#39;</p>
+										</div>
+									</div>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> virtual: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>Opens a virtual software port</p>
+										</div>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_lib_push2_.push2.html" class="tsd-signature-type">Push2</a></h4>
@@ -179,7 +205,7 @@
 					<div class="tsd-signature tsd-kind-icon">device<wbr>Id<span class="tsd-signature-symbol">:</span> <a href="_lib_deviceidentity_.deviceidentity.html" class="tsd-signature-type">DeviceIdentity</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/39d3c14/lib/Push2.ts#L57">lib/Push2.ts:57</a></li>
+							<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/b48adb3/lib/Push2.ts#L50">lib/Push2.ts:50</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -189,7 +215,7 @@
 					<div class="tsd-signature tsd-kind-icon">is<wbr>Virtual<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/39d3c14/lib/Push2.ts#L56">lib/Push2.ts:56</a></li>
+							<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/b48adb3/lib/Push2.ts#L49">lib/Push2.ts:49</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -199,7 +225,7 @@
 					<div class="tsd-signature tsd-kind-icon">midi<span class="tsd-signature-symbol">:</span> <a href="_lib_push2_.midi.html" class="tsd-signature-type">Midi</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/39d3c14/lib/Push2.ts#L60">lib/Push2.ts:60</a></li>
+							<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/b48adb3/lib/Push2.ts#L53">lib/Push2.ts:53</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -209,7 +235,7 @@
 					<div class="tsd-signature tsd-kind-icon">port<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/39d3c14/lib/Push2.ts#L59">lib/Push2.ts:59</a></li>
+							<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/b48adb3/lib/Push2.ts#L52">lib/Push2.ts:52</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -219,7 +245,7 @@
 					<div class="tsd-signature tsd-kind-icon">touch<wbr>Strip<wbr>Configuration<span class="tsd-signature-symbol">:</span> <a href="_lib_touchstripconfiguration_.touchstripconfiguration.html" class="tsd-signature-type">TouchStripConfiguration</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/39d3c14/lib/Push2.ts#L58">lib/Push2.ts:58</a></li>
+							<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/b48adb3/lib/Push2.ts#L51">lib/Push2.ts:51</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -293,7 +319,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/39d3c14/lib/Push2.ts#L89">lib/Push2.ts:89</a></li>
+									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/b48adb3/lib/Push2.ts#L111">lib/Push2.ts:111</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -357,7 +383,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/39d3c14/lib/Push2.ts#L264">lib/Push2.ts:264</a></li>
+									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/b48adb3/lib/Push2.ts#L286">lib/Push2.ts:286</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -374,7 +400,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/39d3c14/lib/Push2.ts#L121">lib/Push2.ts:121</a></li>
+									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/b48adb3/lib/Push2.ts#L143">lib/Push2.ts:143</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -391,7 +417,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/39d3c14/lib/Push2.ts#L215">lib/Push2.ts:215</a></li>
+									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/b48adb3/lib/Push2.ts#L237">lib/Push2.ts:237</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -408,7 +434,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/39d3c14/lib/Push2.ts#L193">lib/Push2.ts:193</a></li>
+									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/b48adb3/lib/Push2.ts#L215">lib/Push2.ts:215</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -425,7 +451,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/39d3c14/lib/Push2.ts#L227">lib/Push2.ts:227</a></li>
+									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/b48adb3/lib/Push2.ts#L249">lib/Push2.ts:249</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -467,7 +493,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/39d3c14/lib/Push2.ts#L269">lib/Push2.ts:269</a></li>
+									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/b48adb3/lib/Push2.ts#L291">lib/Push2.ts:291</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -484,7 +510,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/39d3c14/lib/Push2.ts#L138">lib/Push2.ts:138</a></li>
+									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/b48adb3/lib/Push2.ts#L160">lib/Push2.ts:160</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -551,7 +577,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/39d3c14/lib/Push2.ts#L82">lib/Push2.ts:82</a></li>
+									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/b48adb3/lib/Push2.ts#L104">lib/Push2.ts:104</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -752,7 +778,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/39d3c14/lib/Push2.ts#L254">lib/Push2.ts:254</a></li>
+									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/b48adb3/lib/Push2.ts#L276">lib/Push2.ts:276</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -840,7 +866,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/39d3c14/lib/Push2.ts#L258">lib/Push2.ts:258</a></li>
+									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/b48adb3/lib/Push2.ts#L280">lib/Push2.ts:280</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -863,7 +889,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/39d3c14/lib/Push2.ts#L92">lib/Push2.ts:92</a></li>
+									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/b48adb3/lib/Push2.ts#L114">lib/Push2.ts:114</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -889,7 +915,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/39d3c14/lib/Push2.ts#L220">lib/Push2.ts:220</a></li>
+									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/b48adb3/lib/Push2.ts#L242">lib/Push2.ts:242</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -912,7 +938,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/39d3c14/lib/Push2.ts#L198">lib/Push2.ts:198</a></li>
+									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/b48adb3/lib/Push2.ts#L220">lib/Push2.ts:220</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -935,7 +961,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/39d3c14/lib/Push2.ts#L240">lib/Push2.ts:240</a></li>
+									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/b48adb3/lib/Push2.ts#L262">lib/Push2.ts:262</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -989,7 +1015,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/39d3c14/lib/Push2.ts#L206">lib/Push2.ts:206</a></li>
+									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/b48adb3/lib/Push2.ts#L228">lib/Push2.ts:228</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1012,7 +1038,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/39d3c14/lib/Push2.ts#L145">lib/Push2.ts:145</a></li>
+									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/b48adb3/lib/Push2.ts#L167">lib/Push2.ts:167</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1035,7 +1061,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/39d3c14/lib/Push2.ts#L175">lib/Push2.ts:175</a></li>
+									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/b48adb3/lib/Push2.ts#L197">lib/Push2.ts:197</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1058,7 +1084,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/39d3c14/lib/Push2.ts#L86">lib/Push2.ts:86</a></li>
+									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/b48adb3/lib/Push2.ts#L108">lib/Push2.ts:108</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -1128,6 +1154,15 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-enum tsd-parent-kind-external-module">
+						<a href="../enums/_lib_push2_.aftertouchmodes.html" class="tsd-kind-icon">AFTERTOUCHMODES</a>
+					</li>
+					<li class=" tsd-kind-enum tsd-parent-kind-external-module">
+						<a href="../enums/_lib_push2_.midimodes.html" class="tsd-kind-icon">MIDIMODES</a>
+					</li>
+					<li class=" tsd-kind-enum tsd-parent-kind-external-module">
+						<a href="../enums/_lib_push2_.ports.html" class="tsd-kind-icon">PORTS</a>
+					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module">
 						<a href="_lib_push2_.midi.html" class="tsd-kind-icon">Midi</a>
 					</li>

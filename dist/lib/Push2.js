@@ -11,17 +11,11 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var easymidi = require('easymidi');
-// var EventEmitter = require('events').EventEmitter;
-var Enum = require('enum');
 var push2keymap = require('./Push2Keymap');
 var events_1 = require("events");
 var TouchStripConfiguration_1 = require("./TouchStripConfiguration");
 var DeviceIdentity_1 = require("./DeviceIdentity");
 var DeviceStatistics_1 = require("./DeviceStatistics");
-// Make our Enums easily printable
-Enum.prototype.toString = function () {
-    return this.enums.map(function (k) { return k.key; }).toString();
-};
 var Midi = /** @class */ (function (_super) {
     __extends(Midi, _super);
     function Midi(portName, virtual) {
@@ -52,12 +46,43 @@ var Midi = /** @class */ (function (_super) {
     return Midi;
 }(events_1.EventEmitter));
 exports.Midi = Midi;
-var midiModes = new Enum({ LIVE: 0, USER: 1, BOTH: 2 }, { ignoreCase: true });
-var ports = new Enum({ LIVE: 0, USER: 1 }, { ignoreCase: true });
-var aftertouchModes = new Enum({ CHANNEL: 0, POLY: 1 }, { ignoreCase: true });
+// var MIDIMODES = new Enum({LIVE:0,USER:1,BOTH:2}, {ignoreCase:true});
+var MIDIMODES;
+(function (MIDIMODES) {
+    MIDIMODES[MIDIMODES["live"] = 0] = "live";
+    MIDIMODES[MIDIMODES["user"] = 1] = "user";
+    MIDIMODES[MIDIMODES["both"] = 2] = "both";
+})(MIDIMODES = exports.MIDIMODES || (exports.MIDIMODES = {}));
+// var ports = new Enum({LIVE:0,USER:1}, {ignoreCase:true});
+var PORTS;
+(function (PORTS) {
+    PORTS[PORTS["live"] = 0] = "live";
+    PORTS[PORTS["user"] = 1] = "user";
+})(PORTS = exports.PORTS || (exports.PORTS = {}));
+// var AFTERTOUCHMODES = new Enum({CHANNEL:0,POLY:1}, {ignoreCase:true});
+var AFTERTOUCHMODES;
+(function (AFTERTOUCHMODES) {
+    AFTERTOUCHMODES[AFTERTOUCHMODES["channel"] = 0] = "channel";
+    AFTERTOUCHMODES[AFTERTOUCHMODES["poly"] = 1] = "poly";
+})(AFTERTOUCHMODES = exports.AFTERTOUCHMODES || (exports.AFTERTOUCHMODES = {}));
+/**
+* ## Push2 Controller Object
+* Opens a connection to a physical, connected Push 2 device, or alternatively a virtual port.
+* Implements the functions described in the [Ableton Push 2 MIDI And Display Interface Manual](
+*  https://github.com/Ableton/push-interface/blob/master/doc/AbletonPush2MIDIDisplayInterface.asc).
+* #### Quick start:
+* ```javascript
+* var ableton = require('ableton-push2');
+* var push2 = new ableton.Push2(port='user'); // Boom! A New Ableton Push 2!!
+* push2.setColor([2,3],30); 		 // Set track 2, scene 3 to color index 30
+* ```
+*/
 var Push2 = /** @class */ (function (_super) {
     __extends(Push2, _super);
-    // Emits Events: 'device-id' deviceId received
+    /**
+    * @param port 'user' or 'live'
+    * @param virtual Opens a virtual software port
+    */
     function Push2(port, virtual) {
         if (port === void 0) { port = 'user'; }
         if (virtual === void 0) { virtual = false; }
@@ -65,8 +90,9 @@ var Push2 = /** @class */ (function (_super) {
         _this.isVirtual = virtual;
         _this.deviceId = null;
         _this.touchStripConfiguration = null;
-        if (!ports.get(port))
-            throw new Error("Expected port to be one of: " + ports + ".");
+        port = port.toLowerCase();
+        if (!PORTS.propertyIsEnumerable(port))
+            throw new Error("Expected port to be 'user' or 'live'.");
         port = port[0].toUpperCase() + port.toLowerCase().slice(1); // Capitalize the first letter
         _this.portName = (virtual ? 'Virtual ' : '') + "Ableton Push 2 " + port + " Port";
         _this.midi = new Midi(_this.portName, virtual);
@@ -211,12 +237,12 @@ var Push2 = /** @class */ (function (_super) {
         // return this._sendSysexCommand(bytes);
     };
     Push2.prototype.setMidiMode = function (mode) {
-        if (!midiModes.isDefined(mode))
-            throw new Error("Expected mode to be one of: " + midiModes + ".");
-        this._sendSysexRequest([0x0a, midiModes.get(mode) * 1]).then(function (resp) {
-            if (resp.bytes[7] != midiModes.get(mode))
+        if (!MIDIMODES.propertyIsEnumerable(mode))
+            throw new Error("Expected mode to be one of: " + MIDIMODES + ".");
+        this._sendSysexRequest([0x0a, MIDIMODES[mode]]).then(function (resp) {
+            if (MIDIMODES[resp.bytes[7]] != MIDIMODES[mode])
                 throw new Error("Tried to set MIDI mode to ${mode} but responded with " +
-                    "mode ${midiModes.get(resp.bytes[7])}");
+                    "mode ${MIDIMODES[resp.bytes[7]]}");
         });
     };
     Push2.prototype.getDisplayBrightness = function () {
@@ -267,9 +293,9 @@ var Push2 = /** @class */ (function (_super) {
     };
     Push2.prototype.setAftertouchMode = function (mode) {
         // mode = mode.toLowerCase();
-        if (!aftertouchModes.get(mode))
-            throw new Error("Expected mode to be one of " + aftertouchModes + ".");
-        return this._sendCommandAndValidate([0x1e, aftertouchModes.get(mode) * 1]);
+        if (!AFTERTOUCHMODES[mode])
+            throw new Error("Expected mode to be one of " + AFTERTOUCHMODES + ".");
+        return this._sendCommandAndValidate([0x1e, AFTERTOUCHMODES[mode]]);
     };
     Push2.prototype.getAftertouchMode = function () {
         return this._getParamPromise([0x1f], function (resp, next) {
