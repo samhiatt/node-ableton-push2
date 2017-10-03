@@ -46,6 +46,12 @@ export class Midi extends EventEmitter {
 interface SysexResponse{
   bytes:number[];
 }
+export interface Color {
+  r: number;
+  g: number;
+  b: number;
+  a: number;
+}
 export interface Push2 {
   isVirtual:boolean;
   deviceId:DeviceIdentity;
@@ -200,7 +206,7 @@ export class Push2 extends EventEmitter {
   setMidiMode(mode){
     if (!midiModes.isDefined(mode))
       throw new Error(`Expected mode to be one of: ${midiModes}.`);
-    this._sendSysexRequest([0x0a, midiModes.get(mode)]).then((resp:SysexResponse)=>{
+    this._sendSysexRequest([0x0a, midiModes.get(mode)*1]).then((resp:SysexResponse)=>{
       if (resp.bytes[7]!=midiModes.get(mode))
         throw new Error("Tried to set MIDI mode to ${mode} but responded with "+
           "mode ${midiModes.get(resp.bytes[7])}");
@@ -218,7 +224,7 @@ export class Push2 extends EventEmitter {
     });
     // this._sendSysexCommand(req);
   }
-  getLEDColorPaletteEntry(paletteIdx){
+  getLEDColorPaletteEntry(paletteIdx:number){
     var decode = (lower7bits,higher1bit)=>{
       return lower7bits | higher1bit << 7;
     };
@@ -227,9 +233,23 @@ export class Push2 extends EventEmitter {
         r:decode(resp.bytes[8],resp.bytes[9]),
         g:decode(resp.bytes[10],resp.bytes[11]),
         b:decode(resp.bytes[12],resp.bytes[13]),
-        a:decode(resp.bytes[12],resp.bytes[13]),
+        a:decode(resp.bytes[14],resp.bytes[15]),
       });
     });
+  }
+  setLEDColorPaletteEntry(paletteIdx:number, color:Color,validate:false){
+    if (paletteIdx<0 || paletteIdx>127) throw new Error("paletteIdx should be 0-127.");
+    var bytes=[0x03, paletteIdx];
+    bytes.push(color.r & 127);
+    bytes.push(color.r >> 7);
+    bytes.push(color.g & 127);
+    bytes.push(color.g >> 7);
+    bytes.push(color.b & 127);
+    bytes.push(color.b >> 7);
+    bytes.push(color.a & 127);
+    bytes.push(color.a >> 7);
+    if (validate) return this._sendCommandAndValidate(bytes);
+    else this._sendSysexCommand(bytes);
   }
   reapplyColorPalette(){
     // trigger palette reapplication
@@ -239,7 +259,7 @@ export class Push2 extends EventEmitter {
     // mode = mode.toLowerCase();
     if (!aftertouchModes.get(mode))
       throw new Error(`Expected mode to be one of ${aftertouchModes}.`);
-    return this._sendCommandAndValidate([0x1e, aftertouchModes.get(mode)]);
+    return this._sendCommandAndValidate([0x1e, aftertouchModes.get(mode)*1]);
   }
   getAftertouchMode(){
     return this._getParamPromise([0x1f],(resp,next)=>{
@@ -279,7 +299,7 @@ export class Push2 extends EventEmitter {
     if (typeof msg=='number') msg = [msg];
     msg.forEach((v)=>a.push(v));
     a.push(0xf7);
-    // console.log("Sending sysex command:",a);
+    // console.log("Sending sysex command:",a.map((v)=>{return v.toString(16);}));
     this.midi.send('sysex',a);
   }
   private _sendSysexRequest(msg){
@@ -289,9 +309,11 @@ export class Push2 extends EventEmitter {
       setTimeout(()=>{ // reject if no usable response after 1 second.
         reject(new Error("No usable sysex reponse message received."));
       },1000);
+      // TODO: Set up only one listener, use to handle all messages.
       this.midi.setMaxListeners(100);
       this.midi.on('sysex',function handler(resp) {
         if (resp.bytes[6]==commandId){ // This response matches our request.
+          // console.log("Waiting for "+commandId+" Got SYSEX:",resp);
           this.midi.removeListener('sysex',handler);
           resolve(resp);
         // } else {

@@ -7,8 +7,9 @@ interface VirtualResponder {
   _aftertouchMode:number;
   _touchStripConfiguration:number;
   _globalLEDBrightness:number;
-  _displayBrightness:[number];
+  _displayBrightness:number[];
   _midiMode:number;
+  _colors:any;
 }
 
 class VirtualResponder{
@@ -21,6 +22,7 @@ class VirtualResponder{
     this._globalLEDBrightness = 0;
     this._displayBrightness = [0,0];
     this._midiMode = 1;
+    this._colors={127: [127,1,0,0,0,0,0,1]};
   }
   listen(){
     this.midi.on('data',(msg)=>{
@@ -61,9 +63,12 @@ class VirtualResponder{
         // console.log("Get statistics request received");
         this.midi.write([240,0,33,29,1,1,26,1,1,99,8,0,0,0,247]);
       }
-      else if (deepEqual(msg, [240,0,33,29,1,1,4,127,247])){  // get LED color palette entry
+      else if (deepEqual(msg.slice(0,7), [240,0,33,29,1,1,4])){  // get LED color palette entry
         // console.log("Get LED color palette entry request received",msg);
-        this.midi.write([240,0,33,29,1,1,4,127,127,1,0,0,0,0,0,1,247]);
+        let bytes = [240,0,33,29,1,1,4,msg[7]];
+        this._colors[msg[7]].forEach((c)=>{bytes.push(c);});
+        bytes.push(247);
+        this.midi.write(bytes);
       }
       else if (deepEqual(msg.slice(0,7), [240,0,33,29,1,1,8])){  // set display brightness
         // console.log("Set display brightness request received",msg);
@@ -73,6 +78,10 @@ class VirtualResponder{
         // console.log("Set MIDI mode request received",msg);
         this._midiMode = msg[7];
       }
+      else if (deepEqual(msg.slice(0,7), [240,0,33,29,1,1,3])){  // set color 127 to green
+        // console.log("Set color palette entry request received",msg);
+        this._colors[msg[7]] = msg.slice(8,-1);
+      } else console.log("Unhandled message received:",msg);
     });
   }
   close(){

@@ -9,7 +9,7 @@
 ### Command List
 |Command ID|Implemented|Test Implemented|Sends Reply|Command Name|[Chapter](https://github.com/Ableton/push-interface/blob/master/doc/AbletonPush2MIDIDisplayInterface.asc)|
 |----------|------|-----------|-----------|------------|-------|
-|`0x03` |   |   |   |Set LED Color Palette Entry  |RGB LED Color Processing
+|`0x03` | x | x |   |Set LED Color Palette Entry  |RGB LED Color Processing
 |`0x04` | x | x |yes|Get LED Color Palette Entry | RGB LED Color Processing
 |`0x05` | x | x |   |Reapply Color Palette | RGB LED Color Processing
 |`0x06` | x | x |   |Set LED Brightness   |Global LED Brightness

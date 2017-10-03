@@ -12,6 +12,12 @@ export declare class Midi extends EventEmitter {
     removeAllListeners(event?: string | symbol): this;
     close(): void;
 }
+export interface Color {
+    r: number;
+    g: number;
+    b: number;
+    a: number;
+}
 export interface Push2 {
     isVirtual: boolean;
     deviceId: DeviceIdentity;
@@ -34,7 +40,8 @@ export declare class Push2 extends EventEmitter {
     setMidiMode(mode: any): void;
     getDisplayBrightness(): Promise<{}>;
     setDisplayBrightness(val: any): Promise<{}>;
-    getLEDColorPaletteEntry(paletteIdx: any): Promise<{}>;
+    getLEDColorPaletteEntry(paletteIdx: number): Promise<{}>;
+    setLEDColorPaletteEntry(paletteIdx: number, color: Color, validate: false): Promise<{}>;
     reapplyColorPalette(): void;
     setAftertouchMode(mode: any): Promise<{}>;
     getAftertouchMode(): Promise<{}>;

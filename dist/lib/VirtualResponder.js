@@ -11,6 +11,7 @@ var VirtualResponder = /** @class */ (function () {
         this._globalLEDBrightness = 0;
         this._displayBrightness = [0, 0];
         this._midiMode = 1;
+        this._colors = { 127: [127, 1, 0, 0, 0, 0, 0, 1] };
     }
     VirtualResponder.prototype.listen = function () {
         var _this = this;
@@ -52,9 +53,12 @@ var VirtualResponder = /** @class */ (function () {
                 // console.log("Get statistics request received");
                 _this.midi.write([240, 0, 33, 29, 1, 1, 26, 1, 1, 99, 8, 0, 0, 0, 247]);
             }
-            else if (deepEqual(msg, [240, 0, 33, 29, 1, 1, 4, 127, 247])) {
+            else if (deepEqual(msg.slice(0, 7), [240, 0, 33, 29, 1, 1, 4])) {
                 // console.log("Get LED color palette entry request received",msg);
-                _this.midi.write([240, 0, 33, 29, 1, 1, 4, 127, 127, 1, 0, 0, 0, 0, 0, 1, 247]);
+                var bytes_1 = [240, 0, 33, 29, 1, 1, 4, msg[7]];
+                _this._colors[msg[7]].forEach(function (c) { bytes_1.push(c); });
+                bytes_1.push(247);
+                _this.midi.write(bytes_1);
             }
             else if (deepEqual(msg.slice(0, 7), [240, 0, 33, 29, 1, 1, 8])) {
                 // console.log("Set display brightness request received",msg);
@@ -64,6 +68,12 @@ var VirtualResponder = /** @class */ (function () {
                 // console.log("Set MIDI mode request received",msg);
                 _this._midiMode = msg[7];
             }
+            else if (deepEqual(msg.slice(0, 7), [240, 0, 33, 29, 1, 1, 3])) {
+                // console.log("Set color palette entry request received",msg);
+                _this._colors[msg[7]] = msg.slice(8, -1);
+            }
+            else
+                console.log("Unhandled message received:", msg);
         });
     };
     VirtualResponder.prototype.close = function () {

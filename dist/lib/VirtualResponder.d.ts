@@ -6,8 +6,9 @@ interface VirtualResponder {
     _aftertouchMode: number;
     _touchStripConfiguration: number;
     _globalLEDBrightness: number;
-    _displayBrightness: [number];
+    _displayBrightness: number[];
     _midiMode: number;
+    _colors: any;
 }
 declare class VirtualResponder {
     constructor(port?: string);

@@ -213,7 +213,7 @@ var Push2 = /** @class */ (function (_super) {
     Push2.prototype.setMidiMode = function (mode) {
         if (!midiModes.isDefined(mode))
             throw new Error("Expected mode to be one of: " + midiModes + ".");
-        this._sendSysexRequest([0x0a, midiModes.get(mode)]).then(function (resp) {
+        this._sendSysexRequest([0x0a, midiModes.get(mode) * 1]).then(function (resp) {
             if (resp.bytes[7] != midiModes.get(mode))
                 throw new Error("Tried to set MIDI mode to ${mode} but responded with " +
                     "mode ${midiModes.get(resp.bytes[7])}");
@@ -240,9 +240,26 @@ var Push2 = /** @class */ (function (_super) {
                 r: decode(resp.bytes[8], resp.bytes[9]),
                 g: decode(resp.bytes[10], resp.bytes[11]),
                 b: decode(resp.bytes[12], resp.bytes[13]),
-                a: decode(resp.bytes[12], resp.bytes[13]),
+                a: decode(resp.bytes[14], resp.bytes[15]),
             });
         });
+    };
+    Push2.prototype.setLEDColorPaletteEntry = function (paletteIdx, color, validate) {
+        if (paletteIdx < 0 || paletteIdx > 127)
+            throw new Error("paletteIdx should be 0-127.");
+        var bytes = [0x03, paletteIdx];
+        bytes.push(color.r & 127);
+        bytes.push(color.r >> 7);
+        bytes.push(color.g & 127);
+        bytes.push(color.g >> 7);
+        bytes.push(color.b & 127);
+        bytes.push(color.b >> 7);
+        bytes.push(color.a & 127);
+        bytes.push(color.a >> 7);
+        if (validate)
+            return this._sendCommandAndValidate(bytes);
+        else
+            this._sendSysexCommand(bytes);
     };
     Push2.prototype.reapplyColorPalette = function () {
         // trigger palette reapplication
@@ -252,7 +269,7 @@ var Push2 = /** @class */ (function (_super) {
         // mode = mode.toLowerCase();
         if (!aftertouchModes.get(mode))
             throw new Error("Expected mode to be one of " + aftertouchModes + ".");
-        return this._sendCommandAndValidate([0x1e, aftertouchModes.get(mode)]);
+        return this._sendCommandAndValidate([0x1e, aftertouchModes.get(mode) * 1]);
     };
     Push2.prototype.getAftertouchMode = function () {
         return this._getParamPromise([0x1f], function (resp, next) {
@@ -296,7 +313,7 @@ var Push2 = /** @class */ (function (_super) {
             msg = [msg];
         msg.forEach(function (v) { return a.push(v); });
         a.push(0xf7);
-        // console.log("Sending sysex command:",a);
+        // console.log("Sending sysex command:",a.map((v)=>{return v.toString(16);}));
         this.midi.send('sysex', a);
     };
     Push2.prototype._sendSysexRequest = function (msg) {
@@ -307,9 +324,11 @@ var Push2 = /** @class */ (function (_super) {
             setTimeout(function () {
                 reject(new Error("No usable sysex reponse message received."));
             }, 1000);
+            // TODO: Set up only one listener, use to handle all messages.
             _this.midi.setMaxListeners(100);
             _this.midi.on('sysex', function handler(resp) {
                 if (resp.bytes[6] == commandId) {
+                    // console.log("Waiting for "+commandId+" Got SYSEX:",resp);
                     this.midi.removeListener('sysex', handler);
                     resolve(resp);
                     // } else {

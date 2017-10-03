@@ -153,11 +153,11 @@ describe('Push2',()=>{
         expect(doIt).to.throw(/Expected mode to be one of/i);
       });
     });
-    describe('reapplyColorPalette',()=>{
-      it('should send reapply color palette command.',()=>{
-        return push2.reapplyColorPalette();
-      });
-    });
+    // describe('reapplyColorPalette',()=>{
+    //   it('should send reapply color palette command.',()=>{
+    //     return push2.reapplyColorPalette();
+    //   });
+    // });
     describe('getStatistics',()=>{
       it('should get device statistics.',()=>{
         return push2.getStatistics().then((resp)=>{
@@ -167,12 +167,33 @@ describe('Push2',()=>{
       });
     });
     describe('getLEDColorPaletteEntry',()=>{
+      var origColor=null;
       it('should get color palette entry for color idx 127 (red).',()=>{
         return push2.getLEDColorPaletteEntry(127).then((resp)=>{
-          expect(resp).to.have.property('r',255);
-          expect(resp).to.have.property('g',0);
+          origColor = resp;
+          expect(resp).to.have.property('r');
+          expect(resp).to.have.property('g');
+          expect(resp).to.have.property('b');
+          expect(resp).to.have.property('a');
+        });
+      });
+      it ("should set the color to green",()=>{
+        push2.setLEDColorPaletteEntry(127,{r:0,g:255,b:0,a:127}); //,true).then((color)=>{
+        return push2.getLEDColorPaletteEntry(127).then((resp)=>{
+          expect(resp).to.have.property('r',0);
+          expect(resp).to.have.property('g',255);
           expect(resp).to.have.property('b',0);
-          expect(resp).to.have.property('a',0);
+          expect(resp).to.have.property('a',127);
+        });
+      });
+      it ("should set the color to back to original value",()=>{
+        return push2.setLEDColorPaletteEntry(127,origColor);//,true).then((resp)=>{
+        //   expect(resp).to.have.property('r');
+        // });
+      });
+      it ("should verify the original value",()=>{
+        return push2.getLEDColorPaletteEntry(127).then((resp)=>{
+          expect(resp).to.deep.equal(origColor);
         });
       });
     });
