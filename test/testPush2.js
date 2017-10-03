@@ -1,4 +1,4 @@
-var ableton = require('../');
+var ableton = require('../dist');
 var expect = require('chai').expect;
 
 describe('Push2',()=>{

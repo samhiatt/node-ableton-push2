@@ -1,0 +1,361 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>ableton-push2</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.js" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">ableton-push2</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1> ableton-push2</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<h1 id="nodejs-midi-control-library-for-ableton-push-2">NodeJs MIDI control library for Ableton Push 2</h1>
+				<p>Parses MIDI messages from Ableton Push 2.<br>Includes MIDI mapping of buttons for Push 2.</p>
+				<p>Uses <a href="https://github.com/dinchak/node-easymidi">easymidi</a> to parse and send MIDI messages to Push2.</p>
+				<p>See <a href="/doc/midi.md">midi.md</a> for documentation on access to low-level MIDI messages.</p>
+				<h5 id="intentions-for-future-development-">Intentions for future development:</h5>
+				<ul>
+					<li>Add sysex commands for further control of lights (setting palette, etc).</li>
+					<li>Add support for Push 1. Maybe?</li>
+				</ul>
+				<h2 id="installation">Installation</h2>
+				<pre><code><span class="hljs-meta">$</span><span class="bash"> npm install ableton-push2</span>
+</code></pre><h2 id="usage">Usage</h2>
+				<h3 id="usage-examples">Usage examples</h3>
+				<h5 id="get-a-new-push2-oh-yeah-">Get a new Push2. Oh yeah.</h5>
+				<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> ableton = <span class="hljs-built_in">require</span>(<span class="hljs-string">'ableton-push2'</span>);
+
+<span class="hljs-comment">// port can be 'user' (default) or 'live'</span>
+<span class="hljs-keyword">var</span> push2 = <span class="hljs-keyword">new</span> ableton.Push2(port=<span class="hljs-string">'user'</span>); <span class="hljs-comment">// Boom! A New Ableton Push 2!!</span>
+</code></pre>
+				<h5 id="monitor-control-messages-from-push-2-">Monitor control messages from Push 2.</h5>
+				<pre><code class="lang-javascript">push2.monitor();     <span class="hljs-comment">// Monitor and parse MIDI messages, printing them to console.log</span>
+push2.stopMonitor();         <span class="hljs-comment">// Stops printing Push2 midi messages to console.</span>
+</code></pre>
+				<h5 id="set-pad-or-button-led-colors-">Set pad or button LED colors:</h5>
+				<pre><code class="lang-javascript"><span class="hljs-comment">// First argument can be either a key name from push2keymap</span>
+<span class="hljs-comment">// or it can also be an array containing [track,scene] with values [[1-8],[1-8]]</span>
+<span class="hljs-comment">// paletteIdx: color palette index [1-127]</span>
+push2.setColor([<span class="hljs-number">2</span>,<span class="hljs-number">3</span>],<span class="hljs-number">30</span>);         <span class="hljs-comment">// Set track 2, scene 3 to color 30</span>
+push2.setColor(<span class="hljs-string">"play"</span>,<span class="hljs-number">127</span>);     <span class="hljs-comment">// Set play key to color 127 (red)</span>
+push2.setColor(<span class="hljs-string">"record"</span>,<span class="hljs-number">17</span>);     <span class="hljs-comment">// Set record key to color 17 (blueish)</span>
+push2.setColor(<span class="hljs-string">"1/16t"</span>,<span class="hljs-number">70</span>);     <span class="hljs-comment">// Set 1/16t button to color 70</span>
+</code></pre>
+				<p>TODO: Update and document interface for addressing buttons.</p>
+				<h3 id="touch-strip-configuration">Touch strip configuration</h3>
+				<h5 id="get-touch-strip-configuration">Get touch strip configuration</h5>
+				<pre><code class="lang-javascript">push2.getTouchStripConfiguration()
+    .then(<span class="hljs-function">(<span class="hljs-params">resp</span>)=&gt;</span>{
+      <span class="hljs-built_in">console</span>.log(resp);
+    }).catch(<span class="hljs-built_in">console</span>.error);
+<span class="hljs-comment">// Output:</span>
+<span class="hljs-comment">// TouchStripConfiguration {</span>
+<span class="hljs-comment">//   LEDsControlledByHost: 0,</span>
+<span class="hljs-comment">//   hostSendsSysex: 0,</span>
+<span class="hljs-comment">//   valuesSentAsModWheel: 0,</span>
+<span class="hljs-comment">//   LEDsShowPoint: 1,</span>
+<span class="hljs-comment">//   barStartsAtCenter: 1,</span>
+<span class="hljs-comment">//   doAutoReturn: 1,</span>
+<span class="hljs-comment">//   autoReturnToCenter: 1 }</span>
+</code></pre>
+				<h5 id="set-touch-strip-configuration">Set touch strip configuration</h5>
+				<p>Returns a Promise which resolves after verifying that the value was set correctly.  </p>
+				<p>Set all options at once:</p>
+				<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> newConfig = {
+        <span class="hljs-string">'LEDsControlledByPushOrHost'</span>:<span class="hljs-number">1</span>,
+        <span class="hljs-string">'hostSendsSysex'</span>: <span class="hljs-number">0</span>,
+        <span class="hljs-string">'valuesSentAsModWheel'</span>: <span class="hljs-number">0</span>,
+        <span class="hljs-string">'LEDsShowPoint'</span>: <span class="hljs-number">1</span>,
+        <span class="hljs-string">'barStartsAtCenter'</span>: <span class="hljs-number">1</span>,
+        <span class="hljs-string">'doAutoReturn'</span>: <span class="hljs-number">1</span>,
+        <span class="hljs-string">'autoReturnToCenter'</span>: <span class="hljs-number">1</span>,
+};
+push2.setTouchStripConfiguration(newConfig).then(<span class="hljs-function">(<span class="hljs-params">conf</span>)=&gt;</span>{
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Touch strip configuration successfully set to:"</span>,conf);
+}).catch(<span class="hljs-built_in">console</span>.error);
+</code></pre>
+				<p>Or you can specify just a subset of properties to change. Others remain unchanged.</p>
+				<pre><code class="lang-javascript">push2.setTouchStripConfiguration({<span class="hljs-string">'LEDsControlledByPushOrHost'</span>:<span class="hljs-number">1</span>}).then(<span class="hljs-function">(<span class="hljs-params">conf</span>)=&gt;</span>{
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Touch strip configuration successfully set to:"</span>,conf);
+}).catch(<span class="hljs-built_in">console</span>.error);
+<span class="hljs-comment">// Output:</span>
+<span class="hljs-comment">// Touch strip configuration successfully set to: TouchStripConfiguration {</span>
+<span class="hljs-comment">// LEDsControlledByHost: 1,</span>
+<span class="hljs-comment">// hostSendsSysex: 0,</span>
+<span class="hljs-comment">// valuesSentAsModWheel: 0,</span>
+<span class="hljs-comment">// LEDsShowPoint: 1,</span>
+<span class="hljs-comment">// barStartsAtCenter: 1,</span>
+<span class="hljs-comment">// doAutoReturn: 1,</span>
+<span class="hljs-comment">// autoReturnToCenter: 1 }</span>
+</code></pre>
+				<h6 id="reset-touch-strip-confg-to-defaults">Reset touch strip confg to defaults</h6>
+				<p>Calling <code>setTouchStripConfiguration</code> with no arguments will reset to defaults.</p>
+				<pre><code class="lang-javascript">push2.setTouchStripConfiguration(); <span class="hljs-comment">// Resets to defaults</span>
+</code></pre>
+				<p>It is not necessary to handle the callback if you don&#39;t care to validate the result.</p>
+				<h4 id="touch-strip-configuration-options">Touch strip configuration options</h4>
+				<table>
+					<thead>
+						<tr>
+							<th>TouchStripConfiguration property</th>
+							<th>Behavior if false</th>
+							<th>Behavior if true</th>
+							<th>Remarks</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><code>LEDsControlledByHost</code></td>
+							<td><strong>controlled by push</strong></td>
+							<td>controlled by host</td>
+							<td>LED values received from the host are ignored if this is set to <code>false</code> (default behavior)</td>
+						</tr>
+						<tr>
+							<td><code>hostSendsSysex</code></td>
+							<td><strong>host sends values</strong></td>
+							<td>host sends sysex</td>
+							<td>Host sends position values or sysex commands for full control of LEDs.</td>
+						</tr>
+						<tr>
+							<td><code>valuesSentAsModWheel</code></td>
+							<td><strong>values sent as mod wheel</strong></td>
+							<td>values sent as pitch bend</td>
+							<td>Controls whether lights are controlled by sending pitch bend or mod wheel messages. Ignored if <code>hostSendsSysex == true</code>.</td>
+						</tr>
+						<tr>
+							<td><code>LEDsShowPoint</code></td>
+							<td>LEDs show a bar</td>
+							<td><strong>LEDs show a point</strong></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td><code>barStartsAtCenter</code></td>
+							<td><strong>bar starts at bottom</strong></td>
+							<td>bar starts at center</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td><code>doAutoReturn</code></td>
+							<td>auto-return disabled</td>
+							<td><strong>auro-return enabled</strong></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td><code>autoReturnToCenter</code></td>
+							<td>auto-returns to bottom</td>
+							<td><strong>auto-returns to center</strong></td>
+							<td>Ignored if <code>doAutoReturn==false</code>.</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td>(defaults indicated with <strong>bold</strong>)</td>
+						</tr>
+					</tbody>
+				</table>
+				<p> See <a href="/doc/push2_reference.md#touch-strip-configuration">Touch Strip Configuration Documentation</a> for details on how they work.</p>
+				<h3 id="control-display-backlight">Control display backlight</h3>
+				<h5 id="get-set-display-backlight-brightness">Get/set display backlight brightness</h5>
+				<p>Display backlight brightness ranges from 0 to 255.   Note that when Push 2 is on
+				USB power the brightness is automatically reduced to 100.  </p>
+				<p><code>Push2.getDisplayBrightness</code> returns a Promise.</p>
+				<pre><code class="lang-javascript">push2.getDisplayBrightness()
+    .then(<span class="hljs-function">(<span class="hljs-params">value</span>)=&gt;</span><span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Display brightness: "</span>+value))
+    .catch(<span class="hljs-function">(<span class="hljs-params">err</span>)=&gt;</span><span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Error getting display brightness."</span>,err));
+</code></pre>
+				<p><code>Push2.setDisplayBrightness</code> also returns a Promise which resolves after
+				verifying that the value was set correctly.</p>
+				<pre><code class="lang-javascript">push2.setDisplayBrightness(<span class="hljs-number">200</span>)
+    .then(<span class="hljs-function"><span class="hljs-params">()</span>=&gt;</span><span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Display brightness successfully set."</span>))
+    .catch(<span class="hljs-function">(<span class="hljs-params">err</span>)=&gt;</span><span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Error setting display brightness."</span>,err));
+</code></pre>
+				<h4 id="monitor-raw-midi-messages">Monitor raw MIDI Messages</h4>
+				<p>See <a href="/doc/midi.md">midi.md</a> for more on low-level access to MIDI messages.</p>
+				<pre><code class="lang-javascript"><span class="hljs-comment">// Listen to all MIDI messages</span>
+push2.midi.on(<span class="hljs-string">'message'</span>, <span class="hljs-built_in">console</span>.log);
+
+<span class="hljs-comment">// Or listen to specific midi messages (easymidi message type names)</span>
+push2.midi.on(<span class="hljs-string">'noteon'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">msg</span>)</span>{
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`"noteon": note: <span class="hljs-subst">${msg.note}</span>, velocity:<span class="hljs-subst">${msg.velocity}</span>, channel:<span class="hljs-subst">${msg.channel}</span>`</span>);
+});
+</code></pre>
+				<h3 id="handy-example-scripts">Handy example scripts</h3>
+				<p>A few handy scripts are included in <code>scripts/</code>.</p>
+				<p>First probe MIDI ports to make sure node can see your Push 2 with:</p>
+				<pre><code>$ cd node-ableton-push2
+$ node scripts/show_ports.js
+
+Input ports:
+    Ableton Push 2 Live<span class="hljs-built_in"> Port
+</span>    Ableton Push 2<span class="hljs-built_in"> User Port
+</span>Output ports:
+    Ableton Push 2 Live<span class="hljs-built_in"> Port
+</span>    Ableton Push 2<span class="hljs-built_in"> User </span>Port
+</code></pre><p>Monitor messages from Push 2.</p>
+				<pre><code>$ node scripts/monitor_push.js
+
+Ableton Push <span class="hljs-number">2</span> User Port { <span class="hljs-string">channel:</span> <span class="hljs-number">0</span>, <span class="hljs-string">note:</span> <span class="hljs-number">36</span>, <span class="hljs-string">velocity:</span> <span class="hljs-number">56</span>, <span class="hljs-string">_type:</span> <span class="hljs-string">'noteon'</span> }
+ pad <span class="hljs-number">1</span>,<span class="hljs-number">8</span> pressed, <span class="hljs-string">velocity:</span> <span class="hljs-number">56</span>
+Ableton Push <span class="hljs-number">2</span> User Port { <span class="hljs-string">channel:</span> <span class="hljs-number">0</span>, <span class="hljs-string">note:</span> <span class="hljs-number">36</span>, <span class="hljs-string">velocity:</span> <span class="hljs-number">0</span>, <span class="hljs-string">_type:</span> <span class="hljs-string">'noteoff'</span> }
+ pad <span class="hljs-number">1</span>,<span class="hljs-number">8</span> released
+Ableton Push <span class="hljs-number">2</span> User Port { <span class="hljs-string">channel:</span> <span class="hljs-number">0</span>, <span class="hljs-string">controller:</span> <span class="hljs-number">85</span>, <span class="hljs-string">value:</span> <span class="hljs-number">127</span>, <span class="hljs-string">_type:</span> <span class="hljs-string">'cc'</span> }
+<span class="hljs-symbol"> play:</span> <span class="hljs-number">127</span>
+Ableton Push <span class="hljs-number">2</span> User Port { <span class="hljs-string">channel:</span> <span class="hljs-number">0</span>, <span class="hljs-string">controller:</span> <span class="hljs-number">85</span>, <span class="hljs-string">value:</span> <span class="hljs-number">0</span>, <span class="hljs-string">_type:</span> <span class="hljs-string">'cc'</span> }
+<span class="hljs-symbol"> play:</span> <span class="hljs-number">0</span>
+...
+^C
+</code></pre><p>(Exit with ctrl+C)</p>
+				<h2 id="references">References</h2>
+				<p><a href="https://www.midi.org/specifications/item/table-1-summary-of-midi-message">Summary of MIDI Messages</a><br><a href="https://github.com/Ableton/push-interface/blob/master/doc/AbletonPush2MIDIDisplayInterface.asc">Ableton Push 2 MIDI And Display Interface Manual</a>  </p>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_index_.html">"index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_push2_.html">"lib/<wbr>Push2"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_push2keymap_.html">"lib/<wbr>Push2<wbr>Keymap"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_virtualresponder_.html">"lib/<wbr>Virtual<wbr>Responder"</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>

@@ -1,12 +1,20 @@
 var easymidi = require('easymidi');
-var EventEmitter = require('events').EventEmitter;
+// var EventEmitter = require('events').EventEmitter;
 var Enum = require('enum');
 var push2keymap = require('./Push2Keymap');
+
+import {EventEmitter} from 'events';
 
 // Make our Enums easily printable
 Enum.prototype.toString=function(){
   return this.enums.map((k)=>k.key).toString();
 };
+
+interface Midi {
+  _input:any;
+  _output:any;
+
+}
 
 class Midi extends EventEmitter {
   constructor(portName='Ableton Push 2 User Port',virtual=false){
@@ -23,9 +31,9 @@ class Midi extends EventEmitter {
   send(messageType,message){
     this._output.send(messageType,message);
   }
-  removeAllListeners(){
-    this._input.removeAllListeners();
-  }
+  // removeAllListeners(){
+  //   this._input.removeAllListeners();
+  // }
   close() {
     this._input.close();
     this._output.close();
@@ -96,6 +104,14 @@ class TouchStripConfiguration {
     };
   }
 }
+interface DeviceIdentity{
+  firmwareVersion:string;
+  serialNumber:number;
+  softwareBuild:number;
+  deviceFamilyCode:number;
+  deviceFamilyMemberCode:number;
+  boardRevision:number;
+}
 class DeviceIdentity {
   constructor(msg){
     this.firmwareVersion = msg[12]+'.'+msg[13];
@@ -110,14 +126,31 @@ class DeviceIdentity {
     this.boardRevision = msg[21];
   }
 }
+interface DeviceStatistics{
+  powerStatus:string; // 'USB' or 'External A/C'
+  runId:number;
+  upTime:number;
+}
 class DeviceStatistics{
   constructor(bytes){
     this.powerStatus = bytes[7]==0?'USB':'External A/C';
     this.runId = bytes[8];
-    this.uptime = bit7array2dec(bytes.slice(9,14));
+    this.upTime = bit7array2dec(bytes.slice(9,14));
   }
 }
-
+interface SysexResponse{
+  bytes:[number];
+}
+interface Push2 {
+  isVirtual:boolean;
+  midiModes:any;
+  ports:any;
+  aftertouchModes:any;
+  deviceId:DeviceIdentity;
+  touchStripConfiguration:TouchStripConfiguration;
+  portName:string;
+  midi:Midi;
+}
 class Push2 extends EventEmitter {
   // Emits Events: 'device-id' deviceId received
   constructor(port='user',virtual=false){
@@ -210,15 +243,15 @@ class Push2 extends EventEmitter {
           _touchStripConfigurationProperties.forEach((prop)=>{
             if (conf[prop]!=currentConf[prop])
               reject(new Error("Current config does not match the config just attempted to set."+
-              " Current config is:",currentConf));
+              " Current config is:"+currentConf));
           });
           resolve(conf);
         }).catch(reject);
       };
-      if (typeof val=='undefined') sendCommand();
+      if (typeof val=='undefined') sendCommand(null);
       else if (typeof val == 'object') {
         // If an object is provided, will first get current config and then merge in options.
-        return this.getTouchStripConfiguration().then((conf)=>{
+        return this.getTouchStripConfiguration().then((conf:TouchStripConfiguration)=>{
           _touchStripConfigurationProperties.forEach((key)=> {
             if (typeof val[key]!='undefined') conf[key]=val[key];
           });
@@ -257,14 +290,14 @@ class Push2 extends EventEmitter {
     var bytes = [0x06];
     bytes.push(val);
     return this._sendCommandAndValidate(bytes).catch((err)=>{
-      throw new Error("Tried setting global LED brightness, but new value doesn't match.",err);
+      throw new Error("Tried setting global LED brightness, but new value doesn't match. "+err);
     });
     // return this._sendSysexCommand(bytes);
   }
   setMidiMode(mode){
     if (!this.midiModes.isDefined(mode))
       throw new Error(`Expected mode to be one of: ${this.midiModes}.`);
-    this._sendSysexRequest([0x0a, this.midiModes.get(mode)]).then((resp)=>{
+    this._sendSysexRequest([0x0a, this.midiModes.get(mode)]).then((resp:SysexResponse)=>{
       if (resp.bytes[7]!=this.midiModes.get(mode))
         throw new Error("Tried to set MIDI mode to ${mode} but responded with "+
           "mode ${this.midiModes.get(resp.bytes[7])}");
@@ -278,7 +311,7 @@ class Push2 extends EventEmitter {
   setDisplayBrightness(val){
     var req = [0x08, val&127, val>>7];
     return this._sendCommandAndValidate(req).catch((err)=>{
-      throw new Error("Tried setting display brightness, but new value doesn't match.",err);
+      throw new Error("Tried setting display brightness, but new value doesn't match. "+err);
     });
     // this._sendSysexCommand(req);
   }
@@ -315,7 +348,7 @@ class Push2 extends EventEmitter {
       next(new DeviceStatistics(resp.bytes));
     });
   }
-  _getParamPromise(commandId,responseHandler){
+  private _getParamPromise(commandId,responseHandler){
     return new Promise((resolve,reject)=>{
       if (typeof commandId=='number') commandId = [commandId];
       return this._sendSysexRequest(commandId).then((resp)=>{
@@ -323,7 +356,7 @@ class Push2 extends EventEmitter {
       }).catch(reject);
     });
   }
-  _sendCommandAndValidate(command){ // Sends a command, then validates
+  private _sendCommandAndValidate(command){ // Sends a command, then validates
     this._sendSysexCommand(command);
     // This relies on the assumption that the command id for 'get'
     // commands is the 'set' commandId +1
@@ -336,7 +369,7 @@ class Push2 extends EventEmitter {
       else next();
     });
   }
-  _sendSysexCommand(msg){
+  private _sendSysexCommand(msg){
     // Adds sysex message header and 0xf7 footer, then sends command.
     //[F0 00 21 1D 01 01 ... ... ... F7];
     var a = [0xf0, 0x00, 0x21, 0x1d, 0x01, 0x01 ];
@@ -346,7 +379,7 @@ class Push2 extends EventEmitter {
     // console.log("Sending sysex command:",a);
     this.midi.send('sysex',a);
   }
-  _sendSysexRequest(msg){
+  private _sendSysexRequest(msg){
     // Sends a sysex request and handles response. Throws error if no respone received after 1 second.
     return new Promise((resolve, reject)=>{
       var commandId = msg[0];
@@ -365,11 +398,11 @@ class Push2 extends EventEmitter {
       this._sendSysexCommand(msg);
     });
   }
-  _printMessage(msg) {
+  private _printMessage(msg) {
     var buttonName;
-    if (Object.keys(msg).includes('note')){
+    if (msg.note){
       buttonName = push2keymap.keys[msg.note];
-    } else if (Object.keys(msg).includes('controller')){
+    } else if (msg.controller){
       buttonName = push2keymap.controls[msg.controller];
     }
     if (msg._type=='noteon'){

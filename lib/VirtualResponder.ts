@@ -1,7 +1,17 @@
 var midi = require('midi-stream');
 var deepEqual = require('deep-equal');
 
-module.exports = class VirtualResponder{
+interface VirtualResponder {
+  portName:string;
+  midi:any;
+  _aftertouchMode:number;
+  _touchStripConfiguration:number;
+  _globalLEDBrightness:number;
+  _displayBrightness:[number];
+  _midiMode:number;
+}
+
+class VirtualResponder{
   constructor(port='user'){
     port = port[0].toUpperCase()+port.toLowerCase().slice(1);
     this.portName = `Virtual Ableton Push 2 ${port} Port`;
@@ -69,4 +79,6 @@ module.exports = class VirtualResponder{
     this.midi.removeAllListeners();
     this.midi.close();
   }
-};
+}
+
+module.exports = VirtualResponder;
