@@ -1,61 +1,46 @@
 "use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 Object.defineProperty(exports, "__esModule", { value: true });
-var easymidi = require('easymidi');
+const easymidi = require("easymidi");
 var push2keymap = require('./Push2Keymap');
-var events_1 = require("events");
-var TouchStripConfiguration_1 = require("./TouchStripConfiguration");
-var DeviceIdentity_1 = require("./DeviceIdentity");
-var DeviceStatistics_1 = require("./DeviceStatistics");
+const events_1 = require("events");
+const TouchStripConfiguration_1 = require("./TouchStripConfiguration");
+const DeviceIdentity_1 = require("./DeviceIdentity");
+const DeviceStatistics_1 = require("./DeviceStatistics");
 /**
 * Access to MIDI events through [easymidi](https://github.com/dinchak/node-easymidi) interface.
 */
-var Midi = /** @class */ (function (_super) {
-    __extends(Midi, _super);
-    function Midi(portName, virtual) {
-        if (portName === void 0) { portName = 'Ableton Push 2 User Port'; }
-        if (virtual === void 0) { virtual = false; }
-        var _this = _super.call(this) || this;
+class Midi extends events_1.EventEmitter {
+    constructor(portName = 'Ableton Push 2 User Port', virtual = false) {
+        super();
         // console.log(`Initializing ${portName}`);
-        _this._input = new easymidi.Input(portName, virtual);
-        _this._output = new easymidi.Output(portName, virtual);
-        _this._input.on('message', function (msg) {
+        this._input = new easymidi.Input(portName, virtual);
+        this._output = new easymidi.Output(portName, virtual);
+        this._input.on('message', (msg) => {
             // Emit all messages as 'message' events, plus each individual type separately.
-            _this.emit(msg._type, msg);
-            _this.emit('message', msg);
+            this.emit(msg._type, msg);
+            this.emit('message', msg);
         });
-        return _this;
     }
     /**
     * Send a midi message.
     * See [midi documentation](doc/midi.md#midi-message-event-types) for message types.
     */
-    Midi.prototype.send = function (messageType, message) {
+    send(messageType, message) {
         this._output.send(messageType, message);
-    };
-    Midi.prototype.removeAllListeners = function (event) {
+    }
+    removeAllListeners(event) {
         this._input.removeAllListeners(event);
         return this;
-    };
+    }
     /**
     * Remove event listeners and close ports.
     */
-    Midi.prototype.close = function () {
+    close() {
         this.removeAllListeners();
         this._input.close();
         this._output.close();
-    };
-    return Midi;
-}(events_1.EventEmitter));
+    }
+}
 exports.Midi = Midi;
 // var MIDIMODES = new Enum({LIVE:0,USER:1,BOTH:2}, {ignoreCase:true});
 var MIDIMODES;
@@ -88,40 +73,36 @@ var AFTERTOUCHMODES;
 * push2.setColor([2,3],30); 		 // Set track 2, scene 3 to color index 30
 * ```
 */
-var Push2 = /** @class */ (function (_super) {
-    __extends(Push2, _super);
+class Push2 extends events_1.EventEmitter {
     /**
     * @param port 'user' or 'live'
     * @param virtual Opens a virtual software port
     */
-    function Push2(port, virtual) {
-        if (port === void 0) { port = 'user'; }
-        if (virtual === void 0) { virtual = false; }
-        var _this = _super.call(this) || this;
-        _this.isVirtual = virtual;
-        _this.deviceId = null;
-        _this.touchStripConfiguration = null;
+    constructor(port = 'user', virtual = false) {
+        super();
+        this.isVirtual = virtual;
+        this.deviceId = null;
+        this.touchStripConfiguration = null;
         port = port.toLowerCase();
         if (!PORTS.propertyIsEnumerable(port))
             throw new Error("Expected port to be 'user' or 'live'.");
         port = port[0].toUpperCase() + port.toLowerCase().slice(1); // Capitalize the first letter
-        _this.portName = (virtual ? 'Virtual ' : '') + "Ableton Push 2 " + port + " Port";
-        _this.midi = new Midi(_this.portName, virtual);
-        _this.getDeviceId();
-        return _this;
+        this.portName = `${virtual ? 'Virtual ' : ''}Ableton Push 2 ${port} Port`;
+        this.midi = new Midi(this.portName, virtual);
+        this.getDeviceId();
         // this.getTouchStripConfiguration();
     }
-    Push2.prototype.monitor = function () {
+    monitor() {
         var portName = this.portName;
         this.midi.on('message', this._printMessage.bind(this));
-    };
-    Push2.prototype.stopMonitor = function () {
+    }
+    stopMonitor() {
         this.midi.removeListener('message', this._printMessage.bind(this));
-    };
-    Push2.prototype.close = function () {
+    }
+    close() {
         this.midi.close();
-    };
-    Push2.prototype.setColor = function (key, paletteIdx) {
+    }
+    setColor(key, paletteIdx) {
         // key: key name from push2keymap
         // pad can also be an array containing [track,scene] with values [[1-8],[1-8]]
         // paletteIdx: color palette index [1-127]
@@ -135,11 +116,11 @@ var Push2 = /** @class */ (function (_super) {
             keyName = key;
         }
         else if (typeof key == 'object') {
-            keyName = "pad " + key[0] + "," + key[1];
+            keyName = `pad ${key[0]},${key[1]}`;
             keyIndex = push2keymap.keysByName[keyName];
         }
         if (keyIndex == null)
-            throw keyName + " not found.";
+            throw `${keyName} not found.`;
         // console.log(`Setting color of ${keyName} (${keyIndex}) to ${paletteIdx}`);
         if (keyName.slice(0, 4) == "pad ") {
             this.midi.send('noteon', {
@@ -153,8 +134,8 @@ var Push2 = /** @class */ (function (_super) {
                 value: paletteIdx,
             });
         }
-    };
-    Push2.prototype.getDeviceId = function () {
+    }
+    getDeviceId() {
         var self = this;
         return new Promise(function (resolve, reject) {
             self.midi.on('sysex', function handler(msg) {
@@ -166,28 +147,26 @@ var Push2 = /** @class */ (function (_super) {
                 }
             });
             self.midi.send('sysex', [240, 126, 1, 6, 1, 247]);
-            setTimeout(function () {
+            setTimeout(() => {
                 reject(new Error("No device inquiry reponse received."));
             }, 1000);
         });
-    };
-    Push2.prototype.getTouchStripConfiguration = function () {
-        var _this = this;
-        return this._getParamPromise(0x18, function (resp, resolve) {
-            _this.touchStripConfiguration = new TouchStripConfiguration_1.TouchStripConfiguration(resp.bytes[7]);
-            _this.emit('received_touchStripConfiguration', _this.touchStripConfiguration);
-            resolve(_this.touchStripConfiguration);
+    }
+    getTouchStripConfiguration() {
+        return this._getParamPromise(0x18, (resp, resolve) => {
+            this.touchStripConfiguration = new TouchStripConfiguration_1.TouchStripConfiguration(resp.bytes[7]);
+            this.emit('received_touchStripConfiguration', this.touchStripConfiguration);
+            resolve(this.touchStripConfiguration);
         });
-    };
-    Push2.prototype.setTouchStripConfiguration = function (val) {
-        var _this = this;
+    }
+    setTouchStripConfiguration(val) {
         // If val is undefined will reset touch strip configuration to default.
-        return new Promise(function (resolve, reject) {
-            var sendCommand = function (encoded) {
+        return new Promise((resolve, reject) => {
+            var sendCommand = (encoded) => {
                 var conf = new TouchStripConfiguration_1.TouchStripConfiguration(encoded);
-                _this._sendSysexCommand([0x17, conf.getByteCode()]);
-                _this.getTouchStripConfiguration().then(function (currentConf) {
-                    Object.keys(_this.touchStripConfiguration).forEach(function (prop) {
+                this._sendSysexCommand([0x17, conf.getByteCode()]);
+                this.getTouchStripConfiguration().then((currentConf) => {
+                    Object.keys(this.touchStripConfiguration).forEach((prop) => {
                         if (conf[prop] != currentConf[prop])
                             reject(new Error("Current config does not match the config just attempted to set." +
                                 " Current config is:" + currentConf));
@@ -199,8 +178,8 @@ var Push2 = /** @class */ (function (_super) {
                 sendCommand(0);
             else if (typeof val == 'object') {
                 // If an object is provided, will first get current config and then merge in options.
-                return _this.getTouchStripConfiguration().then(function (conf) {
-                    Object.keys(_this.touchStripConfiguration).forEach(function (key) {
+                return this.getTouchStripConfiguration().then((conf) => {
+                    Object.keys(this.touchStripConfiguration).forEach((key) => {
                         if (typeof val[key] != 'undefined')
                             conf[key] = val[key];
                     });
@@ -213,65 +192,64 @@ var Push2 = /** @class */ (function (_super) {
             else
                 reject(new Error("Expected val to be either a number or an object."));
         });
-    };
-    Push2.prototype.setTouchStripLEDs = function (brightnessArray) {
-        var _this = this;
+    }
+    setTouchStripLEDs(brightnessArray) {
         // Uses sysex message to set LEDs.
         // brightnessArray should be an array of 31 brightness values from 0-7 where
         // brightnessArray[0] is the bottom LED, brightnessArray[30] is the top LED.
         if (brightnessArray.length != 31)
             throw new Error("Expected brightnessArray of length 31");
-        return new Promise(function (resolve, reject) {
+        return new Promise((resolve, reject) => {
             var bytes = [0x19];
-            for (var i = 0; i < 16; i++) {
+            for (let i = 0; i < 16; i++) {
                 bytes.push(((i != 15) ? (brightnessArray[i * 2 + 1]) << 3 : 0) | (brightnessArray[i * 2]));
             }
             // Lets make sure the set 'LEDsControlledByHost' and 'hostSendsSysex' to enable control.
-            return _this.setTouchStripConfiguration({ 'LEDsControlledByHost': 1, 'hostSendsSysex': 1 }).then(function (conf) {
+            return this.setTouchStripConfiguration({ 'LEDsControlledByHost': 1, 'hostSendsSysex': 1 }).then((conf) => {
                 // No need to wait for response since there is no "getTouchStripLEDs" command
-                _this._sendSysexCommand(bytes);
+                this._sendSysexCommand(bytes);
                 resolve();
             }).catch(reject);
         });
-    };
-    Push2.prototype.getGlobalLEDBrightness = function () {
-        return this._getParamPromise(0x07, function (resp, next) {
+    }
+    getGlobalLEDBrightness() {
+        return this._getParamPromise(0x07, (resp, next) => {
             next(resp.bytes[7]);
         });
-    };
-    Push2.prototype.setGlobalLEDBrightness = function (val) {
+    }
+    setGlobalLEDBrightness(val) {
         var bytes = [0x06];
         bytes.push(val);
-        return this._sendCommandAndValidate(bytes).catch(function (err) {
+        return this._sendCommandAndValidate(bytes).catch((err) => {
             throw new Error("Tried setting global LED brightness, but new value doesn't match. " + err);
         });
         // return this._sendSysexCommand(bytes);
-    };
-    Push2.prototype.setMidiMode = function (mode) {
+    }
+    setMidiMode(mode) {
         if (!MIDIMODES.propertyIsEnumerable(mode))
             throw new Error("Expected mode to be 'user', 'live', or 'both'.");
-        return this._sendSysexRequest([0x0a, MIDIMODES[mode]]).then(function (resp) {
+        return this._sendSysexRequest([0x0a, MIDIMODES[mode]]).then((resp) => {
             if (MIDIMODES[resp.bytes[7]] != (MIDIMODES[MIDIMODES[mode]]))
-                throw new Error("Tried to set MIDI mode to \"" + mode + "\" but responded with mode \"" + MIDIMODES[resp.bytes[7]] + "\"");
+                throw new Error(`Tried to set MIDI mode to "${mode}" but responded with mode "${MIDIMODES[resp.bytes[7]]}"`);
         });
-    };
-    Push2.prototype.getDisplayBrightness = function () {
-        return this._getParamPromise(0x09, function (resp, next) {
+    }
+    getDisplayBrightness() {
+        return this._getParamPromise(0x09, (resp, next) => {
             next(resp.bytes[7] | resp.bytes[8] << 7);
         });
-    };
-    Push2.prototype.setDisplayBrightness = function (val) {
+    }
+    setDisplayBrightness(val) {
         var req = [0x08, val & 127, val >> 7];
-        return this._sendCommandAndValidate(req).catch(function (err) {
+        return this._sendCommandAndValidate(req).catch((err) => {
             throw new Error("Tried setting display brightness, but new value doesn't match. " + err);
         });
         // this._sendSysexCommand(req);
-    };
-    Push2.prototype.getLEDColorPaletteEntry = function (paletteIdx) {
-        var decode = function (lower7bits, higher1bit) {
+    }
+    getLEDColorPaletteEntry(paletteIdx) {
+        var decode = (lower7bits, higher1bit) => {
             return lower7bits | higher1bit << 7;
         };
-        return this._getParamPromise([0x04, paletteIdx], function (resp, next) {
+        return this._getParamPromise([0x04, paletteIdx], (resp, next) => {
             next({
                 r: decode(resp.bytes[8], resp.bytes[9]),
                 g: decode(resp.bytes[10], resp.bytes[11]),
@@ -279,8 +257,8 @@ var Push2 = /** @class */ (function (_super) {
                 a: decode(resp.bytes[14], resp.bytes[15]),
             });
         });
-    };
-    Push2.prototype.setLEDColorPaletteEntry = function (paletteIdx, color, validate) {
+    }
+    setLEDColorPaletteEntry(paletteIdx, color, validate) {
         if (paletteIdx < 0 || paletteIdx > 127)
             throw new Error("paletteIdx should be 0-127.");
         var bytes = [0x03, paletteIdx];
@@ -296,73 +274,71 @@ var Push2 = /** @class */ (function (_super) {
             return this._sendCommandAndValidate(bytes);
         else
             this._sendSysexCommand(bytes);
-    };
-    Push2.prototype.reapplyColorPalette = function () {
+    }
+    reapplyColorPalette() {
         // trigger palette reapplication
         this._sendSysexCommand(0x05);
-    };
-    Push2.prototype.setAftertouchMode = function (mode) {
+    }
+    setAftertouchMode(mode) {
         // mode = mode.toLowerCase();
         if (!AFTERTOUCHMODES[mode])
-            throw new Error("Expected mode to be one of " + AFTERTOUCHMODES + ".");
+            throw new Error(`Expected mode to be one of ${AFTERTOUCHMODES}.`);
         return this._sendCommandAndValidate([0x1e, AFTERTOUCHMODES[mode]]);
-    };
-    Push2.prototype.getAftertouchMode = function () {
-        return this._getParamPromise([0x1f], function (resp, next) {
+    }
+    getAftertouchMode() {
+        return this._getParamPromise([0x1f], (resp, next) => {
             next(resp.bytes[7] == 0 ? 'channel' : 'poly');
         });
-    };
-    Push2.prototype.getStatistics = function () {
-        return this._getParamPromise([0x1a, 0x01], function (resp, next) {
+    }
+    getStatistics() {
+        return this._getParamPromise([0x1a, 0x01], (resp, next) => {
             next(new DeviceStatistics_1.DeviceStatistics(resp.bytes));
         });
-    };
-    Push2.prototype._getParamPromise = function (commandId, responseHandler) {
-        var _this = this;
-        return new Promise(function (resolve, reject) {
+    }
+    _getParamPromise(commandId, responseHandler) {
+        return new Promise((resolve, reject) => {
             if (typeof commandId == 'number')
                 commandId = [commandId];
-            return _this._sendSysexRequest(commandId).then(function (resp) {
+            return this._sendSysexRequest(commandId).then((resp) => {
                 responseHandler(resp, resolve);
             }).catch(reject);
         });
-    };
-    Push2.prototype._sendCommandAndValidate = function (command) {
+    }
+    _sendCommandAndValidate(command) {
         this._sendSysexCommand(command);
         // This relies on the assumption that the command id for 'get'
         // commands is the 'set' commandId +1
-        return this._getParamPromise(command[0] + 1, function (resp, next) {
+        return this._getParamPromise(command[0] + 1, (resp, next) => {
             // resp.bytes.slice(7,-1) should equal command.slice(1)
-            var bytesValid = command.slice(1).map(function (v, i) { return v == resp.bytes[i + 7]; });
+            var bytesValid = command.slice(1).map((v, i) => v == resp.bytes[i + 7]);
             if (bytesValid.includes(false))
-                throw new Error("Error validating setting. Sent " + command.slice(1) + "," +
-                    (" but setting is currently " + resp.bytes.slice(7, -1) + "."));
+                throw new Error(`Error validating setting. Sent ${command.slice(1)},` +
+                    ` but setting is currently ${resp.bytes.slice(7, -1)}.`);
             else
                 next();
         });
-    };
-    Push2.prototype._sendSysexCommand = function (msg) {
+    }
+    _sendSysexCommand(msg) {
         // Adds sysex message header and 0xf7 footer, then sends command.
         //[F0 00 21 1D 01 01 ... ... ... F7];
         var a = [0xf0, 0x00, 0x21, 0x1d, 0x01, 0x01];
         if (typeof msg == 'number')
             msg = [msg];
-        msg.forEach(function (v) { return a.push(v); });
+        msg.forEach((v) => a.push(v));
         a.push(0xf7);
         // console.log("Sending sysex command:",a.map((v)=>{return v.toString(16);}));
         this.midi.send('sysex', a);
-    };
-    Push2.prototype._sendSysexRequest = function (msg) {
-        var _this = this;
+    }
+    _sendSysexRequest(msg) {
         // Sends a sysex request and handles response. Throws error if no respone received after 1 second.
-        return new Promise(function (resolve, reject) {
+        return new Promise((resolve, reject) => {
             var commandId = msg[0];
-            setTimeout(function () {
+            setTimeout(() => {
                 reject(new Error("No usable sysex reponse message received."));
             }, 1000);
             // TODO: Set up only one listener, use to handle all messages.
-            _this.midi.setMaxListeners(100);
-            _this.midi.on('sysex', function handler(resp) {
+            this.midi.setMaxListeners(100);
+            this.midi.on('sysex', function handler(resp) {
                 if (resp.bytes[6] == commandId) {
                     // console.log("Waiting for "+commandId+" Got SYSEX:",resp);
                     this.midi.removeListener('sysex', handler);
@@ -370,11 +346,11 @@ var Push2 = /** @class */ (function (_super) {
                     // } else {
                     //   console.warn(`Received sysex message, but command id didn't match. Sent: ${msg} and got ${resp.bytes}`);
                 }
-            }.bind(_this));
-            _this._sendSysexCommand(msg);
+            }.bind(this));
+            this._sendSysexCommand(msg);
         });
-    };
-    Push2.prototype._printMessage = function (msg) {
+    }
+    _printMessage(msg) {
         var buttonName;
         if (msg.note) {
             buttonName = push2keymap.keys[msg.note];
@@ -383,29 +359,28 @@ var Push2 = /** @class */ (function (_super) {
             buttonName = push2keymap.controls[msg.controller];
         }
         if (msg._type == 'noteon') {
-            var toPrint = " " + buttonName + " pressed";
+            var toPrint = ` ${buttonName} pressed`;
             if (msg.note >= 36 && msg.note <= 99)
-                toPrint += ", velocity: " + msg.velocity;
+                toPrint += `, velocity: ${msg.velocity}`;
             console.log(this.portName, toPrint, msg);
         }
         else if (msg._type == 'noteoff')
-            console.log(this.portName, " " + buttonName + " released", msg);
+            console.log(this.portName, ` ${buttonName} released`, msg);
         else if (msg._type == 'poly aftertouch')
-            console.log(this.portName, " " + buttonName + " pressure change to: " + msg.pressure, msg);
+            console.log(this.portName, ` ${buttonName} pressure change to: ${msg.pressure}`, msg);
         else if (msg._type == 'cc')
-            console.log(this.portName, " " + buttonName + ": " + msg.value, msg);
+            console.log(this.portName, ` ${buttonName}: ${msg.value}`, msg);
         else if (msg._type == 'program')
-            console.log(this.portName, " program: " + msg.program, msg);
+            console.log(this.portName, ` program: ${msg.program}`, msg);
         else if (msg._type == 'channel aftertouch')
-            console.log(this.portName, " channel pressure change to: " + msg.pressure, msg);
+            console.log(this.portName, ` channel pressure change to: ${msg.pressure}`, msg);
         else if (msg._type == 'pitch')
-            console.log(this.portName, " pitch bend position: " + msg.value, msg);
+            console.log(this.portName, ` pitch bend position: ${msg.value}`, msg);
         else if (msg._type == 'position')
-            console.log(this.portName, " control wheel position: " + msg.value, msg);
+            console.log(this.portName, ` control wheel position: ${msg.value}`, msg);
         else
-            console.log(this.portName, " message not understood: ", msg);
-    };
-    return Push2;
-}(events_1.EventEmitter));
+            console.log(this.portName, ` message not understood: `, msg);
+    }
+}
 exports.Push2 = Push2;
 module.exports = Push2;

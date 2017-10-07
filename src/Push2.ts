@@ -1,4 +1,4 @@
-var easymidi = require('easymidi');
+import easymidi = require('easymidi');
 var push2keymap = require('./Push2Keymap');
 
 import {EventEmitter} from 'events';

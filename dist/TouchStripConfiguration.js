@@ -10,8 +10,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 //   'doAutoReturn',           // default: true
 //   'autoReturnToCenter',     // default: true, otherwise autoreturns to bottom
 // ];
-var TouchStripConfiguration = /** @class */ (function () {
-    function TouchStripConfiguration(val) {
+class TouchStripConfiguration {
+    constructor(val) {
         // can be instantiated with either a 7-bit valber to be decoded, or
         // val can be an object with options to be merged with defaults.
         if (typeof val == 'number')
@@ -26,7 +26,7 @@ var TouchStripConfiguration = /** @class */ (function () {
             this.autoReturnToCenter = true;
         }
     }
-    TouchStripConfiguration.prototype.getByteCode = function () {
+    getByteCode() {
         var res = 0;
         res |= this.LEDsControlledByHost ? 1 : 0;
         res |= this.hostSendsSysex ? 1 : 0 << 1;
@@ -36,8 +36,8 @@ var TouchStripConfiguration = /** @class */ (function () {
         res |= this.doAutoReturn ? 1 : 0 << 5;
         res |= this.autoReturnToCenter ? 1 : 0 << 6;
         return res;
-    };
-    TouchStripConfiguration.prototype._parseNum = function (num) {
+    }
+    _parseNum(num) {
         this.autoReturnToCenter = ((num >> 6) % 2) ? true : false;
         this.doAutoReturn = ((num >> 5) % 2) ? true : false;
         this.barStartsAtCenter = ((num >> 4) % 2) ? true : false;
@@ -45,7 +45,6 @@ var TouchStripConfiguration = /** @class */ (function () {
         this.valuesSentAsModWheel = ((num >> 2) % 2) ? true : false;
         this.hostSendsSysex = ((num >> 1) % 2) ? true : false;
         this.LEDsControlledByHost = ((num) % 2) ? true : false;
-    };
-    return TouchStripConfiguration;
-}());
+    }
+}
 exports.TouchStripConfiguration = TouchStripConfiguration;

@@ -1,3 +1,3 @@
 module.exports = {
-    Push2: require('./lib/Push2'),
+    Push2: require('./Push2'),
 };

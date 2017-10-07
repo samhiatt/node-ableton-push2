@@ -1,10 +1,9 @@
 var midi = require('midi-stream');
 var deepEqual = require('deep-equal');
-var VirtualResponder = /** @class */ (function () {
-    function VirtualResponder(port) {
-        if (port === void 0) { port = 'user'; }
+class VirtualResponder {
+    constructor(port = 'user') {
         port = port[0].toUpperCase() + port.toLowerCase().slice(1);
-        this.portName = "Virtual Ableton Push 2 " + port + " Port";
+        this.portName = `Virtual Ableton Push 2 ${port} Port`;
         this.midi = midi(this.portName);
         this._aftertouchMode = 0;
         this._touchStripConfiguration = 0;
@@ -13,74 +12,72 @@ var VirtualResponder = /** @class */ (function () {
         this._midiMode = 1;
         this._colors = { 127: [127, 1, 0, 0, 0, 0, 0, 1] };
     }
-    VirtualResponder.prototype.listen = function () {
-        var _this = this;
-        this.midi.on('data', function (msg) {
+    listen() {
+        this.midi.on('data', (msg) => {
             // console.log("Virtual device got ",msg);
             if (deepEqual(msg, [240, 126, 1, 6, 1, 247])) {
                 // console.log("Get Identity request received");
-                _this.midi.write([240, 126, 1, 6, 2, 0, 33, 29, 103, 50, 2, 0, 1, 0, 60, 0, 58, 31, 37, 8, 0, 1, 247]);
+                this.midi.write([240, 126, 1, 6, 2, 0, 33, 29, 103, 50, 2, 0, 1, 0, 60, 0, 58, 31, 37, 8, 0, 1, 247]);
             }
             else if (deepEqual(msg, [240, 0, 33, 29, 1, 1, 24, 247])) {
                 // console.log("Get touch strip configuration request received");
-                _this.midi.write([240, 0, 33, 29, 1, 1, 24, _this._touchStripConfiguration, 247]);
+                this.midi.write([240, 0, 33, 29, 1, 1, 24, this._touchStripConfiguration, 247]);
             }
             else if (deepEqual(msg.slice(0, 7), [240, 0, 33, 29, 1, 1, 23])) {
                 // console.log("Get touch strip configuration request received",msg[7]);
-                _this._touchStripConfiguration = msg[7];
+                this._touchStripConfiguration = msg[7];
             }
             else if (deepEqual(msg, [240, 0, 33, 29, 1, 1, 31, 247])) {
                 // console.log("Get aftertouch mode request received",msg);
-                _this.midi.write([240, 0, 33, 29, 1, 1, 31, _this._aftertouchMode, 247]);
+                this.midi.write([240, 0, 33, 29, 1, 1, 31, this._aftertouchMode, 247]);
             }
             else if (deepEqual(msg.slice(0, 7), [240, 0, 33, 29, 1, 1, 30])) {
                 // console.log("Set aftertouch mode request received:",msg);
-                _this._aftertouchMode = msg[7];
+                this._aftertouchMode = msg[7];
             }
             else if (deepEqual(msg, [240, 0, 33, 29, 1, 1, 7, 247])) {
                 // console.log("Get global LED brightness request received",msg);
-                _this.midi.write([240, 0, 33, 29, 1, 1, 7, _this._globalLEDBrightness, 247]);
+                this.midi.write([240, 0, 33, 29, 1, 1, 7, this._globalLEDBrightness, 247]);
             }
             else if (deepEqual(msg.slice(0, 7), [240, 0, 33, 29, 1, 1, 6])) {
                 // console.log("Set global LED brightness request received",msg);
-                _this._globalLEDBrightness = msg[7];
+                this._globalLEDBrightness = msg[7];
             }
             else if (deepEqual(msg, [240, 0, 33, 29, 1, 1, 9, 247])) {
                 // console.log("Get display brightness request received",this._displayBrightness[0],this._displayBrightness[1]);
-                _this.midi.write([240, 0, 33, 29, 1, 1, 9, _this._displayBrightness[0], _this._displayBrightness[1], 247]);
+                this.midi.write([240, 0, 33, 29, 1, 1, 9, this._displayBrightness[0], this._displayBrightness[1], 247]);
             }
             else if (deepEqual(msg, [240, 0, 33, 29, 1, 1, 26, 1, 247])) {
                 // console.log("Get statistics request received");
-                _this.midi.write([240, 0, 33, 29, 1, 1, 26, 1, 1, 99, 8, 0, 0, 0, 247]);
+                this.midi.write([240, 0, 33, 29, 1, 1, 26, 1, 1, 99, 8, 0, 0, 0, 247]);
             }
             else if (deepEqual(msg.slice(0, 7), [240, 0, 33, 29, 1, 1, 4])) {
                 // console.log("Get LED color palette entry request received",msg);
-                var bytes_1 = [240, 0, 33, 29, 1, 1, 4, msg[7]];
-                _this._colors[msg[7]].forEach(function (c) { bytes_1.push(c); });
-                bytes_1.push(247);
-                _this.midi.write(bytes_1);
+                let bytes = [240, 0, 33, 29, 1, 1, 4, msg[7]];
+                this._colors[msg[7]].forEach((c) => { bytes.push(c); });
+                bytes.push(247);
+                this.midi.write(bytes);
             }
             else if (deepEqual(msg.slice(0, 7), [240, 0, 33, 29, 1, 1, 8])) {
                 // console.log("Set display brightness request received",msg);
-                _this._displayBrightness = [msg[7], msg[8]];
+                this._displayBrightness = [msg[7], msg[8]];
             }
             else if (deepEqual(msg.slice(0, 7), [240, 0, 33, 29, 1, 1, 10])) {
                 // console.log("Set MIDI mode request received",msg);
-                _this._midiMode = msg[7];
-                _this.midi.write([240, 0, 33, 29, 1, 1, 10, 1, 247]);
+                this._midiMode = msg[7];
+                this.midi.write([240, 0, 33, 29, 1, 1, 10, 1, 247]);
             }
             else if (deepEqual(msg.slice(0, 7), [240, 0, 33, 29, 1, 1, 3])) {
                 // console.log("Set color palette entry request received",msg);
-                _this._colors[msg[7]] = msg.slice(8, -1);
+                this._colors[msg[7]] = msg.slice(8, -1);
             }
             else
                 console.log("Unhandled message received:", msg);
         });
-    };
-    VirtualResponder.prototype.close = function () {
+    }
+    close() {
         this.midi.removeAllListeners();
         this.midi.close();
-    };
-    return VirtualResponder;
-}());
+    }
+}
 module.exports = VirtualResponder;

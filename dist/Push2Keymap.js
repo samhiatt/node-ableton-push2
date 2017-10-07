@@ -157,10 +157,10 @@ exports.keys = {
     99: "pad 8,1",
 };
 exports.keysByName = {};
-Object.keys(exports.keys).forEach(function (key) {
+Object.keys(exports.keys).forEach((key) => {
     exports.keysByName[exports.keys[key]] = key;
 });
 exports.controlsByName = {};
-Object.keys(exports.controls).forEach(function (key) {
+Object.keys(exports.controls).forEach((key) => {
     exports.controlsByName[exports.controls[key]] = key;
 });

@@ -1,0 +1,3 @@
+function (err) {
+		finish(err, 'callback');
+	}

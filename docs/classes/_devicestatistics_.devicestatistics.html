@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>&quot;lib/utils&quot; | ableton-push2</title>
+	<title>DeviceStatistics | ableton-push2</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -40,6 +40,8 @@
 							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
 							<input type="checkbox" id="tsd-filter-externals" checked />
 							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
 						</div>
 					</div>
 					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
@@ -54,87 +56,105 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="_lib_utils_.html">&quot;lib/utils&quot;</a>
+					<a href="../modules/_devicestatistics_.html">&quot;DeviceStatistics&quot;</a>
+				</li>
+				<li>
+					<a href="_devicestatistics_.devicestatistics.html">DeviceStatistics</a>
 				</li>
 			</ul>
-			<h1>External module &quot;lib/utils&quot;</h1>
+			<h1>Class DeviceStatistics</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">DeviceStatistics</span>
+					</li>
+				</ul>
+			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Functions</h3>
+							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_lib_utils_.html#bit7array2dec" class="tsd-kind-icon">bit7array2dec</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_lib_utils_.html#dec2bit7array" class="tsd-kind-icon">dec2bit7array</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_devicestatistics_.devicestatistics.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_devicestatistics_.devicestatistics.html#powerstatus" class="tsd-kind-icon">power<wbr>Status</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_devicestatistics_.devicestatistics.html#runid" class="tsd-kind-icon">run<wbr>Id</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_devicestatistics_.devicestatistics.html#uptime" class="tsd-kind-icon">up<wbr>Time</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Functions</h2>
-				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
-					<a name="bit7array2dec" class="tsd-anchor"></a>
-					<h3>bit7array2dec</h3>
-					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
-						<li class="tsd-signature tsd-kind-icon">bit7array2dec<span class="tsd-signature-symbol">(</span>bit7array<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Device<wbr>Statistics<span class="tsd-signature-symbol">(</span>bytes<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_devicestatistics_.devicestatistics.html" class="tsd-signature-type">DeviceStatistics</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/0453422/lib/utils.ts#L4">lib/utils.ts:4</a></li>
+									<li>Defined in DeviceStatistics.ts:9</li>
 								</ul>
 							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Decodes an array of 7-bit values ordered from LSB to MSB.</p>
-								</div>
-							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>bit7array: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h5>
+									<h5>bytes: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_devicestatistics_.devicestatistics.html" class="tsd-signature-type">DeviceStatistics</a></h4>
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
-					<a name="dec2bit7array" class="tsd-anchor"></a>
-					<h3>dec2bit7array</h3>
-					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
-						<li class="tsd-signature tsd-kind-icon">dec2bit7array<span class="tsd-signature-symbol">(</span>num<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/0453422/lib/utils.ts#L12">lib/utils.ts:12</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Encodes a number as an array of 7-bit numbers from LSB to MSB.</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>num: <span class="tsd-signature-type">number</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h4>
-						</li>
-					</ul>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="powerstatus" class="tsd-anchor"></a>
+					<h3>power<wbr>Status</h3>
+					<div class="tsd-signature tsd-kind-icon">power<wbr>Status<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in DeviceStatistics.ts:5</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="runid" class="tsd-anchor"></a>
+					<h3>run<wbr>Id</h3>
+					<div class="tsd-signature tsd-kind-icon">run<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in DeviceStatistics.ts:6</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="uptime" class="tsd-anchor"></a>
+					<h3>up<wbr>Time</h3>
+					<div class="tsd-signature tsd-kind-icon">up<wbr>Time<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in DeviceStatistics.ts:7</li>
+						</ul>
+					</aside>
 				</section>
 			</section>
 		</div>
@@ -145,39 +165,54 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_index_.html">"index"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_lib_deviceidentity_.html">"lib/<wbr>Device<wbr>Identity"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_lib_devicestatistics_.html">"lib/<wbr>Device<wbr>Statistics"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_lib_push2_.html">"lib/<wbr>Push2"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_lib_push2keymap_.html">"lib/<wbr>Push2<wbr>Keymap"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_lib_touchstripconfiguration_.html">"lib/<wbr>Touch<wbr>Strip<wbr>Configuration"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_lib_virtualresponder_.html">"lib/<wbr>Virtual<wbr>Responder"</a>
+						<a href="../modules/_deviceidentity_.html">"<wbr>Device<wbr>Identity"</a>
 					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="_lib_utils_.html">"lib/utils"</a>
+						<a href="../modules/_devicestatistics_.html">"<wbr>Device<wbr>Statistics"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_push2_.html">"<wbr>Push2"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_push2keymap_.html">"<wbr>Push2<wbr>Keymap"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_touchstripconfiguration_.html">"<wbr>Touch<wbr>Strip<wbr>Configuration"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_virtualresponder_.html">"<wbr>Virtual<wbr>Responder"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_index_.html">"index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_utils_.html">"utils"</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="_lib_utils_.html#bit7array2dec" class="tsd-kind-icon">bit7array2dec</a>
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class tsd-parent-kind-external-module">
+						<a href="_devicestatistics_.devicestatistics.html" class="tsd-kind-icon">Device<wbr>Statistics</a>
+						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="_devicestatistics_.devicestatistics.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_devicestatistics_.devicestatistics.html#powerstatus" class="tsd-kind-icon">power<wbr>Status</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_devicestatistics_.devicestatistics.html#runid" class="tsd-kind-icon">run<wbr>Id</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_devicestatistics_.devicestatistics.html#uptime" class="tsd-kind-icon">up<wbr>Time</a>
+							</li>
+						</ul>
 					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="_lib_utils_.html#dec2bit7array" class="tsd-kind-icon">dec2bit7array</a>
-					</li>
+				</ul>
+				<ul class="after-current">
 				</ul>
 			</nav>
 		</div>

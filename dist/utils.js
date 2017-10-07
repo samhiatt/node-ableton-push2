@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 */
 function bit7array2dec(bit7array) {
     var dec = 0;
-    bit7array.forEach(function (v, i) { return dec |= v << (i * 7); });
+    bit7array.forEach((v, i) => dec |= v << (i * 7));
     return dec;
 }
 exports.bit7array2dec = bit7array2dec;

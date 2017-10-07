@@ -1,17 +1,15 @@
 {
   "compilerOptions": {
-    "lib": ["es6"],
     "module": "commonjs",
-    "target": "es5",
+    "target": "es6",
     "moduleResolution": "node",
     "declaration": true,
     "rootDir": ".",
     "outDir": "dist",
-    "types" : ["node","mocha"]
+    "types" : ["node"]
   },
   "include": [
     "index.ts",
-    "lib/**/*",
-    "spec/**/*"
+    "src/**/*",
   ]
 }

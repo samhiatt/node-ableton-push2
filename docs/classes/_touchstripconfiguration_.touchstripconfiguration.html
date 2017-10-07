@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>DeviceIdentity | ableton-push2</title>
+	<title>TouchStripConfiguration | ableton-push2</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -40,6 +40,8 @@
 							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
 							<input type="checkbox" id="tsd-filter-externals" checked />
 							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
 						</div>
 					</div>
 					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
@@ -54,13 +56,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_lib_deviceidentity_.html">&quot;lib/DeviceIdentity&quot;</a>
+					<a href="../modules/_touchstripconfiguration_.html">&quot;TouchStripConfiguration&quot;</a>
 				</li>
 				<li>
-					<a href="_lib_deviceidentity_.deviceidentity.html">DeviceIdentity</a>
+					<a href="_touchstripconfiguration_.touchstripconfiguration.html">TouchStripConfiguration</a>
 				</li>
 			</ul>
-			<h1>Class DeviceIdentity</h1>
+			<h1>Class TouchStripConfiguration</h1>
 		</div>
 	</div>
 </header>
@@ -71,7 +73,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">DeviceIdentity</span>
+						<span class="target">TouchStripConfiguration</span>
 					</li>
 				</ul>
 			</section>
@@ -82,18 +84,26 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_lib_deviceidentity_.deviceidentity.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_touchstripconfiguration_.touchstripconfiguration.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_lib_deviceidentity_.deviceidentity.html#boardrevision" class="tsd-kind-icon">board<wbr>Revision</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_lib_deviceidentity_.deviceidentity.html#devicefamilycode" class="tsd-kind-icon">device<wbr>Family<wbr>Code</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_lib_deviceidentity_.deviceidentity.html#devicefamilymembercode" class="tsd-kind-icon">device<wbr>Family<wbr>Member<wbr>Code</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_lib_deviceidentity_.deviceidentity.html#firmwareversion" class="tsd-kind-icon">firmware<wbr>Version</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_lib_deviceidentity_.deviceidentity.html#serialnumber" class="tsd-kind-icon">serial<wbr>Number</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_lib_deviceidentity_.deviceidentity.html#softwarebuild" class="tsd-kind-icon">software<wbr>Build</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_touchstripconfiguration_.touchstripconfiguration.html#ledscontrolledbyhost" class="tsd-kind-icon">LEDs<wbr>Controlled<wbr>ByHost</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_touchstripconfiguration_.touchstripconfiguration.html#ledsshowpoint" class="tsd-kind-icon">LEDs<wbr>Show<wbr>Point</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_touchstripconfiguration_.touchstripconfiguration.html#autoreturntocenter" class="tsd-kind-icon">auto<wbr>Return<wbr>ToCenter</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_touchstripconfiguration_.touchstripconfiguration.html#barstartsatcenter" class="tsd-kind-icon">bar<wbr>Starts<wbr>AtCenter</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_touchstripconfiguration_.touchstripconfiguration.html#doautoreturn" class="tsd-kind-icon">do<wbr>Auto<wbr>Return</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_touchstripconfiguration_.touchstripconfiguration.html#hostsendssysex" class="tsd-kind-icon">host<wbr>Sends<wbr>Sysex</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_touchstripconfiguration_.touchstripconfiguration.html#valuessentasmodwheel" class="tsd-kind-icon">values<wbr>Sent<wbr>AsMod<wbr>Wheel</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_touchstripconfiguration_.touchstripconfiguration.html#_parsenum" class="tsd-kind-icon">_parse<wbr>Num</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_touchstripconfiguration_.touchstripconfiguration.html#getbytecode" class="tsd-kind-icon">get<wbr>Byte<wbr>Code</a></li>
 							</ul>
 						</section>
 					</div>
@@ -105,22 +115,22 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Device<wbr>Identity<span class="tsd-signature-symbol">(</span>bytes<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_lib_deviceidentity_.deviceidentity.html" class="tsd-signature-type">DeviceIdentity</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Touch<wbr>Strip<wbr>Configuration<span class="tsd-signature-symbol">(</span>val<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><a href="_touchstripconfiguration_.touchstripconfiguration.html" class="tsd-signature-type">TouchStripConfiguration</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_touchstripconfiguration_.touchstripconfiguration.html" class="tsd-signature-type">TouchStripConfiguration</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/0453422/lib/DeviceIdentity.ts#L11">lib/DeviceIdentity.ts:11</a></li>
+									<li>Defined in TouchStripConfiguration.ts:22</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>bytes: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h5>
+									<h5>val: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><a href="_touchstripconfiguration_.touchstripconfiguration.html" class="tsd-signature-type">TouchStripConfiguration</a></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_lib_deviceidentity_.deviceidentity.html" class="tsd-signature-type">DeviceIdentity</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_touchstripconfiguration_.touchstripconfiguration.html" class="tsd-signature-type">TouchStripConfiguration</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -128,64 +138,117 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="boardrevision" class="tsd-anchor"></a>
-					<h3>board<wbr>Revision</h3>
-					<div class="tsd-signature tsd-kind-icon">board<wbr>Revision<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<a name="ledscontrolledbyhost" class="tsd-anchor"></a>
+					<h3>LEDs<wbr>Controlled<wbr>ByHost</h3>
+					<div class="tsd-signature tsd-kind-icon">LEDs<wbr>Controlled<wbr>ByHost<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/0453422/lib/DeviceIdentity.ts#L9">lib/DeviceIdentity.ts:9</a></li>
+							<li>Defined in TouchStripConfiguration.ts:4</li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="devicefamilycode" class="tsd-anchor"></a>
-					<h3>device<wbr>Family<wbr>Code</h3>
-					<div class="tsd-signature tsd-kind-icon">device<wbr>Family<wbr>Code<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<a name="ledsshowpoint" class="tsd-anchor"></a>
+					<h3>LEDs<wbr>Show<wbr>Point</h3>
+					<div class="tsd-signature tsd-kind-icon">LEDs<wbr>Show<wbr>Point<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/0453422/lib/DeviceIdentity.ts#L7">lib/DeviceIdentity.ts:7</a></li>
+							<li>Defined in TouchStripConfiguration.ts:7</li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="devicefamilymembercode" class="tsd-anchor"></a>
-					<h3>device<wbr>Family<wbr>Member<wbr>Code</h3>
-					<div class="tsd-signature tsd-kind-icon">device<wbr>Family<wbr>Member<wbr>Code<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<a name="autoreturntocenter" class="tsd-anchor"></a>
+					<h3>auto<wbr>Return<wbr>ToCenter</h3>
+					<div class="tsd-signature tsd-kind-icon">auto<wbr>Return<wbr>ToCenter<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/0453422/lib/DeviceIdentity.ts#L8">lib/DeviceIdentity.ts:8</a></li>
+							<li>Defined in TouchStripConfiguration.ts:10</li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="firmwareversion" class="tsd-anchor"></a>
-					<h3>firmware<wbr>Version</h3>
-					<div class="tsd-signature tsd-kind-icon">firmware<wbr>Version<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="barstartsatcenter" class="tsd-anchor"></a>
+					<h3>bar<wbr>Starts<wbr>AtCenter</h3>
+					<div class="tsd-signature tsd-kind-icon">bar<wbr>Starts<wbr>AtCenter<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/0453422/lib/DeviceIdentity.ts#L4">lib/DeviceIdentity.ts:4</a></li>
+							<li>Defined in TouchStripConfiguration.ts:8</li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="serialnumber" class="tsd-anchor"></a>
-					<h3>serial<wbr>Number</h3>
-					<div class="tsd-signature tsd-kind-icon">serial<wbr>Number<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<a name="doautoreturn" class="tsd-anchor"></a>
+					<h3>do<wbr>Auto<wbr>Return</h3>
+					<div class="tsd-signature tsd-kind-icon">do<wbr>Auto<wbr>Return<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/0453422/lib/DeviceIdentity.ts#L5">lib/DeviceIdentity.ts:5</a></li>
+							<li>Defined in TouchStripConfiguration.ts:9</li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="softwarebuild" class="tsd-anchor"></a>
-					<h3>software<wbr>Build</h3>
-					<div class="tsd-signature tsd-kind-icon">software<wbr>Build<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<a name="hostsendssysex" class="tsd-anchor"></a>
+					<h3>host<wbr>Sends<wbr>Sysex</h3>
+					<div class="tsd-signature tsd-kind-icon">host<wbr>Sends<wbr>Sysex<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/samhiatt/node-ableton-push2/blob/0453422/lib/DeviceIdentity.ts#L6">lib/DeviceIdentity.ts:6</a></li>
+							<li>Defined in TouchStripConfiguration.ts:5</li>
 						</ul>
 					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="valuessentasmodwheel" class="tsd-anchor"></a>
+					<h3>values<wbr>Sent<wbr>AsMod<wbr>Wheel</h3>
+					<div class="tsd-signature tsd-kind-icon">values<wbr>Sent<wbr>AsMod<wbr>Wheel<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in TouchStripConfiguration.ts:6</li>
+						</ul>
+					</aside>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="_parsenum" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _parse<wbr>Num</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">_parse<wbr>Num<span class="tsd-signature-symbol">(</span>num<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in TouchStripConfiguration.ts:48</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>num: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getbytecode" class="tsd-anchor"></a>
+					<h3>get<wbr>Byte<wbr>Code</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Byte<wbr>Code<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in TouchStripConfiguration.ts:37</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
 				</section>
 			</section>
 		</div>
@@ -196,28 +259,28 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_index_.html">"index"</a>
+						<a href="../modules/_deviceidentity_.html">"<wbr>Device<wbr>Identity"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_devicestatistics_.html">"<wbr>Device<wbr>Statistics"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_push2_.html">"<wbr>Push2"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_push2keymap_.html">"<wbr>Push2<wbr>Keymap"</a>
 					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="../modules/_lib_deviceidentity_.html">"lib/<wbr>Device<wbr>Identity"</a>
+						<a href="../modules/_touchstripconfiguration_.html">"<wbr>Touch<wbr>Strip<wbr>Configuration"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_lib_devicestatistics_.html">"lib/<wbr>Device<wbr>Statistics"</a>
+						<a href="../modules/_virtualresponder_.html">"<wbr>Virtual<wbr>Responder"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_lib_push2_.html">"lib/<wbr>Push2"</a>
+						<a href="../modules/_index_.html">"index"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_lib_push2keymap_.html">"lib/<wbr>Push2<wbr>Keymap"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_lib_touchstripconfiguration_.html">"lib/<wbr>Touch<wbr>Strip<wbr>Configuration"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_lib_virtualresponder_.html">"lib/<wbr>Virtual<wbr>Responder"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_lib_utils_.html">"lib/utils"</a>
+						<a href="../modules/_utils_.html">"utils"</a>
 					</li>
 				</ul>
 			</nav>
@@ -226,28 +289,37 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_lib_deviceidentity_.deviceidentity.html" class="tsd-kind-icon">Device<wbr>Identity</a>
+						<a href="_touchstripconfiguration_.touchstripconfiguration.html" class="tsd-kind-icon">Touch<wbr>Strip<wbr>Configuration</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="_lib_deviceidentity_.deviceidentity.html#constructor" class="tsd-kind-icon">constructor</a>
+								<a href="_touchstripconfiguration_.touchstripconfiguration.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_lib_deviceidentity_.deviceidentity.html#boardrevision" class="tsd-kind-icon">board<wbr>Revision</a>
+								<a href="_touchstripconfiguration_.touchstripconfiguration.html#ledscontrolledbyhost" class="tsd-kind-icon">LEDs<wbr>Controlled<wbr>ByHost</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_lib_deviceidentity_.deviceidentity.html#devicefamilycode" class="tsd-kind-icon">device<wbr>Family<wbr>Code</a>
+								<a href="_touchstripconfiguration_.touchstripconfiguration.html#ledsshowpoint" class="tsd-kind-icon">LEDs<wbr>Show<wbr>Point</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_lib_deviceidentity_.deviceidentity.html#devicefamilymembercode" class="tsd-kind-icon">device<wbr>Family<wbr>Member<wbr>Code</a>
+								<a href="_touchstripconfiguration_.touchstripconfiguration.html#autoreturntocenter" class="tsd-kind-icon">auto<wbr>Return<wbr>ToCenter</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_lib_deviceidentity_.deviceidentity.html#firmwareversion" class="tsd-kind-icon">firmware<wbr>Version</a>
+								<a href="_touchstripconfiguration_.touchstripconfiguration.html#barstartsatcenter" class="tsd-kind-icon">bar<wbr>Starts<wbr>AtCenter</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_lib_deviceidentity_.deviceidentity.html#serialnumber" class="tsd-kind-icon">serial<wbr>Number</a>
+								<a href="_touchstripconfiguration_.touchstripconfiguration.html#doautoreturn" class="tsd-kind-icon">do<wbr>Auto<wbr>Return</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_lib_deviceidentity_.deviceidentity.html#softwarebuild" class="tsd-kind-icon">software<wbr>Build</a>
+								<a href="_touchstripconfiguration_.touchstripconfiguration.html#hostsendssysex" class="tsd-kind-icon">host<wbr>Sends<wbr>Sysex</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_touchstripconfiguration_.touchstripconfiguration.html#valuessentasmodwheel" class="tsd-kind-icon">values<wbr>Sent<wbr>AsMod<wbr>Wheel</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="_touchstripconfiguration_.touchstripconfiguration.html#_parsenum" class="tsd-kind-icon">_parse<wbr>Num</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_touchstripconfiguration_.touchstripconfiguration.html#getbytecode" class="tsd-kind-icon">get<wbr>Byte<wbr>Code</a>
 							</li>
 						</ul>
 					</li>

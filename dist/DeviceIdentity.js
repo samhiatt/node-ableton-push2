@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var utils_1 = require("./utils");
-var DeviceIdentity = /** @class */ (function () {
-    function DeviceIdentity(bytes) {
+const utils_1 = require("./utils");
+class DeviceIdentity {
+    constructor(bytes) {
         this.firmwareVersion = bytes[12] + '.' + bytes[13];
         // Parse serial number
         this.serialNumber = utils_1.bit7array2dec(bytes.slice(16, 21));
@@ -14,6 +14,5 @@ var DeviceIdentity = /** @class */ (function () {
         this.deviceFamilyMemberCode = utils_1.bit7array2dec(bytes.slice(10, 12));
         this.boardRevision = bytes[21];
     }
-    return DeviceIdentity;
-}());
+}
 exports.DeviceIdentity = DeviceIdentity;

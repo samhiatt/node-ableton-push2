@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "NODE_ENV=test ./node_modules/mocha/bin/mocha test",
-    "build": "./node_modules/typescript/bin/tsc && ./node_modules/typedoc/bin/typedoc --out docs/ --excludePrivate --excludeNotExported && touch docs/.nojekyll"
+    "build": "node_modules/gulp/bin/gulp.js build"
   },
   "repository": {
     "type": "git",
@@ -21,8 +21,12 @@
   },
   "devDependencies": {
     "@types/mocha": "^2.2.43",
-    "@types/node": "^8.0.31",
+    "@types/node": "^8.0.33",
     "chai": "^4.1.2",
+    "gulp": "^3.9.1",
+    "gulp-typedoc": "^2.1.0",
+    "gulp-typescript": "^3.2.2",
+    "merge2": "^1.2.0",
     "mocha": "^3.5.3",
     "typedoc": "^0.8.0",
     "typescript": "^2.5.3"
