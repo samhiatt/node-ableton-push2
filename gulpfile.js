@@ -24,22 +24,24 @@ gulp.task("typedoc", function() {
       // name: "my-project",
       // theme: "/path/to/my/theme",
       // plugins: ["my", "plugins"],
-      module: "commonjs",
-      target: "es6",
-      ignoreCompilerErrors: false,
+      // module: "commonjs",
+      // target: "es6",
+      // ignoreCompilerErrors: false,
       version: true,
     }));
 });
 
-gulp.task('docs', ['typedoc'], function(cb) {
+gulp.task('docs', gulp.series('typedoc', async function(cb) {
     fs.writeFileSync('docs/.nojekyll',cb);
-});
+}));
 
-gulp.task('watch', ['scripts'], function() {
-    gulp.watch(tsSources, ['scripts']);
-});
+gulp.task('watch', gulp.series('scripts', async function() {
+    gulp.watch(tsSources, gulp.series('scripts'));
+}));
 
-gulp.task('build', ['scripts', 'docs']);
+gulp.task('build', gulp.parallel('scripts', 'docs'));
+
+gulp.task('default', gulp.parallel('build'));
 
 // TODO: Create a 'release' script to do:
 // ['docs','scripts'], bump version, commit and tag, then npm publish

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Push2 = exports.AFTERTOUCHMODES = exports.PORTS = exports.MIDIMODES = exports.Midi = void 0;
 const easymidi = require("easymidi");
 var push2keymap = require('./Push2Keymap');
 const events_1 = require("events");
@@ -13,8 +14,22 @@ class Midi extends events_1.EventEmitter {
     constructor(portName = 'Ableton Push 2 User Port', virtual = false) {
         super();
         // console.log(`Initializing ${portName}`);
-        this._input = new easymidi.Input(portName, virtual);
-        this._output = new easymidi.Output(portName, virtual);
+        // console.log("Available MIDI inputs: ", easymidi.getInputs());
+        // console.log("Available MIDI Outputs: ", easymidi.getOutputs());
+        // var _inputPortName = easymidi.getInputs().filter((val,i,arr)=>{
+        //     console.log(val, val.startsWith('Ableton'));
+        //     return val.startsWith("Ableton");
+        // });
+        var _inputPorts = easymidi.getInputs().filter((val, i, arr) => val.startsWith(portName));
+        if (_inputPorts.length == 0) {
+            throw new Error("No MIDI input for " + portName);
+        }
+        var _outputPorts = easymidi.getOutputs().filter((val, i, arr) => val.startsWith(portName));
+        if (_outputPorts.length == 0) {
+            throw new Error("No MIDI output for " + portName);
+        }
+        this._input = new easymidi.Input(_inputPorts[0], virtual);
+        this._output = new easymidi.Output(_outputPorts[0], virtual);
         this._input.on('message', (msg) => {
             // Emit all messages as 'message' events, plus each individual type separately.
             this.emit(msg._type, msg);
@@ -87,7 +102,8 @@ class Push2 extends events_1.EventEmitter {
         if (!PORTS.propertyIsEnumerable(port))
             throw new Error("Expected port to be 'user' or 'live'.");
         port = port[0].toUpperCase() + port.toLowerCase().slice(1); // Capitalize the first letter
-        this.portName = `${virtual ? 'Virtual ' : ''}Ableton Push 2 ${port} Port`;
+        //this.portName = `${virtual?'Virtual ':''}Ableton Push 2 ${port} Port`;
+        this.portName = "Ableton Push 2";
         this.midi = new Midi(this.portName, virtual);
         this.getDeviceId();
         // this.getTouchStripConfiguration();
@@ -109,26 +125,26 @@ class Push2 extends events_1.EventEmitter {
         var keyIndex = null;
         var keyName = "";
         //if (typeof key == 'number') keyIndex=key;
-        if (typeof key == 'string') {
+        if (typeof key == 'string') { // must be a key name
             keyIndex = push2keymap.controlsByName[key];
             if (keyIndex == null)
                 keyIndex = push2keymap.keysByName[key];
             keyName = key;
         }
-        else if (typeof key == 'object') {
+        else if (typeof key == 'object') { // must be an array [track,scene]
             keyName = `pad ${key[0]},${key[1]}`;
             keyIndex = push2keymap.keysByName[keyName];
         }
         if (keyIndex == null)
             throw `${keyName} not found.`;
         // console.log(`Setting color of ${keyName} (${keyIndex}) to ${paletteIdx}`);
-        if (keyName.slice(0, 4) == "pad ") {
+        if (keyName.slice(0, 4) == "pad ") { // Must be for a pad control, use noteon
             this.midi.send('noteon', {
                 note: keyIndex,
                 velocity: paletteIdx,
             });
         }
-        else {
+        else { // Must be a button, use cc
             this.midi.send('cc', {
                 controller: keyIndex,
                 value: paletteIdx,
@@ -139,7 +155,7 @@ class Push2 extends events_1.EventEmitter {
         var self = this;
         return new Promise(function (resolve, reject) {
             self.midi.on('sysex', function handler(msg) {
-                if (msg.bytes[4] == 2) {
+                if (msg.bytes[4] == 2) { // device identity reply
                     self.midi.removeListener('sysex', handler);
                     self.deviceId = new DeviceIdentity_1.DeviceIdentity(msg.bytes);
                     self.emit('device-id', self.deviceId);
@@ -208,7 +224,7 @@ class Push2 extends events_1.EventEmitter {
             return this.setTouchStripConfiguration({ 'LEDsControlledByHost': 1, 'hostSendsSysex': 1 }).then((conf) => {
                 // No need to wait for response since there is no "getTouchStripLEDs" command
                 this._sendSysexCommand(bytes);
-                resolve();
+                resolve(null);
             }).catch(reject);
         });
     }
@@ -229,7 +245,7 @@ class Push2 extends events_1.EventEmitter {
         if (!MIDIMODES.propertyIsEnumerable(mode))
             throw new Error("Expected mode to be 'user', 'live', or 'both'.");
         return this._sendSysexRequest([0x0a, MIDIMODES[mode]]).then((resp) => {
-            if (MIDIMODES[resp.bytes[7]] != (MIDIMODES[MIDIMODES[mode]]))
+            if (MIDIMODES[resp.bytes[7]] != (MIDIMODES[MIDIMODES[mode]])) // Workaround typecript compiler error
                 throw new Error(`Tried to set MIDI mode to "${mode}" but responded with mode "${MIDIMODES[resp.bytes[7]]}"`);
         });
     }
@@ -339,7 +355,7 @@ class Push2 extends events_1.EventEmitter {
             // TODO: Set up only one listener, use to handle all messages.
             this.midi.setMaxListeners(100);
             this.midi.on('sysex', function handler(resp) {
-                if (resp.bytes[6] == commandId) {
+                if (resp.bytes[6] == commandId) { // This response matches our request.
                     // console.log("Waiting for "+commandId+" Got SYSEX:",resp);
                     this.midi.removeListener('sysex', handler);
                     resolve(resp);
@@ -378,8 +394,7 @@ class Push2 extends events_1.EventEmitter {
             console.log(this.portName, ` pitch bend position: ${msg.value}`, msg);
         else if (msg._type == 'position')
             console.log(this.portName, ` control wheel position: ${msg.value}`, msg);
-        else
-            console.log(this.portName, ` message not understood: `, msg);
+        //else console.log(this.portName,` message not understood: `,msg);
     }
 }
 exports.Push2 = Push2;

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.dec2bit7array = exports.bit7array2dec = void 0;
 /**
 * Decodes an array of 7-bit values ordered from LSB to MSB.
 */
