@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.TouchStripConfiguration = void 0;
 // https://github.com/Ableton/push-interface/blob/master/doc/AbletonPush2MIDIDisplayInterface.asc#210-touch-strip
 // var _touchStripConfigurationProperties=[
 //   'LEDsControlledByHost',   // default: false, controlled by push

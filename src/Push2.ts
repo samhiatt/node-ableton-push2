@@ -18,8 +18,22 @@ export class Midi extends EventEmitter {
   constructor(portName:string='Ableton Push 2 User Port',virtual:boolean=false){
     super();
     // console.log(`Initializing ${portName}`);
-    this._input = new easymidi.Input(portName,virtual);
-    this._output = new easymidi.Output(portName,virtual);
+    // console.log("Available MIDI inputs: ", easymidi.getInputs());
+    // console.log("Available MIDI Outputs: ", easymidi.getOutputs());
+    // var _inputPortName = easymidi.getInputs().filter((val,i,arr)=>{
+    //     console.log(val, val.startsWith('Ableton'));
+    //     return val.startsWith("Ableton");
+    // });
+    var _inputPorts = easymidi.getInputs().filter((val,i,arr)=>val.startsWith(portName));
+    if (_inputPorts.length == 0) {
+      throw new Error("No MIDI input for "+portName);
+    }
+    var _outputPorts = easymidi.getOutputs().filter((val,i,arr)=>val.startsWith(portName));
+    if (_outputPorts.length == 0) {
+      throw new Error("No MIDI output for "+portName);
+    }
+    this._input = new easymidi.Input(_inputPorts[0], virtual);
+    this._output = new easymidi.Output(_outputPorts[0], virtual);
     this._input.on('message',(msg)=>{
       // Emit all messages as 'message' events, plus each individual type separately.
       this.emit(msg._type,msg);
@@ -107,7 +121,8 @@ export class Push2 extends EventEmitter {
     if (!PORTS.propertyIsEnumerable(port))
       throw new Error("Expected port to be 'user' or 'live'.");
     port = port[0].toUpperCase() + port.toLowerCase().slice(1); // Capitalize the first letter
-    this.portName = `${virtual?'Virtual ':''}Ableton Push 2 ${port} Port`;
+    //this.portName = `${virtual?'Virtual ':''}Ableton Push 2 ${port} Port`;
+    this.portName = "Ableton Push 2";
     this.midi = new Midi(this.portName,virtual);
     this.getDeviceId();
     // this.getTouchStripConfiguration();
@@ -219,7 +234,7 @@ export class Push2 extends EventEmitter {
       return this.setTouchStripConfiguration({'LEDsControlledByHost':1,'hostSendsSysex':1}).then((conf)=>{
         // No need to wait for response since there is no "getTouchStripLEDs" command
         this._sendSysexCommand(bytes);
-        resolve();
+        resolve(null);
       }).catch(reject);
     });
   }
@@ -381,7 +396,7 @@ export class Push2 extends EventEmitter {
       console.log(this.portName,` pitch bend position: ${msg.value}`,msg);
     else if (msg._type=='position')
       console.log(this.portName,` control wheel position: ${msg.value}`,msg);
-    else console.log(this.portName,` message not understood: `,msg);
+    //else console.log(this.portName,` message not understood: `,msg);
   }
 }
 module.exports = Push2;

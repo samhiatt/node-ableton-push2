@@ -1,6 +1,6 @@
 var ableton = require('../dist');
 var expect = require('chai').expect;
-var VirtualResponder = require('../dist/lib/VirtualResponder');
+var VirtualResponder = require('../dist/VirtualResponder');
 
 describe('Push2',()=>{
   describe('constructor',()=>{

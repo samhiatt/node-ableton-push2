@@ -10,5 +10,5 @@ export interface TouchStripConfiguration {
 export declare class TouchStripConfiguration {
     constructor(val: number | TouchStripConfiguration);
     getByteCode(): number;
-    private _parseNum(num);
+    private _parseNum;
 }
