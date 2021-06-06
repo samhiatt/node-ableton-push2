@@ -208,15 +208,22 @@ describe('Push2',()=>{
     describe("getSelectedPadSensitivity", ()=>{
       it("should get sensitivity for a single pad", ()=>{
         return push2.getSelectedPadSensitivity(1,1).then((resp)=>{
-          expect(resp).to.be.a('number');
-          expect(resp).to.be.lessThanOrEqual(2).and.greaterThanOrEqual(0);
+          expect(resp).to.be.a('number')
+              .and.lessThanOrEqual(2)
+              .and.greaterThanOrEqual(0);
         });
       });
     });
     describe("getPadSensitivitySettings", ()=>{
       it("should get sensitivity setting for all pads", ()=>{
         return push2.getPadSensitivitySettings().then((resp)=>{
-
+          expect(resp).to.be.a('object')
+              .and.have.a.property('8');
+          expect(resp[8]).to.be.a('object')
+              .and.have.a.property('8');
+          expect(resp[8][8]).to.be.a('number')
+              .and.lessThanOrEqual(2)
+              .and.greaterThanOrEqual(0);
         });
       })
     });

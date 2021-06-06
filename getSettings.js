@@ -19,7 +19,7 @@ var push2 = new ableton.Push2('live', false);
 //     process.exit(1);
 // });
 
-push2.get400gPadValues(8).then((resp)=> {
+push2.get400gPadValues().then((resp)=> {
     console.log(resp);
     process.exit(0);
 }).catch((err)=>{
