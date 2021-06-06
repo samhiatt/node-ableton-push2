@@ -320,6 +320,37 @@ class Push2 extends events_1.EventEmitter {
             next(new DeviceStatistics_1.DeviceStatistics(resp.bytes));
         });
     }
+    getLEDWhiteBalance(colorGroup) {
+        return __awaiter(this, void 0, void 0, function* () {
+            assert(colorGroup >= 0 && colorGroup <= 10, "'colorGroup' should be a number from 1 to 10.");
+            return yield this._getParamPromise([0x15, colorGroup], (resp, next) => {
+                next(resp.bytes[8] | resp.bytes[9] << 7);
+            });
+        });
+    }
+    getLEDWhiteBalanceGroups() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return {
+                rgbButtons: {
+                    r: yield this.getLEDWhiteBalance(0),
+                    g: yield this.getLEDWhiteBalance(1),
+                    b: yield this.getLEDWhiteBalance(2),
+                },
+                rgbPads: {
+                    r: yield this.getLEDWhiteBalance(3),
+                    g: yield this.getLEDWhiteBalance(4),
+                    b: yield this.getLEDWhiteBalance(5),
+                },
+                displayButtons: {
+                    r: yield this.getLEDWhiteBalance(6),
+                    g: yield this.getLEDWhiteBalance(7),
+                    b: yield this.getLEDWhiteBalance(8),
+                },
+                whiteButtons: yield this.getLEDWhiteBalance(9),
+                touchStrip: yield this.getLEDWhiteBalance(10),
+            };
+        });
+    }
     getSelectedPadSensitivity(scene, track) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield this._getParamPromise([0x29, scene, track], (resp, next) => {

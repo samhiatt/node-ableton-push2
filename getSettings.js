@@ -1,28 +1,14 @@
 var ableton = require('.');
-
 var push2 = new ableton.Push2('live', false);
 
-// var scene = 1;
-// var track = 1;
-// push2.getSelectedPadSensitivity(scene,track).then((val)=>{
-//     console.log("scene: "+scene.toString()+
-//         " track: "+track.toString()+
-//         " val: "+val.toString());
-//     process.exit(0);
-// });
-
-// push2.getPadSensitivitySettings().then((resp)=> {
-//     console.log(resp);
-//     process.exit(0);
-// }).catch((err)=>{
-//     console.error("Error getting settings:"+err.toString());
-//     process.exit(1);
-// });
-
-push2.get400gPadValues().then((resp)=> {
-    console.log(resp);
+(async function() {
+    console.log("Device ID:", await push2.getDeviceId());
+    console.log("Pad 400g Values:", JSON.stringify(await push2.get400gPadValues()));
+    console.log("Pad Sensitivity:", await push2.getPadSensitivitySettings());
+    console.log("White Balance Groups:", await push2.getLEDWhiteBalanceGroups());
+})().then(()=>{
     process.exit(0);
 }).catch((err)=>{
-    console.error("Error getting 400g pad values:"+err.toString());
+    console.error(err);
     process.exit(1);
 });

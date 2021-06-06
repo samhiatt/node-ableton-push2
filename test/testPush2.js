@@ -205,6 +205,37 @@ describe('Push2',()=>{
         });
       });
     });
+    describe("getLEDWhiteBalance", ()=>{
+      it("should get white balance settings for a single color group", ()=>{
+        return push2.getLEDWhiteBalance(1).then((resp)=>{
+          expect(resp).to.be.a('number')
+              .and.greaterThanOrEqual(0)
+              .and.lessThanOrEqual(1024);
+        });
+      });
+    });
+    describe("getLEDWhiteBalanceGroups", ()=>{
+      it("should get white balance settings for all color groups", ()=>{
+        return push2.getLEDWhiteBalanceGroups().then((resp)=>{
+          expect(resp).to.be.a('object');
+          expect(resp).to.have.property('rgbButtons');
+          expect(resp).to.have.property('rgbPads');
+          expect(resp).to.have.property('displayButtons');
+          expect(resp).to.have.property('whiteButtons');
+          expect(resp).to.have.property('touchStrip');
+          expect(resp['rgbButtons']).to.be.a('object');
+          expect(resp['rgbButtons']).to.have.property('r');
+          expect(resp['rgbButtons']).to.have.property('g');
+          expect(resp['rgbButtons']).to.have.property('b');
+          expect(resp['rgbButtons']['r']).to.be.a('number')
+              .and.greaterThanOrEqual(0)
+              .and.lessThanOrEqual(1024);
+          expect(resp['whiteButtons']).to.be.a('number')
+              .and.greaterThanOrEqual(0)
+              .and.lessThanOrEqual(1024);
+        });
+      });
+    });
     describe("getSelectedPadSensitivity", ()=>{
       it("should get sensitivity for a single pad", ()=>{
         return push2.getSelectedPadSensitivity(1,1).then((resp)=>{

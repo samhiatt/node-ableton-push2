@@ -20,7 +20,7 @@
 |`0x0B` |   |   |   |Set LED PWM Frequency Correction |PWM Frequency
 |`0x13` |   |   |yes|Sample Pedal Data |Pedal Sampling
 |`0x14` |   |   |   |Set LED White Balance  |White Balance
-|`0x15` |   |   |yes|Get LED White Balance|White Balance
+|`0x15` | x |   |yes|Get LED White Balance|White Balance
 |`0x17` | x | x |   |Set Touch Strip Configuration  |Touch Strip
 |`0x18` | x | x |yes|Get Touch Strip Configuration|Touch Strip
 |`0x19` | x |   |   |Set Touch Strip LEDs|Touch Strip

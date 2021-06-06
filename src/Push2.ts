@@ -65,12 +65,14 @@ export class Midi extends EventEmitter {
 interface SysexResponse{
   bytes:number[];
 }
+
 export interface Color {
   r: number;
   g: number;
   b: number;
   a: number;
 }
+
 export interface Push2 {
   isVirtual:boolean;
   deviceId:DeviceIdentity;
@@ -99,6 +101,20 @@ export interface Grid8x8 {
   6: Scene8track;
   7: Scene8track;
   8: Scene8track;
+}
+
+export interface RGB {
+  r:number;
+  g:number;
+  b:number;
+}
+
+export interface WhiteBalanceGroups {
+  rgbButtons: RGB;
+  rgbPads: RGB;
+  displayButtons: RGB;
+  whiteButtons: number;
+  touchStrip: number;
 }
 
 // var MIDIMODES = new Enum({LIVE:0,USER:1,BOTH:2}, {ignoreCase:true});
@@ -339,6 +355,33 @@ export class Push2 extends EventEmitter {
     return this._getParamPromise([0x1a,0x01],(resp,next)=>{
       next(new DeviceStatistics(resp.bytes));
     });
+  }
+  async getLEDWhiteBalance(colorGroup:number):Promise<number> {
+    assert(colorGroup>=0 && colorGroup<=10, "'colorGroup' should be a number from 1 to 10.");
+    return await this._getParamPromise([0x15, colorGroup], (resp, next)=>{
+      next(resp.bytes[8] | resp.bytes[9]<<7 );
+    });
+  }
+  async getLEDWhiteBalanceGroups():Promise<WhiteBalanceGroups> {
+    return {
+      rgbButtons: {
+        r: await this.getLEDWhiteBalance(0),
+        g: await this.getLEDWhiteBalance(1),
+        b: await this.getLEDWhiteBalance(2),
+      },
+      rgbPads: {
+        r: await this.getLEDWhiteBalance(3),
+        g: await this.getLEDWhiteBalance(4),
+        b: await this.getLEDWhiteBalance(5),
+      },
+      displayButtons: {
+        r: await this.getLEDWhiteBalance(6),
+        g: await this.getLEDWhiteBalance(7),
+        b: await this.getLEDWhiteBalance(8),
+      },
+      whiteButtons: await this.getLEDWhiteBalance(9),
+      touchStrip: await this.getLEDWhiteBalance(10),
+    };
   }
   async getSelectedPadSensitivity(scene:number, track:number):Promise<number> {
     return await this._getParamPromise([0x29, scene, track], (resp,next)=>{

@@ -57,6 +57,18 @@ export interface Grid8x8 {
     7: Scene8track;
     8: Scene8track;
 }
+export interface RGB {
+    r: number;
+    g: number;
+    b: number;
+}
+export interface WhiteBalanceGroups {
+    rgbButtons: RGB;
+    rgbPads: RGB;
+    displayButtons: RGB;
+    whiteButtons: number;
+    touchStrip: number;
+}
 export declare enum MIDIMODES {
     live = 0,
     user = 1,
@@ -112,6 +124,8 @@ export declare class Push2 extends EventEmitter {
     setAftertouchMode(mode: any): Promise<void>;
     getAftertouchMode(): Promise<string>;
     getStatistics(): Promise<number[]>;
+    getLEDWhiteBalance(colorGroup: number): Promise<number>;
+    getLEDWhiteBalanceGroups(): Promise<WhiteBalanceGroups>;
     getSelectedPadSensitivity(scene: number, track: number): Promise<number>;
     getPadSensitivitySettings(): Promise<{}>;
     get400gPadValuesForScene(scene: number): Promise<Scene8track>;
