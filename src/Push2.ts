@@ -5,6 +5,7 @@ import {EventEmitter} from 'events';
 import {TouchStripConfiguration} from './TouchStripConfiguration';
 import {DeviceIdentity} from './DeviceIdentity';
 import {DeviceStatistics} from './DeviceStatistics';
+import assert = require("assert");
 
 export interface Midi {
   _input:any;
@@ -272,7 +273,7 @@ export class Push2 extends EventEmitter {
     // this._sendSysexCommand(req);
   }
   getLEDColorPaletteEntry(paletteIdx:number){
-    var decode = (lower7bits,higher1bit)=>{
+    var decode = (lower7bits:number, higher1bit:number):number=>{
       return lower7bits | higher1bit << 7;
     };
     return this._getParamPromise([0x04,paletteIdx],(resp,next)=>{
@@ -318,12 +319,12 @@ export class Push2 extends EventEmitter {
       next(new DeviceStatistics(resp.bytes));
     });
   }
-  async getSelectedPadSensitivity(scene:number, track:number) {
+  async getSelectedPadSensitivity(scene:number, track:number):Promise<number> {
     return await this._getParamPromise([0x29, scene, track], (resp,next)=>{
       next(resp.bytes[9]);
     });
   }
-  async getPadSensitivitySettings() {
+  async getPadSensitivitySettings():Promise<{}> {
     // return new Promise(async (resolve, reject) => {
     var padSettings = {};
     for (var scene = 1; scene < 9; scene++) {
@@ -338,7 +339,18 @@ export class Push2 extends EventEmitter {
     return padSettings;
     // });
   }
-  private _getParamPromise(commandId,responseHandler){
+  async get400gPadValues(scene: number):Promise<number[]> {
+    assert(scene>=0 && scene<=8, "'scene' should be a number from 1 to 8.");
+    return await this._getParamPromise([0x1D, scene], (resp, next)=>{
+      var vals = resp.bytes.slice(8, -1);
+      var res = [];
+      for (var i=0; i<8; i++) {
+        res.push(vals[i*2] | vals[i*2+1]<<7);
+      }
+      next(res);
+    });
+  }
+  private _getParamPromise(commandId,responseHandler):Promise<any> {
     return new Promise((resolve,reject)=>{
       if (typeof commandId=='number') commandId = [commandId];
       return this._sendSysexRequest(commandId).then((resp)=>{

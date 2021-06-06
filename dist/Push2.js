@@ -16,6 +16,7 @@ const events_1 = require("events");
 const TouchStripConfiguration_1 = require("./TouchStripConfiguration");
 const DeviceIdentity_1 = require("./DeviceIdentity");
 const DeviceStatistics_1 = require("./DeviceStatistics");
+const assert = require("assert");
 /**
 * Access to MIDI events through [easymidi](https://github.com/dinchak/node-easymidi) interface.
 */
@@ -342,6 +343,19 @@ class Push2 extends events_1.EventEmitter {
             }
             return padSettings;
             // });
+        });
+    }
+    get400gPadValues(scene) {
+        return __awaiter(this, void 0, void 0, function* () {
+            assert(scene >= 0 && scene <= 8, "'scene' should be a number from 1 to 8.");
+            return yield this._getParamPromise([0x1D, scene], (resp, next) => {
+                var vals = resp.bytes.slice(8, -1);
+                var res = [];
+                for (var i = 0; i < 8; i++) {
+                    res.push(vals[i * 2] | vals[i * 2 + 1] << 7);
+                }
+                next(res);
+            });
         });
     }
     _getParamPromise(commandId, responseHandler) {
