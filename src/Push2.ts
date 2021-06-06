@@ -79,6 +79,28 @@ export interface Push2 {
   midi:Midi;
 }
 
+export interface Scene8track {
+  1: number;
+  2: number;
+  3: number;
+  4: number;
+  5: number;
+  6: number;
+  7: number;
+  8: number;
+}
+
+export interface Grid8x8 {
+  1: Scene8track;
+  2: Scene8track;
+  3: Scene8track;
+  4: Scene8track;
+  5: Scene8track;
+  6: Scene8track;
+  7: Scene8track;
+  8: Scene8track;
+}
+
 // var MIDIMODES = new Enum({LIVE:0,USER:1,BOTH:2}, {ignoreCase:true});
 export enum MIDIMODES {
   live=0,
@@ -121,24 +143,23 @@ export class Push2 extends EventEmitter {
     port = port.toLowerCase();
     if (!PORTS.propertyIsEnumerable(port))
       throw new Error("Expected port to be 'user' or 'live'.");
-    port = port[0].toUpperCase() + port.toLowerCase().slice(1); // Capitalize the first letter
+    //port = port[0].toUpperCase() + port.toLowerCase().slice(1); // Capitalize the first letter
     //this.portName = `${virtual?'Virtual ':''}Ableton Push 2 ${port} Port`;
     this.portName = "Ableton Push 2";
     this.midi = new Midi(this.portName,virtual);
     this.getDeviceId();
     // this.getTouchStripConfiguration();
   }
-  monitor(){
-    var portName = this.portName;
+  monitor():void {
     this.midi.on('message', this._printMessage.bind(this));
   }
-  stopMonitor(){
+  stopMonitor():void {
     this.midi.removeListener('message', this._printMessage.bind(this));
   }
-  close(){
+  close():void {
     this.midi.close();
   }
-  setColor(key,paletteIdx) {
+  setColor(key,paletteIdx):void {
     // key: key name from push2keymap
     // pad can also be an array containing [track,scene] with values [[1-8],[1-8]]
     // paletteIdx: color palette index [1-127]
@@ -167,7 +188,7 @@ export class Push2 extends EventEmitter {
       });
     }
   }
-  getDeviceId(){
+  getDeviceId():Promise<DeviceIdentity> {
     var self= this;
     return new Promise(function (resolve, reject) {
       self.midi.on('sysex',function handler(msg) {
@@ -184,14 +205,14 @@ export class Push2 extends EventEmitter {
       },1000);
     });
   }
-  getTouchStripConfiguration() {
+  getTouchStripConfiguration():Promise<TouchStripConfiguration> {
     return this._getParamPromise(0x18,(resp,resolve)=>{
       this.touchStripConfiguration = new TouchStripConfiguration(resp.bytes[7]);
       this.emit('received_touchStripConfiguration',this.touchStripConfiguration);
       resolve(this.touchStripConfiguration);
     });
   }
-  setTouchStripConfiguration(val){
+  setTouchStripConfiguration(val):Promise<TouchStripConfiguration> {
     // If val is undefined will reset touch strip configuration to default.
     return new Promise((resolve,reject)=>{
       var sendCommand = (encoded)=>{
@@ -221,7 +242,7 @@ export class Push2 extends EventEmitter {
       else reject(new Error("Expected val to be either a number or an object."));
     });
   }
-  setTouchStripLEDs(brightnessArray){
+  setTouchStripLEDs(brightnessArray):Promise<null> {
     // Uses sysex message to set LEDs.
     // brightnessArray should be an array of 31 brightness values from 0-7 where
     // brightnessArray[0] is the bottom LED, brightnessArray[30] is the top LED.
@@ -239,12 +260,12 @@ export class Push2 extends EventEmitter {
       }).catch(reject);
     });
   }
-  getGlobalLEDBrightness(){
+  getGlobalLEDBrightness():Promise<number> {
     return this._getParamPromise(0x07,(resp,next)=>{
       next(resp.bytes[7]);
     });
   }
-  setGlobalLEDBrightness(val){
+  setGlobalLEDBrightness(val):Promise<void> {
     var bytes = [0x06];
     bytes.push(val);
     return this._sendCommandAndValidate(bytes).catch((err)=>{
@@ -252,7 +273,7 @@ export class Push2 extends EventEmitter {
     });
     // return this._sendSysexCommand(bytes);
   }
-  setMidiMode(mode){
+  setMidiMode(mode):Promise<void> {
     if (!MIDIMODES.propertyIsEnumerable(mode))
       throw new Error("Expected mode to be 'user', 'live', or 'both'.");
     return this._sendSysexRequest([0x0a, MIDIMODES[mode]]).then((resp:SysexResponse)=>{
@@ -260,19 +281,19 @@ export class Push2 extends EventEmitter {
         throw new Error(`Tried to set MIDI mode to "${mode}" but responded with mode "${MIDIMODES[resp.bytes[7]]}"`);
     });
   }
-  getDisplayBrightness(){
+  getDisplayBrightness():Promise<number> {
     return this._getParamPromise(0x09,(resp,next)=>{
       next( resp.bytes[7] | resp.bytes[8]<<7 );
     });
   }
-  setDisplayBrightness(val){
+  setDisplayBrightness(val):Promise<void> {
     var req = [0x08, val&127, val>>7];
     return this._sendCommandAndValidate(req).catch((err)=>{
       throw new Error("Tried setting display brightness, but new value doesn't match. "+err);
     });
     // this._sendSysexCommand(req);
   }
-  getLEDColorPaletteEntry(paletteIdx:number){
+  getLEDColorPaletteEntry(paletteIdx:number):Promise<{r:number, g:number, b:number, a:number}> {
     var decode = (lower7bits:number, higher1bit:number):number=>{
       return lower7bits | higher1bit << 7;
     };
@@ -285,7 +306,7 @@ export class Push2 extends EventEmitter {
       });
     });
   }
-  setLEDColorPaletteEntry(paletteIdx:number, color:Color,validate:false){
+  setLEDColorPaletteEntry(paletteIdx:number, color:Color,validate:false):Promise<void>|void {
     if (paletteIdx<0 || paletteIdx>127) throw new Error("paletteIdx should be 0-127.");
     var bytes=[0x03, paletteIdx];
     bytes.push(color.r & 127);
@@ -299,22 +320,22 @@ export class Push2 extends EventEmitter {
     if (validate) return this._sendCommandAndValidate(bytes);
     else this._sendSysexCommand(bytes);
   }
-  reapplyColorPalette(){
+  reapplyColorPalette():void {
     // trigger palette reapplication
     this._sendSysexCommand(0x05);
   }
-  setAftertouchMode(mode){
+  setAftertouchMode(mode):Promise<void> {
     // mode = mode.toLowerCase();
     if (!AFTERTOUCHMODES[mode])
       throw new Error(`Expected mode to be one of ${AFTERTOUCHMODES}.`);
     return this._sendCommandAndValidate([0x1e, AFTERTOUCHMODES[mode]]);
   }
-  getAftertouchMode(){
+  getAftertouchMode():Promise<string> {
     return this._getParamPromise([0x1f],(resp,next)=>{
       next(resp.bytes[7]==0?'channel':'poly');
     });
   }
-  getStatistics(){
+  getStatistics():Promise<number[]> {
     return this._getParamPromise([0x1a,0x01],(resp,next)=>{
       next(new DeviceStatistics(resp.bytes));
     });
@@ -339,16 +360,23 @@ export class Push2 extends EventEmitter {
     return padSettings;
     // });
   }
-  async get400gPadValues(scene: number):Promise<number[]> {
+  get400gPadValuesForScene(scene: number):Promise<Scene8track> {
     assert(scene>=0 && scene<=8, "'scene' should be a number from 1 to 8.");
-    return await this._getParamPromise([0x1D, scene], (resp, next)=>{
+    return this._getParamPromise([0x1D, scene], (resp, next)=>{
       var vals = resp.bytes.slice(8, -1);
-      var res = [];
+      var res = {};
       for (var i=0; i<8; i++) {
-        res.push(vals[i*2] | vals[i*2+1]<<7);
+        res[i+1] = vals[i*2] | vals[i*2+1]<<7;
       }
       next(res);
     });
+  }
+  async get400gPadValues():Promise<Grid8x8> {
+    var res = <Grid8x8>{};
+    for (var i=0; i<8; i++){
+      res[i+1] = await this.get400gPadValuesForScene(i+1);
+    }
+    return res;
   }
   private _getParamPromise(commandId,responseHandler):Promise<any> {
     return new Promise((resolve,reject)=>{
@@ -358,7 +386,7 @@ export class Push2 extends EventEmitter {
       }).catch(reject);
     });
   }
-  private _sendCommandAndValidate(command){ // Sends a command, then validates
+  private _sendCommandAndValidate(command):Promise<void> { // Sends a command, then validates
     this._sendSysexCommand(command);
     // This relies on the assumption that the command id for 'get'
     // commands is the 'set' commandId +1
@@ -371,7 +399,7 @@ export class Push2 extends EventEmitter {
       else next();
     });
   }
-  private _sendSysexCommand(msg){
+  private _sendSysexCommand(msg):void {
     // Adds sysex message header and 0xf7 footer, then sends command.
     //[F0 00 21 1D 01 01 ... ... ... F7];
     var a = [0xf0, 0x00, 0x21, 0x1d, 0x01, 0x01 ];
@@ -381,7 +409,7 @@ export class Push2 extends EventEmitter {
     // console.log("Sending sysex command:",a.map((v)=>{return v.toString(16);}));
     this.midi.send('sysex',a);
   }
-  private _sendSysexRequest(msg){
+  private _sendSysexRequest(msg):Promise<SysexResponse> {
     // Sends a sysex request and handles response. Throws error if no respone received after 1 second.
     return new Promise((resolve, reject)=>{
       var commandId = msg[0];
@@ -402,7 +430,7 @@ export class Push2 extends EventEmitter {
       this._sendSysexCommand(msg);
     });
   }
-  private _printMessage(msg) {
+  private _printMessage(msg):void {
     var buttonName;
     if (msg.note){
       buttonName = push2keymap.keys[msg.note];

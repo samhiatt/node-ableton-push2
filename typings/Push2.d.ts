@@ -37,6 +37,26 @@ export interface Push2 {
     portName: string;
     midi: Midi;
 }
+export interface Scene8track {
+    1: number;
+    2: number;
+    3: number;
+    4: number;
+    5: number;
+    6: number;
+    7: number;
+    8: number;
+}
+export interface Grid8x8 {
+    1: Scene8track;
+    2: Scene8track;
+    3: Scene8track;
+    4: Scene8track;
+    5: Scene8track;
+    6: Scene8track;
+    7: Scene8track;
+    8: Scene8track;
+}
 export declare enum MIDIMODES {
     live = 0,
     user = 1,
@@ -72,24 +92,30 @@ export declare class Push2 extends EventEmitter {
     stopMonitor(): void;
     close(): void;
     setColor(key: any, paletteIdx: any): void;
-    getDeviceId(): Promise<unknown>;
-    getTouchStripConfiguration(): Promise<any>;
-    setTouchStripConfiguration(val: any): Promise<unknown>;
-    setTouchStripLEDs(brightnessArray: any): Promise<unknown>;
-    getGlobalLEDBrightness(): Promise<any>;
-    setGlobalLEDBrightness(val: any): Promise<any>;
+    getDeviceId(): Promise<DeviceIdentity>;
+    getTouchStripConfiguration(): Promise<TouchStripConfiguration>;
+    setTouchStripConfiguration(val: any): Promise<TouchStripConfiguration>;
+    setTouchStripLEDs(brightnessArray: any): Promise<null>;
+    getGlobalLEDBrightness(): Promise<number>;
+    setGlobalLEDBrightness(val: any): Promise<void>;
     setMidiMode(mode: any): Promise<void>;
-    getDisplayBrightness(): Promise<any>;
-    setDisplayBrightness(val: any): Promise<any>;
-    getLEDColorPaletteEntry(paletteIdx: number): Promise<any>;
-    setLEDColorPaletteEntry(paletteIdx: number, color: Color, validate: false): Promise<any>;
+    getDisplayBrightness(): Promise<number>;
+    setDisplayBrightness(val: any): Promise<void>;
+    getLEDColorPaletteEntry(paletteIdx: number): Promise<{
+        r: number;
+        g: number;
+        b: number;
+        a: number;
+    }>;
+    setLEDColorPaletteEntry(paletteIdx: number, color: Color, validate: false): Promise<void> | void;
     reapplyColorPalette(): void;
-    setAftertouchMode(mode: any): Promise<any>;
-    getAftertouchMode(): Promise<any>;
-    getStatistics(): Promise<any>;
+    setAftertouchMode(mode: any): Promise<void>;
+    getAftertouchMode(): Promise<string>;
+    getStatistics(): Promise<number[]>;
     getSelectedPadSensitivity(scene: number, track: number): Promise<number>;
     getPadSensitivitySettings(): Promise<{}>;
-    get400gPadValues(scene: number): Promise<number[]>;
+    get400gPadValuesForScene(scene: number): Promise<Scene8track>;
+    get400gPadValues(): Promise<Grid8x8>;
     private _getParamPromise;
     private _sendCommandAndValidate;
     private _sendSysexCommand;

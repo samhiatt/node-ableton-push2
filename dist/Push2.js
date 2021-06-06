@@ -111,7 +111,7 @@ class Push2 extends events_1.EventEmitter {
         port = port.toLowerCase();
         if (!PORTS.propertyIsEnumerable(port))
             throw new Error("Expected port to be 'user' or 'live'.");
-        port = port[0].toUpperCase() + port.toLowerCase().slice(1); // Capitalize the first letter
+        //port = port[0].toUpperCase() + port.toLowerCase().slice(1); // Capitalize the first letter
         //this.portName = `${virtual?'Virtual ':''}Ableton Push 2 ${port} Port`;
         this.portName = "Ableton Push 2";
         this.midi = new Midi(this.portName, virtual);
@@ -119,7 +119,6 @@ class Push2 extends events_1.EventEmitter {
         // this.getTouchStripConfiguration();
     }
     monitor() {
-        var portName = this.portName;
         this.midi.on('message', this._printMessage.bind(this));
     }
     stopMonitor() {
@@ -345,17 +344,24 @@ class Push2 extends events_1.EventEmitter {
             // });
         });
     }
-    get400gPadValues(scene) {
+    get400gPadValuesForScene(scene) {
+        assert(scene >= 0 && scene <= 8, "'scene' should be a number from 1 to 8.");
+        return this._getParamPromise([0x1D, scene], (resp, next) => {
+            var vals = resp.bytes.slice(8, -1);
+            var res = {};
+            for (var i = 0; i < 8; i++) {
+                res[i + 1] = vals[i * 2] | vals[i * 2 + 1] << 7;
+            }
+            next(res);
+        });
+    }
+    get400gPadValues() {
         return __awaiter(this, void 0, void 0, function* () {
-            assert(scene >= 0 && scene <= 8, "'scene' should be a number from 1 to 8.");
-            return yield this._getParamPromise([0x1D, scene], (resp, next) => {
-                var vals = resp.bytes.slice(8, -1);
-                var res = [];
-                for (var i = 0; i < 8; i++) {
-                    res.push(vals[i * 2] | vals[i * 2 + 1] << 7);
-                }
-                next(res);
-            });
+            var res = {};
+            for (var i = 0; i < 8; i++) {
+                res[i + 1] = yield this.get400gPadValuesForScene(i + 1);
+            }
+            return res;
         });
     }
     _getParamPromise(commandId, responseHandler) {

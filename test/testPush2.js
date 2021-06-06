@@ -1,6 +1,7 @@
 var ableton = require('../dist');
 var expect = require('chai').expect;
 var VirtualResponder = require('../dist/VirtualResponder');
+const exp = require("constants");
 
 describe('Push2',()=>{
   describe('constructor',()=>{
@@ -45,7 +46,8 @@ describe('Push2',()=>{
       it('should get device identity response',()=>{
         return push2.getDeviceId().then((resp)=>{
           expect(resp).to.have.property('firmwareVersion','1.0');
-          expect(resp).to.have.property('softwareBuild',60);
+          expect(resp).to.have.property('softwareBuild');
+          expect(resp['softwareBuild']).to.be.a('number');
           expect(resp).to.have.property('boardRevision',1);
           if (isVirtual) expect(resp).to.have.property('serialNumber',17387450);
           else expect(resp).to.have.property('serialNumber');
@@ -200,6 +202,44 @@ describe('Push2',()=>{
       it ("should verify the original value",()=>{
         return push2.getLEDColorPaletteEntry(127).then((resp)=>{
           expect(resp).to.deep.equal(origColor);
+        });
+      });
+    });
+    describe("getSelectedPadSensitivity", ()=>{
+      it("should get sensitivity for a single pad", ()=>{
+        return push2.getSelectedPadSensitivity(1,1).then((resp)=>{
+          expect(resp).to.be.a('number');
+          expect(resp).to.be.lessThanOrEqual(2).and.greaterThanOrEqual(0);
+        });
+      });
+    });
+    describe("getPadSensitivitySettings", ()=>{
+      it("should get sensitivity setting for all pads", ()=>{
+        return push2.getPadSensitivitySettings().then((resp)=>{
+
+        });
+      })
+    });
+    describe("get400gPadValuesForScene", ()=>{
+      it("should get 400g pad values for a scene", ()=>{
+        return push2.get400gPadValuesForScene(8).then((resp)=>{
+          expect(resp).to.be.a('object');
+          expect(resp).to.have.a.property('8');
+          expect(resp[8]).to.be.a('number')
+              .and.lessThanOrEqual(4095)
+              .and.greaterThanOrEqual(0);
+        });
+      });
+    });
+    describe("get400gPadValues", ()=>{
+      it("should get 400g pad values for a scene", ()=>{
+        return push2.get400gPadValues().then((resp)=>{
+          expect(resp).to.be.a('object');
+          expect(resp).to.have.a.property('8');
+          expect(resp[8]).to.have.a.property('8');
+          expect(resp[8][8]).to.be.a('number')
+              .and.lessThanOrEqual(4095)
+              .and.greaterThanOrEqual(0);
         });
       });
     });
