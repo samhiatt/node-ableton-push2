@@ -26,15 +26,15 @@
 |`0x19` | x |   |   |Set Touch Strip LEDs|Touch Strip
 |`0x1A` | x | x |yes|Request Statistics |Statistics
 |`0x1B` |   |   |   |Set Pad Parameters |Pad Parameters (aftertouch thresholds)
-|`0x1D` | x |   |yes|Read 400g Pad Values From Flash |Individual Pad Calibration (get400gPadValuesForScene, get400gPadValues)
+|`0x1D` | x | x |yes|Read 400g Pad Values From Flash |Individual Pad Calibration (get400gPadValuesForScene, get400gPadValues)
 |`0x1E` | x | x |   |Set Aftertouch Mode |Aftertouch
 |`0x1F` | x | x |yes|Get Aftertouch Mode|Aftertouch
 |`0x20` |   |   |   |Set Pad Velocity Curve Entry |Velocity Curve
 |`0x21` |   |   |yes|Get Pad Velocity Curve Entry|Velocity Curve
 |`0x22` |   |   |   |Set Temporary 400g Pad Values |Individual Pad Calibration
 |`0x23` |   |   |yes|Flash LED White Balance|White Balance
-|`0x28` | x |   |   |Select Pad Settings |Pad Settings (getPadSensitivitySettings, getSelectedPadSensitivity)
-|`0x29` |   |   |yes|Get Selected Pad Settings|Pad Settings
+|`0x28` |   |   |   |Select Pad Settings |Pad Settings
+|`0x29` | x | x |yes|Get Selected Pad Settings|Pad Settings (getPadSensitivitySettings, getSelectedPadSensitivity)
 |`0x30` |   |   |   |Configure Pedal |Pedal Configuration
 |`0x31` |   |   |   |Set Pedal Curve Limits|Pedal Configuration
 |`0x32` |   |   |   |Set Pedal Curve Entries|Pedal Configuration
