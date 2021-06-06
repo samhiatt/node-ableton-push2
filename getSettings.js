@@ -8,10 +8,12 @@ var push2 = new ableton.Push2('live', false);
 //     console.log("scene: "+scene.toString()+
 //         " track: "+track.toString()+
 //         " val: "+val.toString());
+//     process.exit(0);
 // });
 
 // push2.getPadSensitivitySettings().then((resp)=> {
 //     console.log(resp);
+//     process.exit(0);
 // }).catch((err)=>{
 //     console.error("Error getting settings:"+err.toString());
 //     process.exit(1);
@@ -19,6 +21,7 @@ var push2 = new ableton.Push2('live', false);
 
 push2.get400gPadValues(8).then((resp)=> {
     console.log(resp);
+    process.exit(0);
 }).catch((err)=>{
     console.error("Error getting 400g pad values:"+err.toString());
     process.exit(1);
