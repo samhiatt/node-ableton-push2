@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Push2 = exports.AFTERTOUCHMODES = exports.PORTS = exports.MIDIMODES = exports.Midi = void 0;
 const easymidi = require("easymidi");
@@ -311,6 +320,30 @@ class Push2 extends events_1.EventEmitter {
             next(new DeviceStatistics_1.DeviceStatistics(resp.bytes));
         });
     }
+    getSelectedPadSensitivity(scene, track) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this._getParamPromise([0x29, scene, track], (resp, next) => {
+                next(resp.bytes[9]);
+            });
+        });
+    }
+    getPadSensitivitySettings() {
+        return __awaiter(this, void 0, void 0, function* () {
+            // return new Promise(async (resolve, reject) => {
+            var padSettings = {};
+            for (var scene = 1; scene < 9; scene++) {
+                padSettings[scene] = {};
+                for (var track = 1; track < 9; track++) {
+                    padSettings[scene][track] = yield this.getSelectedPadSensitivity(scene, track).catch((err) => {
+                        console.error(`Unable to set pad sensitivity for scene ${scene}, track ${track}: ${err}`);
+                        throw err;
+                    });
+                }
+            }
+            return padSettings;
+            // });
+        });
+    }
     _getParamPromise(commandId, responseHandler) {
         return new Promise((resolve, reject) => {
             if (typeof commandId == 'number')
@@ -350,7 +383,7 @@ class Push2 extends events_1.EventEmitter {
         return new Promise((resolve, reject) => {
             var commandId = msg[0];
             setTimeout(() => {
-                reject(new Error("No usable sysex reponse message received."));
+                reject(new Error("No usable sysex response message received."));
             }, 1000);
             // TODO: Set up only one listener, use to handle all messages.
             this.midi.setMaxListeners(100);

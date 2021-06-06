@@ -87,6 +87,8 @@ export declare class Push2 extends EventEmitter {
     setAftertouchMode(mode: any): Promise<unknown>;
     getAftertouchMode(): Promise<unknown>;
     getStatistics(): Promise<unknown>;
+    getSelectedPadSensitivity(scene: number, track: number): Promise<unknown>;
+    getPadSensitivitySettings(): Promise<{}>;
     private _getParamPromise;
     private _sendCommandAndValidate;
     private _sendSysexCommand;

@@ -318,6 +318,26 @@ export class Push2 extends EventEmitter {
       next(new DeviceStatistics(resp.bytes));
     });
   }
+  async getSelectedPadSensitivity(scene:number, track:number) {
+    return await this._getParamPromise([0x29, scene, track], (resp,next)=>{
+      next(resp.bytes[9]);
+    });
+  }
+  async getPadSensitivitySettings() {
+    // return new Promise(async (resolve, reject) => {
+    var padSettings = {};
+    for (var scene = 1; scene < 9; scene++) {
+      padSettings[scene] = {};
+      for (var track = 1; track < 9; track++) {
+        padSettings[scene][track] = await this.getSelectedPadSensitivity(scene, track).catch((err)=>{
+          console.error(`Unable to set pad sensitivity for scene ${scene}, track ${track}: ${err}`);
+          throw err;
+        });
+      }
+    }
+    return padSettings;
+    // });
+  }
   private _getParamPromise(commandId,responseHandler){
     return new Promise((resolve,reject)=>{
       if (typeof commandId=='number') commandId = [commandId];
@@ -354,7 +374,7 @@ export class Push2 extends EventEmitter {
     return new Promise((resolve, reject)=>{
       var commandId = msg[0];
       setTimeout(()=>{ // reject if no usable response after 1 second.
-        reject(new Error("No usable sysex reponse message received."));
+        reject(new Error("No usable sysex response message received."));
       },1000);
       // TODO: Set up only one listener, use to handle all messages.
       this.midi.setMaxListeners(100);
