@@ -1,6 +1,6 @@
 import easymidi = require('easymidi');
-var push2keymap = require('./Push2Keymap');
-
+const push2keymap = require('./Push2Keymap');
+const OS_PLATFORM = require('os').platform();
 import {EventEmitter} from 'events';
 import {TouchStripConfiguration} from './TouchStripConfiguration';
 import {DeviceIdentity} from './DeviceIdentity';
@@ -162,6 +162,8 @@ export class Push2 extends EventEmitter {
   */
   constructor(port:string='user',virtual:boolean=false){
     super();
+    assert(!(virtual && OS_PLATFORM!='win32'),
+        "Virtual MIDI devices are not supported on Windows.");
     this.isVirtual = virtual;
     this.deviceId = null;
     this.touchStripConfiguration = null;
@@ -170,7 +172,8 @@ export class Push2 extends EventEmitter {
       throw new Error("Expected port to be 'user' or 'live'.");
     //port = port[0].toUpperCase() + port.toLowerCase().slice(1); // Capitalize the first letter
     //this.portName = `${virtual?'Virtual ':''}Ableton Push 2 ${port} Port`;
-    this.portName = "Ableton Push 2";
+    this.portName = `${virtual?'Virtual ':''}Ableton Push 2`;
+    // this.portName = "Ableton Push 2";
     this.midi = new Midi(this.portName,virtual);
     this.getDeviceId();
     // this.getTouchStripConfiguration();
@@ -555,7 +558,7 @@ export class Push2 extends EventEmitter {
         reject(new Error("No usable sysex response message received."));
       },1000);
       // TODO: Set up only one listener, use to handle all messages.
-      this.midi.setMaxListeners(100);
+      this.midi.setMaxListeners(200);
       this.midi.on('sysex',function handler(resp) {
         if (resp.bytes[6]==commandId){ // This response matches our request.
           // console.log("Waiting for "+commandId+" Got SYSEX:",resp);

@@ -1,7 +1,7 @@
-var ableton = require('../dist');
-var expect = require('chai').expect;
-var VirtualResponder = require('../dist/VirtualResponder');
-const exp = require("constants");
+const ableton = require('../dist');
+const expect = require('chai').expect;
+const VirtualResponder = require('../dist/VirtualResponder');
+const OS_PLATFORM = require('os').platform();
 
 describe('Push2',()=>{
   describe('constructor',()=>{
@@ -11,20 +11,24 @@ describe('Push2',()=>{
       }
       expect(badInstantiation).to.throw(/Expected port to be/i);
     });
-    it("should instantiate a virtual Push2 instance, when called with port='user'.",()=>{
-      function closeIt(){push.close();}
-      var push = new ableton.Push2('user',true);
-      expect(push).to.have.property('isVirtual',true);
-      expect(closeIt).to.not.throw();
+    if (OS_PLATFORM=='win32') {
+      console.log("Virtual MIDI devices aren't supported on Windows. Skipping some tests.");
+      return;
+    }
+    it("should instantiate a virtual Push2 instance, when called with port='user'.", () => {
+      let push;
+      expect(() => push = new ableton.Push2('user', true)).to.not.throw();
+      expect(push).to.have.property('isVirtual', true);
+      expect(() => push.close()).to.not.throw();
     });
   });
   describe('class methods',()=>{
-    var push2 = null;
-    var isVirtual;
+    let push2 = null;
+    let isVirtual;
     before(()=>{
       function getVirtualPush(){
-        var push2 = new ableton.Push2('user',true);
-        var responder = new VirtualResponder('user');
+        let push2 = new ableton.Push2('user',true);
+        let responder = new VirtualResponder('user');
         responder.listen();
         return push2;
       }
@@ -36,11 +40,14 @@ describe('Push2',()=>{
         push2 = new ableton.Push2('user');
         console.log("Running tests against connected Push 2.");
       } catch(e) {
-        if (e.message.startsWith('No MIDI input found')) {
+        if (e.message.startsWith('No MIDI input for')) {
           console.log("No Ableton Push 2 found. Running tests against VirtualResponder.");
           push2 = getVirtualPush();
         }
       }
+    });
+    after(()=>{
+      push2.close();
     });
     describe('getDeviceId',()=>{
       it('should get device identity response',()=>{
@@ -76,7 +83,7 @@ describe('Push2',()=>{
         });
       });
     });
-    var origSetting=null;
+    let origSetting=null;
     describe('getTouchStripConfiguration/setTouchStripConfiguration',()=>{
       it('should get current touch strip config and save it',()=>{
         return push2.getTouchStripConfiguration().then((conf)=>{
@@ -117,7 +124,7 @@ describe('Push2',()=>{
     describe('getGlobalLEDBrightness/setGlobalLEDBrightness',()=>{
       it('should get display brightness, set it to 37, '+
           'validate, then set it back to original value', ()=>{
-        var origVal = null;
+        let origVal = null;
         return push2.getGlobalLEDBrightness().then((val)=>{
             expect(val).to.be.a('number');
             origVal = val;
@@ -135,7 +142,7 @@ describe('Push2',()=>{
     describe('getDisplayBrightness/setDisplayBrightness',()=>{
       it('should get display brightness, set it to 137, '+
           'validate, then set it back to original value', ()=>{
-        var origVal = null;
+        let origVal = null;
         return push2.getDisplayBrightness().then((val)=>{
             expect(val).to.be.a('number');
             origVal = val;
@@ -175,7 +182,7 @@ describe('Push2',()=>{
       });
     });
     describe('getLEDColorPaletteEntry',()=>{
-      var origColor=null;
+      let origColor=null;
       it('should get color palette entry for color idx 127 (red).',()=>{
         return push2.getLEDColorPaletteEntry(127).then((resp)=>{
           origColor = resp;

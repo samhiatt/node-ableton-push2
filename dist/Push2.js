@@ -11,7 +11,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Push2 = exports.AFTERTOUCHMODES = exports.PORTS = exports.MIDIMODES = exports.SENSITIVITY = exports.Midi = void 0;
 const easymidi = require("easymidi");
-var push2keymap = require('./Push2Keymap');
+const push2keymap = require('./Push2Keymap');
+const OS_PLATFORM = require('os').platform();
 const events_1 = require("events");
 const TouchStripConfiguration_1 = require("./TouchStripConfiguration");
 const DeviceIdentity_1 = require("./DeviceIdentity");
@@ -111,6 +112,7 @@ class Push2 extends events_1.EventEmitter {
     */
     constructor(port = 'user', virtual = false) {
         super();
+        assert(!(virtual && OS_PLATFORM != 'win32'), "Virtual MIDI devices are not supported on Windows.");
         this.isVirtual = virtual;
         this.deviceId = null;
         this.touchStripConfiguration = null;
@@ -119,7 +121,8 @@ class Push2 extends events_1.EventEmitter {
             throw new Error("Expected port to be 'user' or 'live'.");
         //port = port[0].toUpperCase() + port.toLowerCase().slice(1); // Capitalize the first letter
         //this.portName = `${virtual?'Virtual ':''}Ableton Push 2 ${port} Port`;
-        this.portName = "Ableton Push 2";
+        this.portName = `${virtual ? 'Virtual ' : ''}Ableton Push 2`;
+        // this.portName = "Ableton Push 2";
         this.midi = new Midi(this.portName, virtual);
         this.getDeviceId();
         // this.getTouchStripConfiguration();
@@ -523,7 +526,7 @@ class Push2 extends events_1.EventEmitter {
                 reject(new Error("No usable sysex response message received."));
             }, 1000);
             // TODO: Set up only one listener, use to handle all messages.
-            this.midi.setMaxListeners(100);
+            this.midi.setMaxListeners(200);
             this.midi.on('sysex', function handler(resp) {
                 if (resp.bytes[6] == commandId) { // This response matches our request.
                     // console.log("Waiting for "+commandId+" Got SYSEX:",resp);
