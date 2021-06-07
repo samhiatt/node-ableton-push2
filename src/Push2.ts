@@ -367,9 +367,9 @@ export class Push2 extends EventEmitter {
   }
   setAftertouchThresholds(lowerThreshold:number, upperThreshold:number):void {
     assert(lowerThreshold>=400 && lowerThreshold<=4095,
-        "'lowerThreshold' should be a number from 400 to 4095.");
+        "'lowerThreshold' should be a number from 400..4095.");
     assert(upperThreshold>=400 && upperThreshold<=4095,
-        "'upperThreshold' should be a number from 400 to 4095.");
+        "'upperThreshold' should be a number from 400..4095.");
     assert(upperThreshold>=lowerThreshold,
         "'lowerThreshold' must be less than 'upperThreshold'");
     this._sendSysexCommand([0x1B, 0, 0, 0, 0,
@@ -443,7 +443,7 @@ export class Push2 extends EventEmitter {
     // });
   }
   get400gPadValuesForScene(scene: number):Promise<Scene8track> {
-    assert(scene>=0 && scene<=8, "'scene' should be a number from 1 to 8.");
+    assert(scene>=0 && scene<=8, "'scene' should be a number from 1..8.");
     return this._getParamPromise([0x1D, scene], (resp, next)=>{
       var vals = resp.bytes.slice(8, -1);
       var res = {};
@@ -460,9 +460,32 @@ export class Push2 extends EventEmitter {
     }
     return res;
   }
+  set400gPadValues(scene:number, values:number[]):void {
+    // scene: scene in range 1..8
+    // values: 400g value for each track in scene
+    // Temporarily set calibration values for individual pads.
+    // The overwritten values are in effect until the device is rebooted.
+    // Pad values are in range from 0 to 4095. The 400g reference value is 1690.
+    // Higher 400g values are compensated in the firmware by lowering the resulting
+    // velocities somewhat, for lower 400g values the velocities are boosted.
+    // The 400g values have no effect on the note-on threshold (both in the pad physics
+    // and in the algorithm interpreting the read values).
+    assert(scene>=1&&scene<=8,
+        "should be within range 1..8");
+    assert(values.length==8,
+        "should be an array of length 8");
+    var msg = [0x22, scene];
+    for (var i=0; i<8; i++) {
+      assert(values[i]>=0 && values[i]<=4095,
+          "All 400g values should be in the range 0..4095");
+      msg.push(values[i]&127);
+      msg.push(values[i]>>7);
+    }
+    this._sendSysexCommand(msg);
+  }
   getPadVelocityCurveEntry(i:number):Promise<number> {
-    // i: index (0...127)
-    assert(i >=0 && i<= 127, "'i' should be in range 0...127");
+    // i: index (0..127)
+    assert(i >=0 && i<= 127, "'i' should be in range 0..127");
     return this._getParamPromise([0x21, i], (resp, next)=>{
       next(resp.bytes[8]);
     });
@@ -475,7 +498,7 @@ export class Push2 extends EventEmitter {
         "'i' should be one of (0, 16, 32, 48, 64, 80, 96, 112)");
     assert(v.length==16, "v should be an array with 16 velocities");
     for (var j in v) {
-      assert(v[j]>=1 && v[j]<=127, "velocities should be in range 1...127");
+      assert(v[j]>=1 && v[j]<=127, "velocities should be in range 1..127");
     }
     var cmd = [0x20, i].concat(v);
     this._sendSysexCommand(cmd);

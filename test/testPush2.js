@@ -211,9 +211,9 @@ describe('Push2',()=>{
       });
       it("should throw an error if outside of range",()=>{
         expect(()=>push2.setAftertouchThresholds(0,4000))
-            .throws("'lowerThreshold' should be a number from 400 to 4095.");
+            .throws("'lowerThreshold' should be a number from 400..4095.");
         expect(()=>push2.setAftertouchThresholds(400,5000))
-            .throws("'upperThreshold' should be a number from 400 to 4095.");
+            .throws("'upperThreshold' should be a number from 400..4095.");
       });
       it("should throw an error if lowerThreshold is greater than upperThreshold",()=>{
         expect(()=>push2.setAftertouchThresholds(1000,500))
@@ -330,7 +330,27 @@ describe('Push2',()=>{
       it("should throw an error if called with velocities outside of range", ()=>{
         expect(()=>{
           push2.setPadVelocityCurveEntry(0, [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,160]);
-        }).throws("velocities should be in range 1...127");
+        }).throws("velocities should be in range 1..127");
+      });
+    });
+    describe("set400gPadValues", ()=>{
+      it("should set the 400g pad values for a scene", ()=>{
+        expect(()=>{
+          push2.set400gPadValues(1,[1600,1600,1600,1600,1600,1600,1600,1600]);
+        }).does.not.throw();
+      });
+      it("should throw an error if 'scene' is out of range", ()=>{
+        expect(()=>{
+          push2.set400gPadValues(0,[1600,1600,1600,1600,1600,1600,1600,1600]);
+        }).throws("should be within range 1..8");
+        expect(()=>{
+          push2.set400gPadValues(9,[1600,1600,1600,1600,1600,1600,1600,1600]);
+        }).throws("should be within range 1..8");
+      });
+      it("should throw an error if any 400g pad values are outside range", ()=>{
+          expect(()=>{
+            push2.set400gPadValues(1,[1600,1600,1600,1600,1600,1600,1600,6000])
+          }).throws("All 400g values should be in the range 0..4095");
       });
     });
     // describe("", ()=>{
