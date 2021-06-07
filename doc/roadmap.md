@@ -18,7 +18,7 @@
 |`0x09` | x | x |   |Get Display Brightness |Display Backlight
 |`0x0A` | x | x |yes|Set MIDI Mode |MIDI Mode
 |`0x0B` |   |   |   |Set LED PWM Frequency Correction |PWM Frequency
-|`0x13` |   |   |yes|Sample Pedal Data |Pedal Sampling
+|`0x13` | x | x |yes|Sample Pedal Data |Pedal Sampling
 |`0x14` |   |   |   |Set LED White Balance  |White Balance
 |`0x15` | x |   |yes|Get LED White Balance|White Balance
 |`0x17` | x | x |   |Set Touch Strip Configuration  |Touch Strip

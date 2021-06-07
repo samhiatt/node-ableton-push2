@@ -205,6 +205,17 @@ describe('Push2',()=>{
         });
       });
     });
+    describe("samplePedalData",()=>{
+      it("should get an object with two arrays each for left and right pedals",()=>{
+        push2.samplePedalData(2).then((resp)=>{
+          expect(resp).to.have.keys('right','left');
+          expect(resp).to.have.keys("left","right");
+          expect(resp['left']).to.have.keys("tip","ring");
+          expect(resp['right']).to.have.keys("tip","ring");
+          expect(resp['right']['tip']).to.be.a('number');
+        });
+      });
+    });
     describe("getLEDWhiteBalance", ()=>{
       it("should get white balance settings for a single color group", ()=>{
         return push2.getLEDWhiteBalance(1).then((resp)=>{
@@ -252,9 +263,10 @@ describe('Push2',()=>{
               .and.have.a.property('8');
           expect(resp[8]).to.be.a('object')
               .and.have.a.property('8');
-          expect(resp[8][8]).to.be.a('number')
-              .and.lessThanOrEqual(2)
-              .and.greaterThanOrEqual(0);
+          // expect(resp[8][8]).to.be.a('number')
+          //     .and.lessThanOrEqual(2)
+          //     .and.greaterThanOrEqual(0);
+          expect(resp[8][8]).to.be.oneOf(['regular', 'reduced', 'low']);
         });
       })
     });

@@ -109,6 +109,11 @@ export interface RGB {
   b:number;
 }
 
+export interface PedalSampleData {
+  right: { ring:number, tip:number };
+  left: { ring:number, tip:number };
+}
+
 export interface WhiteBalanceGroups {
   rgbButtons: RGB;
   rgbPads: RGB;
@@ -116,7 +121,11 @@ export interface WhiteBalanceGroups {
   whiteButtons: number;
   touchStrip: number;
 }
-
+export enum SENSITIVITY {
+  regular=0,
+  reduced=1,
+  low=1,
+}
 // var MIDIMODES = new Enum({LIVE:0,USER:1,BOTH:2}, {ignoreCase:true});
 export enum MIDIMODES {
   live=0,
@@ -362,6 +371,25 @@ export class Push2 extends EventEmitter {
       next(resp.bytes[8] | resp.bytes[9]<<7 );
     });
   }
+  async samplePedalData(n:number):Promise<PedalSampleData> {
+    // Sample pedal data accumulating the ADC readings of the 4 pedal wires (left/right jack, tip/ring contact)
+    // over a certain sample count and return the averages for each of the wires.
+    // Sample pedal data for 512 samples (29, approx 0.4 sec)
+    // n: log2 of number of samples to average (0..19)
+    assert(n>=0 && n<=19, "'n' should be a number from 0 to 19.");
+    return await this._getParamPromise([0x13, n], (resp,next)=>{
+      next({
+        right: {
+          ring: resp.bytes[7] | resp.bytes[8]<<7,
+          tip: resp.bytes[9] | resp.bytes[10]<<7,
+        },
+        left: {
+          ring: resp.bytes[11] | resp.bytes[12]<<7,
+          tip: resp.bytes[13] | resp.bytes[14]<<7,
+        },
+      });
+    });
+  }
   async getLEDWhiteBalanceGroups():Promise<WhiteBalanceGroups> {
     return {
       rgbButtons: {
@@ -394,10 +422,11 @@ export class Push2 extends EventEmitter {
     for (var scene = 1; scene < 9; scene++) {
       padSettings[scene] = {};
       for (var track = 1; track < 9; track++) {
-        padSettings[scene][track] = await this.getSelectedPadSensitivity(scene, track).catch((err)=>{
+        var sensitivity = await this.getSelectedPadSensitivity(scene, track).catch((err)=>{
           console.error(`Unable to set pad sensitivity for scene ${scene}, track ${track}: ${err}`);
           throw err;
         });
+        padSettings[scene][track] = SENSITIVITY[sensitivity];
       }
     }
     return padSettings;

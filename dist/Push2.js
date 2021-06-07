@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Push2 = exports.AFTERTOUCHMODES = exports.PORTS = exports.MIDIMODES = exports.Midi = void 0;
+exports.Push2 = exports.AFTERTOUCHMODES = exports.PORTS = exports.MIDIMODES = exports.SENSITIVITY = exports.Midi = void 0;
 const easymidi = require("easymidi");
 var push2keymap = require('./Push2Keymap');
 const events_1 = require("events");
@@ -67,6 +67,12 @@ class Midi extends events_1.EventEmitter {
     }
 }
 exports.Midi = Midi;
+var SENSITIVITY;
+(function (SENSITIVITY) {
+    SENSITIVITY[SENSITIVITY["regular"] = 0] = "regular";
+    SENSITIVITY[SENSITIVITY["reduced"] = 1] = "reduced";
+    SENSITIVITY[SENSITIVITY["low"] = 1] = "low";
+})(SENSITIVITY = exports.SENSITIVITY || (exports.SENSITIVITY = {}));
 // var MIDIMODES = new Enum({LIVE:0,USER:1,BOTH:2}, {ignoreCase:true});
 var MIDIMODES;
 (function (MIDIMODES) {
@@ -328,6 +334,27 @@ class Push2 extends events_1.EventEmitter {
             });
         });
     }
+    samplePedalData(n) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // Sample pedal data accumulating the ADC readings of the 4 pedal wires (left/right jack, tip/ring contact)
+            // over a certain sample count and return the averages for each of the wires.
+            // Sample pedal data for 512 samples (29, approx 0.4 sec)
+            // n: log2 of number of samples to average (0..19)
+            assert(n >= 0 && n <= 19, "'n' should be a number from 0 to 19.");
+            return yield this._getParamPromise([0x13, n], (resp, next) => {
+                next({
+                    right: {
+                        ring: resp.bytes[7] | resp.bytes[8] << 7,
+                        tip: resp.bytes[9] | resp.bytes[10] << 7,
+                    },
+                    left: {
+                        ring: resp.bytes[11] | resp.bytes[12] << 7,
+                        tip: resp.bytes[13] | resp.bytes[14] << 7,
+                    },
+                });
+            });
+        });
+    }
     getLEDWhiteBalanceGroups() {
         return __awaiter(this, void 0, void 0, function* () {
             return {
@@ -365,10 +392,11 @@ class Push2 extends events_1.EventEmitter {
             for (var scene = 1; scene < 9; scene++) {
                 padSettings[scene] = {};
                 for (var track = 1; track < 9; track++) {
-                    padSettings[scene][track] = yield this.getSelectedPadSensitivity(scene, track).catch((err) => {
+                    var sensitivity = yield this.getSelectedPadSensitivity(scene, track).catch((err) => {
                         console.error(`Unable to set pad sensitivity for scene ${scene}, track ${track}: ${err}`);
                         throw err;
                     });
+                    padSettings[scene][track] = SENSITIVITY[sensitivity];
                 }
             }
             return padSettings;
