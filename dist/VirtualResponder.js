@@ -81,3 +81,4 @@ class VirtualResponder {
     }
 }
 module.exports = VirtualResponder;
+//# sourceMappingURL=VirtualResponder.js.map

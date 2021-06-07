@@ -1,11 +1,12 @@
 {
   "name": "ableton-push2",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "NodeJs library for communicating with the Ableton Push 2 MIDI controller.",
   "main": "dist/index.js",
   "scripts": {
     "test": "node node_modules/mocha/bin/mocha test --exit",
     "build": "node node_modules/gulp/bin/gulp.js build",
+    "typescript": "node node_modules/typescript/bin/tsc",
     "watch": "node node_modules/gulp/bin/gulp.js watch"
   },
   "repository": {

@@ -49,3 +49,4 @@ class TouchStripConfiguration {
     }
 }
 exports.TouchStripConfiguration = TouchStripConfiguration;
+//# sourceMappingURL=TouchStripConfiguration.js.map

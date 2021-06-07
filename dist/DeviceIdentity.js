@@ -17,3 +17,4 @@ class DeviceIdentity {
     }
 }
 exports.DeviceIdentity = DeviceIdentity;
+//# sourceMappingURL=DeviceIdentity.js.map

@@ -10,7 +10,7 @@ var tsProject = ts.createProject('tsconfig.json');
 gulp.task("scripts",function(){
   var tsResult = gulp.src(tsSources).pipe(tsProject());
   return merge_stream([ // Merge the two output streams, so this task is finished when the IO of both operations is done.
-      tsResult.dts.pipe(gulp.dest('./typings')),
+      tsResult.dts.pipe(gulp.dest('./dist')),
       tsResult.js.pipe(gulp.dest('./dist'))
   ]);
 });

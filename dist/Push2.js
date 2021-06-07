@@ -572,3 +572,4 @@ class Push2 extends events_1.EventEmitter {
 }
 exports.Push2 = Push2;
 module.exports = Push2;
+//# sourceMappingURL=Push2.js.map

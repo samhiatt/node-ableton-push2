@@ -10,3 +10,4 @@ class DeviceStatistics {
     }
 }
 exports.DeviceStatistics = DeviceStatistics;
+//# sourceMappingURL=DeviceStatistics.js.map

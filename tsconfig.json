@@ -4,12 +4,13 @@
     "target": "es6",
     "moduleResolution": "node",
     "declaration": true,
-    "rootDir": ".",
+    "rootDir": "src",
     "outDir": "dist",
-    "types" : ["node"]
+    "types" : ["node"],
+    "sourceMap": true
   },
   "include": [
     "index.ts",
-    "src/**/*",
+    "**/*",
   ]
 }
