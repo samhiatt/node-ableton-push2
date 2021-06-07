@@ -136,9 +136,10 @@ export declare class Push2 extends EventEmitter {
     }>;
     setLEDColorPaletteEntry(paletteIdx: number, color: Color, validate: false): Promise<void> | void;
     reapplyColorPalette(): void;
-    setAftertouchMode(mode: any): Promise<void>;
+    setAftertouchMode(mode: any): void;
     getAftertouchMode(): Promise<string>;
     getStatistics(): Promise<number[]>;
+    setAftertouchThresholds(lowerThreshold: number, upperThreshold: number): void;
     getLEDWhiteBalance(colorGroup: number): Promise<number>;
     samplePedalData(n: number): Promise<PedalSampleData>;
     getLEDWhiteBalanceGroups(): Promise<WhiteBalanceGroups>;

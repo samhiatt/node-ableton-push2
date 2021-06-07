@@ -349,11 +349,11 @@ export class Push2 extends EventEmitter {
     // trigger palette reapplication
     this._sendSysexCommand(0x05);
   }
-  setAftertouchMode(mode):Promise<void> {
-    // mode = mode.toLowerCase();
+  setAftertouchMode(mode) {
+    mode = mode.toLowerCase();
     if (!AFTERTOUCHMODES[mode])
       throw new Error(`Expected mode to be one of ${AFTERTOUCHMODES}.`);
-    return this._sendCommandAndValidate([0x1e, AFTERTOUCHMODES[mode]]);
+    this._sendSysexCommand([0x1e, AFTERTOUCHMODES[mode]]);
   }
   getAftertouchMode():Promise<string> {
     return this._getParamPromise([0x1f],(resp,next)=>{
@@ -364,6 +364,16 @@ export class Push2 extends EventEmitter {
     return this._getParamPromise([0x1a,0x01],(resp,next)=>{
       next(new DeviceStatistics(resp.bytes));
     });
+  }
+  setAftertouchThresholds(lowerThreshold:number, upperThreshold:number):void {
+    assert(lowerThreshold>=400 && lowerThreshold<=4095,
+        "'lowerThreshold' should be a number from 400 to 4095.");
+    assert(upperThreshold>=400 && upperThreshold<=4095,
+        "'upperThreshold' should be a number from 400 to 4095.");
+    assert(upperThreshold>=lowerThreshold,
+        "'lowerThreshold' must be less than 'upperThreshold'");
+    this._sendSysexCommand([0x1B, 0, 0, 0, 0,
+        lowerThreshold&127, lowerThreshold>>7, upperThreshold&127, upperThreshold>>7]);
   }
   async getLEDWhiteBalance(colorGroup:number):Promise<number> {
     assert(colorGroup>=0 && colorGroup<=10, "'colorGroup' should be a number from 1 to 10.");

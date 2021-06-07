@@ -205,6 +205,21 @@ describe('Push2',()=>{
         });
       });
     });
+    describe("setAftertouchThresholds",()=>{
+      it("should set the lower and upper pad after thresholds",()=>{
+        push2.setAftertouchThresholds(400, 4000);
+      });
+      it("should throw an error if outside of range",()=>{
+        expect(()=>push2.setAftertouchThresholds(0,4000))
+            .throws("'lowerThreshold' should be a number from 400 to 4095.");
+        expect(()=>push2.setAftertouchThresholds(400,5000))
+            .throws("'upperThreshold' should be a number from 400 to 4095.");
+      });
+      it("should throw an error if lowerThreshold is greater than upperThreshold",()=>{
+        expect(()=>push2.setAftertouchThresholds(1000,500))
+            .throws("'lowerThreshold' must be less than 'upperThreshold'");
+      });
+    });
     describe("samplePedalData",()=>{
       it("should get an object with two arrays each for left and right pedals",()=>{
         push2.samplePedalData(2).then((resp)=>{
