@@ -29,7 +29,7 @@
 |`0x1D` | x | x |yes|Read 400g Pad Values From Flash |Individual Pad Calibration (get400gPadValuesForScene, get400gPadValues)
 |`0x1E` | x | x |   |Set Aftertouch Mode |Aftertouch
 |`0x1F` | x | x |yes|Get Aftertouch Mode|Aftertouch
-|`0x20` |   |   |   |Set Pad Velocity Curve Entry |Velocity Curve
+|`0x20` | x | x |   |Set Pad Velocity Curve Entry |Velocity Curve
 |`0x21` |   |   |yes|Get Pad Velocity Curve Entry|Velocity Curve
 |`0x22` |   |   |   |Set Temporary 400g Pad Values |Individual Pad Calibration
 |`0x23` |   |   |yes|Flash LED White Balance|White Balance

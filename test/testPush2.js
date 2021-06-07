@@ -308,5 +308,22 @@ describe('Push2',()=>{
         });
       });
     });
+    describe("setPadVelocityCurveEntry", ()=>{
+      it("should call setPadVelocityCurveEntry without throwing an error", ()=>{
+        expect(()=>{
+          push2.setPadVelocityCurveEntry(0, [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]);
+        }).does.not.throw;
+      });
+      it("should throw an error if called with array of wrong length", ()=>{
+        expect(()=>{
+          push2.setPadVelocityCurveEntry(0, [1,2,3,4]);
+        }).throws("v should be an array with 16 velocities");
+      });
+      it("should throw an error if called with velocities outside of range", ()=>{
+        expect(()=>{
+          push2.setPadVelocityCurveEntry(0, [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,160]);
+        }).throws("velocities should be in range 1..127");
+      });
+    });
   });
 });
