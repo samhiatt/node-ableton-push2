@@ -460,6 +460,13 @@ export class Push2 extends EventEmitter {
     }
     return res;
   }
+  getPadVelocityCurveEntry(i:number):Promise<number> {
+    // i: index (0...127)
+    assert(i >=0 && i<= 127, "'i' should be in range 0...127");
+    return this._getParamPromise([0x21, i], (resp, next)=>{
+      next(resp.bytes[8]);
+    });
+  }
   setPadVelocityCurveEntry(i:number, v:number[]):void {
     // i: start index (one of 0, 16, 32, 48, 64, 80, 96, 112)
     // v: array of 16 velocities for index i+j, e.g. v[15] is velocity at index i+15
@@ -468,7 +475,7 @@ export class Push2 extends EventEmitter {
         "'i' should be one of (0, 16, 32, 48, 64, 80, 96, 112)");
     assert(v.length==16, "v should be an array with 16 velocities");
     for (var j in v) {
-      assert(v[j]>=1 && v[j]<=127, "velocities should be in range 1..127");
+      assert(v[j]>=1 && v[j]<=127, "velocities should be in range 1...127");
     }
     var cmd = [0x20, i].concat(v);
     this._sendSysexCommand(cmd);

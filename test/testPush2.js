@@ -308,6 +308,14 @@ describe('Push2',()=>{
         });
       });
     });
+    describe("getPadVelocityCurveEntry", ()=>{
+      it("should get pad velocity curve value at index 126", ()=>{
+        return push2.getPadVelocityCurveEntry(126).then((resp,next)=>{
+          expect(resp).is.a('number');
+          expect(resp).is.greaterThanOrEqual(1).and.lessThanOrEqual(127);
+        });
+      });
+    });
     describe("setPadVelocityCurveEntry", ()=>{
       it("should call setPadVelocityCurveEntry without throwing an error", ()=>{
         expect(()=>{
@@ -322,8 +330,14 @@ describe('Push2',()=>{
       it("should throw an error if called with velocities outside of range", ()=>{
         expect(()=>{
           push2.setPadVelocityCurveEntry(0, [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,160]);
-        }).throws("velocities should be in range 1..127");
+        }).throws("velocities should be in range 1...127");
       });
     });
+    // describe("", ()=>{
+    //   it("", ()=>{
+    //     expect(()=>{
+    //     });
+    //   });
+    // });
   });
 });

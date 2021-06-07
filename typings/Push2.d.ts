@@ -147,6 +147,7 @@ export declare class Push2 extends EventEmitter {
     getPadSensitivitySettings(): Promise<{}>;
     get400gPadValuesForScene(scene: number): Promise<Scene8track>;
     get400gPadValues(): Promise<Grid8x8>;
+    getPadVelocityCurveEntry(i: number): Promise<number>;
     setPadVelocityCurveEntry(i: number, v: number[]): void;
     private _getParamPromise;
     private _sendCommandAndValidate;

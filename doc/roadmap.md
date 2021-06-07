@@ -30,7 +30,7 @@
 |`0x1E` | x | x |   |Set Aftertouch Mode |Aftertouch
 |`0x1F` | x | x |yes|Get Aftertouch Mode|Aftertouch
 |`0x20` | x | x |   |Set Pad Velocity Curve Entry |Velocity Curve
-|`0x21` |   |   |yes|Get Pad Velocity Curve Entry|Velocity Curve
+|`0x21` | x | x |yes|Get Pad Velocity Curve Entry|Velocity Curve
 |`0x22` |   |   |   |Set Temporary 400g Pad Values |Individual Pad Calibration
 |`0x23` |   |   |yes|Flash LED White Balance|White Balance
 |`0x28` |   |   |   |Select Pad Settings |Pad Settings
