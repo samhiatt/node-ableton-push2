@@ -285,6 +285,21 @@ describe('Push2',()=>{
         });
       })
     });
+    describe("setPadSensitivitySettings", ()=>{
+      it("should set pad sensitivity setting for a single pad", ()=>{
+        expect(()=>{
+          push2.setPadSensitivitySettings(8,1,'normal');
+        }).does.not.throw();
+      });
+      it("should throw an error if scene or track is our of range", ()=>{
+        expect(()=>{
+          push2.setPadSensitivitySettings(9,1,'normal');
+        }).throws("should be within range 1..8");
+        expect(()=>{
+          push2.setPadSensitivitySettings(8,0,'normal');
+        }).throws("should be within range 1..8");
+      });
+    });
     describe("get400gPadValuesForScene", ()=>{
       it("should get 400g pad values for a scene", ()=>{
         return push2.get400gPadValuesForScene(8).then((resp)=>{

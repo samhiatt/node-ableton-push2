@@ -427,6 +427,8 @@ export class Push2 extends EventEmitter {
     });
   }
   async getPadSensitivitySettings():Promise<{}> {
+    // TODO: Pass in 0,0 to get all values at once.
+    // "By passing 0, 0 as scene and track, the settings for all pads can be selected."
     // return new Promise(async (resolve, reject) => {
     var padSettings = {};
     for (var scene = 1; scene < 9; scene++) {
@@ -441,6 +443,17 @@ export class Push2 extends EventEmitter {
     }
     return padSettings;
     // });
+  }
+  setPadSensitivitySettings(scene:number, track:number, setting:string):void {
+    // Command ID 0x28
+    // setting: 'normal', 'reduced', or 'low'
+    // The purpose is to reduce the sensitivity of pads that should not be triggered "by accident",
+    // like a loop selector near drum pads.
+    assert(scene>=1&&scene<=8,"should be within range 1..8");
+    assert(track>=1&&track<=8,"should be within range 1..8");
+    assert(['normal', 'reduced', 'low'].includes(setting),
+        "should be one of 'normal', 'reduced', or 'low'");
+    this._sendSysexCommand([0x28, scene, track, SENSITIVITY[setting]]);
   }
   get400gPadValuesForScene(scene: number):Promise<Scene8track> {
     assert(scene>=0 && scene<=8, "'scene' should be a number from 1..8.");

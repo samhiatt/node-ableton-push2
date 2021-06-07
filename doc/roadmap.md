@@ -33,7 +33,7 @@
 |`0x21` | x | x |yes|Get Pad Velocity Curve Entry|Velocity Curve |
 |`0x22` | x | x |   |Set Temporary 400g Pad Values |Individual Pad Calibration | set400gPadValues
 |`0x23` |   |   |yes|Flash LED White Balance|White Balance |
-|`0x28` |   |   |   |Select Pad Settings |Pad Settings |
+|`0x28` | x | x |   |Select Pad Settings |Pad Settings | setPadSensitivitySettings
 |`0x29` | x | x |yes|Get Selected Pad Settings|Pad Settings | getPadSensitivitySettings, getSelectedPadSensitivity
 |`0x30` |   |   |   |Configure Pedal |Pedal Configuration |
 |`0x31` |   |   |   |Set Pedal Curve Limits|Pedal Configuration |

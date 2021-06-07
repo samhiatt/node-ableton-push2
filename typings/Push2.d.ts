@@ -145,6 +145,7 @@ export declare class Push2 extends EventEmitter {
     getLEDWhiteBalanceGroups(): Promise<WhiteBalanceGroups>;
     getSelectedPadSensitivity(scene: number, track: number): Promise<number>;
     getPadSensitivitySettings(): Promise<{}>;
+    setPadSensitivitySettings(scene: number, track: number, setting: string): void;
     get400gPadValuesForScene(scene: number): Promise<Scene8track>;
     get400gPadValues(): Promise<Grid8x8>;
     set400gPadValues(scene: number, values: number[]): void;
