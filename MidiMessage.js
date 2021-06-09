@@ -1,10 +1,10 @@
 //Summary of MIDI Messages from MIDI spec:
 // https://www.midi.org/specifications/item/table-1-summary-of-midi-message
-var p2sysex = require('./Push2SysexCommands');
+let p2sysex = require('./Push2SysexCommands');
 
 class MidiMessage {
   constructor(messageArray) {
-    var midiMessages={
+    let midiMessages={
       128:"note off",
       144:"note on",
       160:"polyphonic key pressure",
@@ -15,7 +15,7 @@ class MidiMessage {
       240:"system common message",
     };
     this.statusCode = messageArray[0];
-    var message = midiMessages[messageArray[0]];
+    let message = midiMessages[messageArray[0]];
     if (!message) {
       console.warn("status code not understood.",messageArray);
       return;
@@ -38,7 +38,7 @@ class MidiMessage {
               messageArray[4]==1&&messageArray[5]==1){
       // sysex command  [ 240, 0, 33, 29, 1, 1, ${commandId}, ${value}, 247 ]
       this.commandId = messageArray[6];
-      var command = p2sysex.commands[this.commandId];
+      let command = p2sysex.commands[this.commandId];
       this.command = command.name;
       if (Object.keys(command).includes('mode')){
         this.mode = command.mode[messageArray[7]];

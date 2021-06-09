@@ -1,6 +1,6 @@
-var ableton = require('../');
+let ableton = require('../');
 
-var push2 = new ableton.Push2();
+let push2 = new ableton.Push2();
 
 
 push2.getGlobalLEDBrightness().then((leds)=>{

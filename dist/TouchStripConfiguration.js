@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TouchStripConfiguration = void 0;
 // https://github.com/Ableton/push-interface/blob/master/doc/AbletonPush2MIDIDisplayInterface.asc#210-touch-strip
-// var _touchStripConfigurationProperties=[
+// let _touchStripConfigurationProperties=[
 //   'LEDsControlledByHost',   // default: false, controlled by push
 //   'hostSendsSysex',         // default: false, host sends values
 //   'valuesSentAsModWheel',   // default: false, values sent as pitch bend
@@ -28,7 +28,7 @@ class TouchStripConfiguration {
         }
     }
     getByteCode() {
-        var res = 0;
+        let res = 0;
         res |= this.LEDsControlledByHost ? 1 : 0;
         res |= this.hostSendsSysex ? 1 : 0 << 1;
         res |= this.valuesSentAsModWheel ? 1 : 0 << 2;

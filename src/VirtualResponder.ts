@@ -1,5 +1,5 @@
-var midi = require('midi-stream');
-var deepEqual = require('deep-equal');
+let midi = require('midi-stream');
+let deepEqual = require('deep-equal');
 
 interface VirtualResponder {
   portName:string;

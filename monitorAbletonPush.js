@@ -1,6 +1,6 @@
-var ableton = require('.');
+let ableton = require('.');
 
-var push2 = new ableton.Push2('live', false);
+let push2 = new ableton.Push2('live', false);
 
 push2.getStatistics().then((val)=>{
    console.log(val);

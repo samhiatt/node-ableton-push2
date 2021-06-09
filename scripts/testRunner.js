@@ -2,12 +2,12 @@
 
 // Snippet from https://github.com/mochajs/mocha/wiki/Using-mocha-programmatically
 
-var Mocha = require('mocha'),
+let Mocha = require('mocha'),
   fs = require('fs'),
   path = require('path');
 
-var mocha = new Mocha();
-var testDir = 'test';
+let mocha = new Mocha();
+let testDir = 'test';
 
 fs.readdirSync(testDir).filter(function(file){
     // Only keep the .js files

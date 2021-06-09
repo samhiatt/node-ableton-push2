@@ -1,5 +1,5 @@
-var ableton = require('.');
-var push2 = new ableton.Push2('live', false);
+let ableton = require('.');
+let push2 = new ableton.Push2('live', false);
 
 (async function() {
     console.log("Device ID:", await push2.getDeviceId());

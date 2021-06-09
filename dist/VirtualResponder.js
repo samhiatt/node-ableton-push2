@@ -1,5 +1,5 @@
-var midi = require('midi-stream');
-var deepEqual = require('deep-equal');
+let midi = require('midi-stream');
+let deepEqual = require('deep-equal');
 class VirtualResponder {
     constructor(port = 'user') {
         port = port[0].toUpperCase() + port.toLowerCase().slice(1);

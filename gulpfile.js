@@ -1,14 +1,14 @@
-var gulp = require('gulp');
-var typedoc = require("gulp-typedoc");
-var ts = require('gulp-typescript');
-var merge_stream = require('merge2');
-var fs = require('fs');
+let gulp = require('gulp');
+let typedoc = require("gulp-typedoc");
+let ts = require('gulp-typescript');
+let merge_stream = require('merge2');
+let fs = require('fs');
 
-var tsSources = ['src/**/*.ts'];
-var tsProject = ts.createProject('tsconfig.json');
+let tsSources = ['src/**/*.ts'];
+let tsProject = ts.createProject('tsconfig.json');
 
 gulp.task("scripts",function(){
-  var tsResult = gulp.src(tsSources).pipe(tsProject());
+  let tsResult = gulp.src(tsSources).pipe(tsProject());
   return merge_stream([ // Merge the two output streams, so this task is finished when the IO of both operations is done.
       tsResult.dts.pipe(gulp.dest('./dist')),
       tsResult.js.pipe(gulp.dest('./dist'))

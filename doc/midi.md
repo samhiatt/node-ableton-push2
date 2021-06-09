@@ -5,8 +5,8 @@
 Listen to all MIDI messages by adding a listener for `message` events.
 
 ```javascript
-var ableton = require('ableton-push2');
-var push2 = new ableton.Push2('user');
+let ableton = require('ableton-push2');
+let push2 = new ableton.Push2('user');
 
 push2.midi.on('message',console.log);
 ```

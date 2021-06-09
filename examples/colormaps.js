@@ -1,7 +1,7 @@
-var ableton = require('../');
-var colormap = require('colormap');
+let ableton = require('../');
+let colormap = require('colormap');
 
-var push2 = new ableton.Push2();
+let push2 = new ableton.Push2();
 
 push2.setMidiMode('user');  // Make sure we're in user mode
 push2.setLEDColorPaletteEntry(0,{r:0,g:0,b:0,a:0});  // Reserve idx 0 as 'off'
@@ -11,8 +11,8 @@ push2.reapplyColorPalette();
 push2.setColor('octave up',127);  // octave up to select colorList[pointer-1]
 push2.setColor('octave down',127); // octave up to select colorList[pointer-1]
 
-var colorList = ['jet', 'hsv', 'hot', 'cool', 'spring', 'summer', 'autumn', 'winter', 'bone', 'copper', 'greys', 'greens', 'bluered', 'RdBu', 'picnic', 'rainbow', 'portland', 'blackbody', 'earth', 'electric', 'viridis', 'inferno', 'magma', 'plasma', 'warm', 'cool', 'rainbow-soft', 'bathymetry', 'cdom', 'chlorophyll', 'density', 'freesurface-blue', 'freesurface-red', 'oxygen', 'par', 'phase', 'salinity', 'temperature', 'velocity-blue', 'velocity-green', 'cubehelix'];
-var pointer = 0;
+let colorList = ['jet', 'hsv', 'hot', 'cool', 'spring', 'summer', 'autumn', 'winter', 'bone', 'copper', 'greys', 'greens', 'bluered', 'RdBu', 'picnic', 'rainbow', 'portland', 'blackbody', 'earth', 'electric', 'viridis', 'inferno', 'magma', 'plasma', 'warm', 'cool', 'rainbow-soft', 'bathymetry', 'cdom', 'chlorophyll', 'density', 'freesurface-blue', 'freesurface-red', 'oxygen', 'par', 'phase', 'salinity', 'temperature', 'velocity-blue', 'velocity-green', 'cubehelix'];
+let pointer = 0;
 
 // Set each pad to one of the colors
 for(let scene=1; scene<=8; scene++){

@@ -84,7 +84,7 @@ export declare enum SENSITIVITY {
     reduced = 1,
     low = 1
 }
-export declare enum MIDIMODES {
+export declare enum MIDI_MODES {
     live = 0,
     user = 1,
     both = 2
@@ -93,7 +93,7 @@ export declare enum PORTS {
     live = 0,
     user = 1
 }
-export declare enum AFTERTOUCHMODES {
+export declare enum AFTERTOUCH_MODES {
     channel = 0,
     poly = 1
 }
@@ -104,8 +104,8 @@ export declare enum AFTERTOUCHMODES {
 *  https://github.com/Ableton/push-interface/blob/master/doc/AbletonPush2MIDIDisplayInterface.asc).
 * #### Quick start:
 * ```javascript
-* var ableton = require('ableton-push2');
-* var push2 = new ableton.Push2(port='user'); // Boom! A New Ableton Push 2!!
+* static ableton = require('ableton-push2');
+* let push2 = new ableton.Push2(port='user'); // Boom! A New Ableton Push 2!!
 * push2.setColor([2,3],30); 		 // Set track 2, scene 3 to color index 30
 * ```
 */

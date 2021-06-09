@@ -1,5 +1,5 @@
-declare var midi: any;
-declare var deepEqual: any;
+declare let midi: any;
+declare let deepEqual: any;
 interface VirtualResponder {
     portName: string;
     midi: any;

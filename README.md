@@ -26,10 +26,10 @@ $ npm install ableton-push2
 ### Usage examples
 ##### Get a new Push2. Oh yeah.
 ```javascript
-var ableton = require('ableton-push2');
+let ableton = require('ableton-push2');
 
 // port can be 'user' (default) or 'live'
-var push2 = new ableton.Push2(port='user'); // Boom! A New Ableton Push 2!!
+let push2 = new ableton.Push2(port='user'); // Boom! A New Ableton Push 2!!
 ```
 
 ##### Monitor control messages from Push 2.
@@ -74,7 +74,7 @@ Returns a Promise which resolves after verifying that the value was set correctl
 
 Set all options at once:
 ```javascript
-var newConfig = {
+let newConfig = {
 		'LEDsControlledByPushOrHost':1,
 		'hostSendsSysex': 0,
 		'valuesSentAsModWheel': 0,
