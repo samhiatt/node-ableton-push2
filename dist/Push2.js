@@ -112,7 +112,7 @@ class Push2 extends events_1.EventEmitter {
     */
     constructor(port = 'user', virtual = false) {
         super();
-        assert(!(virtual && OS_PLATFORM != 'win32'), "Virtual MIDI devices are not supported on Windows.");
+        assert(!(virtual && OS_PLATFORM == 'win32'), "Virtual MIDI devices are not supported on Windows.");
         this.isVirtual = virtual;
         this.deviceId = null;
         this.touchStripConfiguration = null;
